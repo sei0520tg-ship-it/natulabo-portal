@@ -42,3 +42,11 @@
 
 ## テスト
 - [x] tRPCルーターのVitestテスト（5テスト全パス）
+
+## デザインリニューアル（B-VAX参考）
+- [x] グローバルCSSテーマ刷新（クリーム・ゴールド・フォレストグリーン）
+- [x] Google Fonts追加（Noto Serif JP・Cormorant Garamond）
+- [x] ランディングページ（Home.tsx）高感度デザイン実装
+- [x] MemberLayoutデザイン統一（サイドバー・ボトムナビ）
+- [x] Dashboardページ高感度デザイン実装
+- [x] AdminLayoutデザイン統一
