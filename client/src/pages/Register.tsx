@@ -1,0 +1,206 @@
+import { useAuth } from "@/_core/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { trpc } from "@/lib/trpc";
+import { CheckCircle2, Leaf, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useLocation } from "wouter";
+
+export default function Register() {
+  const { user, isAuthenticated } = useAuth();
+  const [, navigate] = useLocation();
+  const [step, setStep] = useState<"invite" | "profile" | "done">("invite");
+  const [inviteCode, setInviteCode] = useState("");
+  const [inviteError, setInviteError] = useState("");
+  const [form, setForm] = useState({
+    name: user?.name ?? "",
+    phone: "",
+    address: "",
+    brandRegisteredAt: "",
+  });
+
+  const validateInvite = trpc.invitation.validate.useQuery(
+    { code: inviteCode },
+    { enabled: false }
+  );
+
+  const registerMutation = trpc.member.register.useMutation({
+    onSuccess: () => setStep("done"),
+    onError: (e) => setInviteError(e.message),
+  });
+
+  const handleInviteSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setInviteError("");
+    const result = await validateInvite.refetch();
+    if (result.data?.valid) {
+      setStep("profile");
+    } else {
+      setInviteError(result.data?.reason ?? "招待コードが無効です");
+    }
+  };
+
+  const handleProfileSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+    registerMutation.mutate({
+      invitationCode: inviteCode,
+      name: form.name,
+      phone: form.phone,
+      address: form.address,
+      brandRegisteredAt: form.brandRegisteredAt || undefined,
+      email: user?.email ?? "",
+    });
+  };
+
+  if (step === "done") {
+    return (
+      <div className="min-h-screen bg-hero-gradient flex items-center justify-center px-4">
+        <div className="text-center animate-fade-in-up">
+          <CheckCircle2 className="w-16 h-16 text-primary mx-auto mb-4" />
+          <h2 className="text-2xl font-serif font-semibold mb-2">登録完了</h2>
+          <p className="text-muted-foreground mb-6">NatuLaboポータルへようこそ！</p>
+          <Button onClick={() => navigate("/dashboard")} className="rounded-xl px-8">
+            ダッシュボードへ
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-hero-gradient flex flex-col items-center justify-center px-4 py-12">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-primary/8 blur-3xl" />
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-accent/8 blur-3xl" />
+      </div>
+
+      <div className="relative w-full max-w-sm animate-fade-in-up">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-3">
+            <Leaf className="w-7 h-7 text-primary" />
+          </div>
+          <h1 className="text-2xl font-serif font-semibold">会員登録</h1>
+          <p className="text-sm text-muted-foreground mt-1">NatuLabo Portal</p>
+        </div>
+
+        {/* Step indicator */}
+        <div className="flex items-center justify-center gap-2 mb-8">
+          {["招待コード確認", "プロフィール入力"].map((label, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium transition-colors ${
+                (i === 0 && step === "invite") || (i === 1 && step === "profile")
+                  ? "bg-primary text-primary-foreground"
+                  : i === 0 && step === "profile"
+                  ? "bg-primary/20 text-primary"
+                  : "bg-muted text-muted-foreground"
+              }`}>
+                {i + 1}
+              </div>
+              <span className="text-xs text-muted-foreground hidden sm:block">{label}</span>
+              {i === 0 && <div className="w-8 h-px bg-border" />}
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-card rounded-2xl shadow-lg border border-border/50 p-8">
+          {step === "invite" && (
+            <form onSubmit={handleInviteSubmit} className="space-y-5">
+              <div>
+                <Label htmlFor="invite" className="text-sm font-medium">招待コード</Label>
+                <Input
+                  id="invite"
+                  value={inviteCode}
+                  onChange={(e) => setInviteCode(e.target.value)}
+                  placeholder="招待コードを入力"
+                  className="mt-1.5 h-11 rounded-xl"
+                  required
+                />
+                {inviteError && (
+                  <p className="text-destructive text-xs mt-1.5">{inviteError}</p>
+                )}
+              </div>
+              <Button
+                type="submit"
+                className="w-full h-11 rounded-xl"
+                disabled={validateInvite.isFetching}
+              >
+                {validateInvite.isFetching ? <Loader2 className="w-4 h-4 animate-spin" /> : "次へ"}
+              </Button>
+            </form>
+          )}
+
+          {step === "profile" && (
+            <form onSubmit={handleProfileSubmit} className="space-y-4">
+              <div>
+                <Label htmlFor="name" className="text-sm font-medium">お名前 <span className="text-destructive">*</span></Label>
+                <Input
+                  id="name"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  placeholder="山田 花子"
+                  className="mt-1.5 h-11 rounded-xl"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="phone" className="text-sm font-medium">電話番号</Label>
+                <Input
+                  id="phone"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  placeholder="090-0000-0000"
+                  className="mt-1.5 h-11 rounded-xl"
+                />
+              </div>
+              <div>
+                <Label htmlFor="address" className="text-sm font-medium">住所</Label>
+                <Input
+                  id="address"
+                  value={form.address}
+                  onChange={(e) => setForm({ ...form, address: e.target.value })}
+                  placeholder="東京都渋谷区..."
+                  className="mt-1.5 h-11 rounded-xl"
+                />
+              </div>
+              <div>
+                <Label htmlFor="brand" className="text-sm font-medium">dōTERRA登録日</Label>
+                <Input
+                  id="brand"
+                  type="date"
+                  value={form.brandRegisteredAt}
+                  onChange={(e) => setForm({ ...form, brandRegisteredAt: e.target.value })}
+                  className="mt-1.5 h-11 rounded-xl"
+                />
+              </div>
+              {inviteError && (
+                <p className="text-destructive text-xs">{inviteError}</p>
+              )}
+              <div className="flex gap-3 pt-1">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1 h-11 rounded-xl"
+                  onClick={() => setStep("invite")}
+                >
+                  戻る
+                </Button>
+                <Button
+                  type="submit"
+                  className="flex-1 h-11 rounded-xl"
+                  disabled={registerMutation.isPending}
+                >
+                  {registerMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "登録する"}
+                </Button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
