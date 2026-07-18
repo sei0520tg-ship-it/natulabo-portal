@@ -9,6 +9,7 @@ import {
   ExternalLink,
   MessageCircle,
   Settings,
+  Sparkles,
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -16,6 +17,7 @@ const menuItems = [
   { href: "/setup",    icon: Settings,      title: "はじめての方へ",     subtitle: "初期設定・準備フロー",       en: "GETTING STARTED" },
   { href: "/contact",  icon: MessageCircle, title: "お問い合わせ",       subtitle: "困ったときの相談窓口一覧",   en: "CONTACT" },
   { href: "/videos",   icon: BookOpen,      title: "学習動画ライブラリ", subtitle: "カテゴリ別動画コンテンツ",   en: "VIDEO LIBRARY" },
+  { href: "/recipes",  icon: Sparkles,      title: "クラフトレシピ集",   subtitle: "エッセンシャルオイルレシピ",  en: "CRAFT RECIPES" },
   { href: "/calendar", icon: Calendar,      title: "イベント・講座",     subtitle: "カレンダーで日程確認",       en: "EVENTS" },
   { href: "/links",    icon: ExternalLink,  title: "外部リンク集",       subtitle: "愛用に役立つサイト一覧",     en: "USEFUL LINKS" },
 ];

@@ -10,6 +10,7 @@ import {
   LogOut,
   MessageCircle,
   Settings,
+  Sparkles,
   User,
 } from "lucide-react";
 import { useEffect } from "react";
@@ -19,6 +20,7 @@ const navItems = [
   { href: "/dashboard", icon: Home,          label: "ホーム",         en: "HOME" },
   { href: "/setup",     icon: Settings,       label: "はじめに",       en: "SETUP" },
   { href: "/videos",    icon: BookOpen,       label: "動画",           en: "VIDEOS" },
+  { href: "/recipes",   icon: Sparkles,       label: "レシピ",           en: "RECIPES" },
   { href: "/calendar",  icon: Calendar,       label: "カレンダー",     en: "EVENTS" },
   { href: "/contact",   icon: MessageCircle,  label: "お問い合わせ",   en: "CONTACT" },
   { href: "/links",     icon: ExternalLink,   label: "リンク集",       en: "LINKS" },

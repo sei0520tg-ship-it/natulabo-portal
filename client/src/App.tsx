@@ -13,6 +13,7 @@ import Contact from "./pages/Contact";
 import Videos from "./pages/Videos";
 import CalendarPage from "./pages/CalendarPage";
 import Links from "./pages/Links";
+import Recipes from "./pages/Recipes";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers";
@@ -40,6 +41,7 @@ function Router() {
       <Route path="/videos" component={Videos} />
       <Route path="/calendar" component={CalendarPage} />
       <Route path="/links" component={Links} />
+      <Route path="/recipes" component={Recipes} />
       <Route path="/profile" component={Profile} />
 
       {/* Admin */}
