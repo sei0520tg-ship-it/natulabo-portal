@@ -25,6 +25,8 @@ import AdminSetup from "./pages/admin/AdminSetup";
 import AdminInvitations from "./pages/admin/AdminInvitations";
 import AdminImages from "./pages/admin/AdminImages";
 import AdminLogs from "./pages/admin/AdminLogs";
+import AdminTestimonials from "./pages/admin/AdminTestimonials";
+import Testimonials from "./pages/Testimonials";
 
 function Router() {
   return (
@@ -42,6 +44,7 @@ function Router() {
       <Route path="/calendar" component={CalendarPage} />
       <Route path="/links" component={Links} />
       <Route path="/recipes" component={Recipes} />
+      <Route path="/testimonials" component={Testimonials} />
       <Route path="/profile" component={Profile} />
 
       {/* Admin */}
@@ -55,6 +58,7 @@ function Router() {
       <Route path="/admin/invitations" component={AdminInvitations} />
       <Route path="/admin/images" component={AdminImages} />
       <Route path="/admin/logs" component={AdminLogs} />
+      <Route path="/admin/testimonials" component={AdminTestimonials} />
 
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

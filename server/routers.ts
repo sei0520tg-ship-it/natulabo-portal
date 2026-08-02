@@ -312,6 +312,36 @@ export const appRouter = router({
       }),
   }),
 
+  // ─── Testimonials ──────────────────────────────────────────────────────────
+  testimonial: router({
+    list: publicProcedure.query(() => db.getTestimonials(true)),
+    adminList: adminProcedure.query(() => db.getTestimonials(false)),
+    upsert: adminProcedure
+      .input(
+        z.object({
+          id: z.number().optional(),
+          title: z.string().min(1),
+          authorName: z.string().min(1),
+          authorLabel: z.string().optional(),
+          content: z.string().min(1),
+          category: z.string().default("健康"),
+          oilsUsed: z.string().optional(),
+          imageUrl: z.string().optional(),
+          isPublished: z.enum(["published", "draft"]).default("draft"),
+          sortOrder: z.number().default(0),
+        })
+      )
+      .mutation(async ({ input }) => {
+        await db.upsertTestimonial(input);
+        return { success: true };
+      }),
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteTestimonial(input.id);
+        return { success: true };
+      }),
+  }),
   // ─── Admin ────────────────────────────────────────────────────────────────
   admin: router({
     stats: adminProcedure.query(() => db.getDashboardStats()),
