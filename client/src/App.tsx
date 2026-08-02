@@ -26,6 +26,7 @@ import AdminInvitations from "./pages/admin/AdminInvitations";
 import AdminImages from "./pages/admin/AdminImages";
 import AdminLogs from "./pages/admin/AdminLogs";
 import AdminTestimonials from "./pages/admin/AdminTestimonials";
+import AdminTopics from "./pages/admin/AdminTopics";
 import Testimonials from "./pages/Testimonials";
 
 function Router() {
@@ -59,6 +60,7 @@ function Router() {
       <Route path="/admin/images" component={AdminImages} />
       <Route path="/admin/logs" component={AdminLogs} />
       <Route path="/admin/testimonials" component={AdminTestimonials} />
+      <Route path="/admin/topics" component={AdminTopics} />
 
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

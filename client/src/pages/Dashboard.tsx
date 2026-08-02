@@ -11,7 +11,9 @@ import {
   MessageCircle,
   Settings,
   Sparkles,
+  ChevronLeft,
 } from "lucide-react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "wouter";
 
 const menuItems = [
@@ -77,6 +79,9 @@ export default function Dashboard() {
             NatuLaboポータルへようこそ。今日も素敵な一日を。
           </p>
         </div>
+
+        {/* ── Topics Carousel ────────────────────────────────────── */}
+        <TopicsCarousel />
 
         {/* ── Hero banner ──────────────────────────────────────────── */}
         <div
@@ -410,5 +415,281 @@ export default function Dashboard() {
         )}
       </div>
     </MemberLayout>
+  );
+}
+
+// ─── Topics Carousel ─────────────────────────────────────────────────────────
+
+type Topic = {
+  id: number;
+  title: string;
+  body: string | null;
+  imageUrl: string | null;
+  buttonText: string | null;
+  buttonUrl: string | null;
+  sortOrder: number;
+  isPublished: "published" | "draft";
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+// Gradient palettes for slides without images
+const GRADIENTS = [
+  "linear-gradient(135deg, var(--forest-600) 0%, var(--forest-500) 60%, oklch(0.520 0.092 150) 100%)",
+  "linear-gradient(135deg, oklch(0.480 0.080 200) 0%, oklch(0.540 0.090 180) 100%)",
+  "linear-gradient(135deg, var(--gold-600) 0%, var(--gold-500) 60%, oklch(0.600 0.100 60) 100%)",
+  "linear-gradient(135deg, oklch(0.420 0.060 280) 0%, oklch(0.500 0.080 260) 100%)",
+  "linear-gradient(135deg, oklch(0.480 0.070 20) 0%, oklch(0.540 0.080 40) 100%)",
+];
+
+function TopicsCarousel() {
+  const { data: rawTopics = [], isLoading } = trpc.topic.list.useQuery();
+  const topics = rawTopics.slice(0, 5);
+  const [current, setCurrent] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartX = useRef(0);
+  const dragDeltaX = useRef(0);
+  const autoPlayRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const count = topics.length;
+
+  const goTo = useCallback(
+    (idx: number) => {
+      setCurrent(((idx % count) + count) % count);
+    },
+    [count]
+  );
+
+  const next = useCallback(() => goTo(current + 1), [current, goTo]);
+  const prev = useCallback(() => goTo(current - 1), [current, goTo]);
+
+  // Auto-play every 5 seconds
+  useEffect(() => {
+    if (count <= 1) return;
+    autoPlayRef.current = setInterval(next, 5000);
+    return () => {
+      if (autoPlayRef.current) clearInterval(autoPlayRef.current);
+    };
+  }, [count, next]);
+
+  function resetAutoPlay() {
+    if (autoPlayRef.current) clearInterval(autoPlayRef.current);
+    if (count > 1) autoPlayRef.current = setInterval(next, 5000);
+  }
+
+  // Touch / mouse drag handlers
+  function onDragStart(clientX: number) {
+    setIsDragging(true);
+    dragStartX.current = clientX;
+    dragDeltaX.current = 0;
+    if (autoPlayRef.current) clearInterval(autoPlayRef.current);
+  }
+
+  function onDragMove(clientX: number) {
+    if (!isDragging) return;
+    dragDeltaX.current = clientX - dragStartX.current;
+  }
+
+  function onDragEnd() {
+    if (!isDragging) return;
+    setIsDragging(false);
+    const threshold = 50;
+    if (dragDeltaX.current < -threshold) {
+      goTo(current + 1);
+    } else if (dragDeltaX.current > threshold) {
+      goTo(current - 1);
+    }
+    resetAutoPlay();
+  }
+
+  if (isLoading || count === 0) return null;
+
+  const topic = topics[current] as Topic;
+  const gradient = GRADIENTS[current % GRADIENTS.length];
+
+  return (
+    <div className="animate-fade-in-up">
+      {/* Label */}
+      <div className="flex items-center gap-3 mb-3">
+        <span style={{ width: "1.5rem", height: "1px", background: "var(--gold-400)", display: "inline-block" }} />
+        <span
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "0.6rem",
+            letterSpacing: "0.25em",
+            textTransform: "uppercase",
+            color: "var(--gold-500)",
+          }}
+        >
+          Topics
+        </span>
+      </div>
+
+      {/* Carousel container */}
+      <div
+        className="relative rounded-2xl overflow-hidden select-none"
+        style={{ height: "180px", cursor: isDragging ? "grabbing" : "grab" }}
+        onMouseDown={(e) => onDragStart(e.clientX)}
+        onMouseMove={(e) => onDragMove(e.clientX)}
+        onMouseUp={onDragEnd}
+        onMouseLeave={onDragEnd}
+        onTouchStart={(e) => onDragStart(e.touches[0].clientX)}
+        onTouchMove={(e) => onDragMove(e.touches[0].clientX)}
+        onTouchEnd={onDragEnd}
+      >
+        {/* Background */}
+        <div
+          className="absolute inset-0 transition-all duration-500"
+          style={{
+            background: topic.imageUrl
+              ? `url(${topic.imageUrl}) center/cover no-repeat`
+              : gradient,
+          }}
+        />
+        {/* Overlay */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: topic.imageUrl
+              ? "linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.20) 100%)"
+              : "linear-gradient(to right, rgba(0,0,0,0.20) 0%, transparent 100%)",
+          }}
+        />
+
+        {/* Decorative circle */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            top: "-30%", right: "-5%",
+            width: "50%", paddingBottom: "50%",
+            borderRadius: "50%",
+            border: "1px solid rgba(255,255,255,0.1)",
+          }}
+        />
+
+        {/* Content */}
+        <div className="absolute inset-0 flex items-center px-6 pr-16">
+          <div className="flex-1 min-w-0">
+            {/* Slide indicator label */}
+            <p
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "0.55rem",
+                letterSpacing: "0.3em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.6)",
+                marginBottom: "0.4rem",
+              }}
+            >
+              {String(current + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
+            </p>
+            <p
+              style={{
+                fontFamily: "var(--font-serif)",
+                fontSize: "clamp(0.95rem, 2.5vw, 1.15rem)",
+                fontWeight: 400,
+                color: "white",
+                letterSpacing: "0.04em",
+                lineHeight: 1.5,
+                marginBottom: topic.body ? "0.5rem" : "0",
+              }}
+            >
+              {topic.title}
+            </p>
+            {topic.body && (
+              <p
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.75rem",
+                  fontWeight: 300,
+                  color: "rgba(255,255,255,0.85)",
+                  letterSpacing: "0.03em",
+                  lineHeight: 1.6,
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                }}
+              >
+                {topic.body}
+              </p>
+            )}
+            {topic.buttonText && topic.buttonUrl && (
+              <Link href={topic.buttonUrl}>
+                <span
+                  className="inline-flex items-center gap-1 mt-3 px-3 py-1 rounded-full transition-all duration-200"
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "0.7rem",
+                    fontWeight: 400,
+                    letterSpacing: "0.05em",
+                    color: "white",
+                    background: "rgba(255,255,255,0.2)",
+                    border: "1px solid rgba(255,255,255,0.3)",
+                    backdropFilter: "blur(4px)",
+                    cursor: "pointer",
+                  }}
+                >
+                  {topic.buttonText}
+                  <ChevronRight className="w-3 h-3" />
+                </span>
+              </Link>
+            )}
+          </div>
+        </div>
+
+        {/* Prev / Next arrows (desktop) */}
+        {count > 1 && (
+          <>
+            <button
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 hidden sm:flex"
+              style={{
+                background: "rgba(255,255,255,0.15)",
+                border: "1px solid rgba(255,255,255,0.25)",
+                color: "white",
+                backdropFilter: "blur(4px)",
+              }}
+              onClick={(e) => { e.stopPropagation(); prev(); resetAutoPlay(); }}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 hidden sm:flex"
+              style={{
+                background: "rgba(255,255,255,0.15)",
+                border: "1px solid rgba(255,255,255,0.25)",
+                color: "white",
+                backdropFilter: "blur(4px)",
+              }}
+              onClick={(e) => { e.stopPropagation(); next(); resetAutoPlay(); }}
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </>
+        )}
+
+        {/* Dot indicators */}
+        {count > 1 && (
+          <div
+            className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5"
+          >
+            {topics.map((_, i) => (
+              <button
+                key={i}
+                className="rounded-full transition-all duration-300"
+                style={{
+                  width: i === current ? "1.5rem" : "0.4rem",
+                  height: "0.4rem",
+                  background: i === current ? "white" : "rgba(255,255,255,0.4)",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+                onClick={(e) => { e.stopPropagation(); goTo(i); resetAutoPlay(); }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

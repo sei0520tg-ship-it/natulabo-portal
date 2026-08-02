@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser,
   InsertTestimonial,
+  InsertTopic,
   contactItems,
   events,
   externalLinks,
@@ -12,6 +13,7 @@ import {
   pageViews,
   setupSteps,
   testimonials,
+  topics,
   users,
   videoViews,
   videos,
@@ -508,4 +510,33 @@ export async function deleteTestimonial(id: number) {
   const db = await getDb();
   if (!db) return;
   await db.delete(testimonials).where(eq(testimonials.id, id));
+}
+
+// ─── Topics ────────────────────────────────────────────────────────────────
+
+export async function getTopics(publishedOnly = true) {
+  const db = await getDb();
+  if (!db) return [];
+  const query = db.select().from(topics);
+  if (publishedOnly) {
+    return query.where(eq(topics.isPublished, "published")).orderBy(topics.sortOrder, topics.createdAt);
+  }
+  return query.orderBy(topics.sortOrder, topics.createdAt);
+}
+
+export async function upsertTopic(data: InsertTopic & { id?: number }) {
+  const db = await getDb();
+  if (!db) return;
+  if (data.id) {
+    const { id, ...rest } = data;
+    await db.update(topics).set({ ...rest, updatedAt: new Date() }).where(eq(topics.id, id));
+  } else {
+    await db.insert(topics).values(data);
+  }
+}
+
+export async function deleteTopic(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(topics).where(eq(topics.id, id));
 }

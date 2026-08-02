@@ -291,37 +291,8 @@ export default function Home() {
       {/* ── 01 ABOUT ───────────────────────────────────────────────────── */}
       <section className="py-24 lg:py-32" style={{ background: "white" }}>
         <div className="container">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left: decorative image placeholder */}
+          <div className="max-w-2xl mx-auto text-center">
             <Reveal>
-              <div
-                className="relative rounded-2xl overflow-hidden"
-                style={{
-                  aspectRatio: "4/5",
-                  background: "linear-gradient(135deg, var(--cream-200) 0%, var(--cream-300) 100%)",
-                  maxWidth: "420px",
-                }}
-              >
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 opacity-40">
-                  <Leaf className="w-16 h-16" style={{ color: "var(--forest-500)" }} />
-                  <span style={{ fontFamily: "var(--font-display)", fontSize: "0.7rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--brown-500)" }}>
-                    Image
-                  </span>
-                </div>
-                {/* Gold corner accent */}
-                <div
-                  className="absolute top-4 right-4 w-12 h-12 rounded-full"
-                  style={{ border: "1px solid var(--gold-300)", opacity: 0.6 }}
-                />
-                <div
-                  className="absolute bottom-4 left-4 w-8 h-8 rounded-full"
-                  style={{ border: "1px solid var(--gold-300)", opacity: 0.4 }}
-                />
-              </div>
-            </Reveal>
-
-            {/* Right: text */}
-            <Reveal delay={150}>
               <SectionLabel num="01" label="About NatuLabo" />
               <h2
                 className="mb-6"
@@ -352,7 +323,7 @@ export default function Home() {
                 あなたのウェルネスライフをトータルにサポートします。
               </p>
               <div
-                className="mt-8 pt-8"
+                className="mt-8 pt-8 flex justify-center"
                 style={{ borderTop: "1px solid var(--cream-300)" }}
               >
                 <p

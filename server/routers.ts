@@ -342,6 +342,35 @@ export const appRouter = router({
         return { success: true };
       }),
   }),
+  // ─── Topics ──────────────────────────────────────────────────────────────
+  topic: router({
+    list: protectedProcedure.query(() => db.getTopics(true)),
+    adminList: adminProcedure.query(() => db.getTopics(false)),
+    upsert: adminProcedure
+      .input(
+        z.object({
+          id: z.number().optional(),
+          title: z.string().min(1).max(200),
+          body: z.string().optional(),
+          imageUrl: z.string().optional(),
+          buttonText: z.string().optional(),
+          buttonUrl: z.string().optional(),
+          sortOrder: z.number().default(0),
+          isPublished: z.enum(["published", "draft"]).default("published"),
+        })
+      )
+      .mutation(async ({ input }) => {
+        await db.upsertTopic(input);
+        return { success: true };
+      }),
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteTopic(input.id);
+        return { success: true };
+      }),
+  }),
+
   // ─── Admin ────────────────────────────────────────────────────────────────
   admin: router({
     stats: adminProcedure.query(() => db.getDashboardStats()),

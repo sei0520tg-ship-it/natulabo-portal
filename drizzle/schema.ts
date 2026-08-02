@@ -220,3 +220,20 @@ export const testimonials = mysqlTable("testimonials", {
 
 export type Testimonial = typeof testimonials.$inferSelect;
 export type InsertTestimonial = typeof testimonials.$inferInsert;
+
+// トピックスカルーセルテーブル（ダッシュボード上部のお知らせスライダー）
+export const topics = mysqlTable("topics", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 200 }).notNull(),
+  body: text("body"),                                          // 本文（任意）
+  imageUrl: text("imageUrl"),                                  // 背景画像URL（任意）
+  buttonText: varchar("buttonText", { length: 100 }),         // ボタンラベル（任意）
+  buttonUrl: text("buttonUrl"),                               // ボタンリンク先（任意）
+  sortOrder: int("sortOrder").default(0).notNull(),
+  isPublished: mysqlEnum("isPublished", ["published", "draft"]).default("published").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Topic = typeof topics.$inferSelect;
+export type InsertTopic = typeof topics.$inferInsert;

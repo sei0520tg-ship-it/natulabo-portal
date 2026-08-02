@@ -28,6 +28,7 @@ const navItems = [
   { href: "/admin/images",      icon: Image,         label: "画像管理",           en: "IMAGES" },
   { href: "/admin/invitations", icon: ExternalLink,  label: "招待コード管理",     en: "INVITES" },
   { href: "/admin/testimonials", icon: Leaf,          label: "体験談管理",         en: "STORIES" },
+  { href: "/admin/topics",        icon: Leaf,          label: "トピックス管理",       en: "TOPICS" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
