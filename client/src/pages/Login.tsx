@@ -30,11 +30,46 @@ export default function Login() {
       <div className="relative w-full max-w-sm animate-fade-in-up">
         {/* Logo */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-4">
-            <Leaf className="w-8 h-8 text-primary" />
+          <div
+            className="inline-flex items-center justify-center mb-4"
+            style={{
+              width: "5rem",
+              height: "5rem",
+              borderRadius: "1.25rem",
+              background: "var(--cream-100, oklch(0.970 0.012 80))",
+              boxShadow: "0 2px 12px oklch(0.200 0.030 60 / 0.08)",
+            }}
+          >
+            <img
+              src="/manus-storage/logo-circle_08be9919.png"
+              alt="NatuLabo"
+              style={{ width: "3rem", height: "3rem", objectFit: "contain" }}
+            />
           </div>
-          <h1 className="text-3xl font-serif font-semibold text-foreground tracking-wide">NatuLabo</h1>
-          <p className="text-sm text-muted-foreground mt-1 font-light tracking-wider">PORTAL</p>
+          <h1
+            style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: "1.6rem",
+              fontWeight: 400,
+              letterSpacing: "0.06em",
+              color: "var(--brown-800)",
+              lineHeight: 1.3,
+            }}
+          >
+            NatuLabo
+          </h1>
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "0.65rem",
+              letterSpacing: "0.3em",
+              textTransform: "uppercase",
+              color: "var(--brown-400)",
+              marginTop: "0.3rem",
+            }}
+          >
+            Portal
+          </p>
         </div>
 
         {/* Card */}

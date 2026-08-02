@@ -81,11 +81,45 @@ export default function Register() {
 
       <div className="relative w-full max-w-sm animate-fade-in-up">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-3">
-            <Leaf className="w-7 h-7 text-primary" />
+          <div
+            className="inline-flex items-center justify-center mb-3"
+            style={{
+              width: "4.5rem",
+              height: "4.5rem",
+              borderRadius: "1.25rem",
+              background: "var(--cream-100, oklch(0.970 0.012 80))",
+              boxShadow: "0 2px 12px oklch(0.200 0.030 60 / 0.08)",
+            }}
+          >
+            <img
+              src="/manus-storage/logo-circle_08be9919.png"
+              alt="NatuLabo"
+              style={{ width: "2.75rem", height: "2.75rem", objectFit: "contain" }}
+            />
           </div>
-          <h1 className="text-2xl font-serif font-semibold">会員登録</h1>
-          <p className="text-sm text-muted-foreground mt-1">NatuLabo Portal</p>
+          <h1
+            style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: "1.5rem",
+              fontWeight: 400,
+              letterSpacing: "0.05em",
+              color: "var(--brown-800)",
+            }}
+          >
+            会員登録
+          </h1>
+          <p
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "0.62rem",
+              letterSpacing: "0.25em",
+              textTransform: "uppercase",
+              color: "var(--brown-400)",
+              marginTop: "0.3rem",
+            }}
+          >
+            NatuLabo Portal
+          </p>
         </div>
 
         {/* Step indicator */}
