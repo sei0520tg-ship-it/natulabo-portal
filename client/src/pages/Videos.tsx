@@ -3,8 +3,9 @@ import YouTubePlayer, { extractYouTubeId } from "@/components/YouTubePlayer";
 import { trpc } from "@/lib/trpc";
 import { usePageView } from "@/hooks/usePageView";
 import { Badge } from "@/components/ui/badge";
-import { PlayCircle, Sparkles, CheckCircle2, Clock } from "lucide-react";
+import { PlayCircle, Sparkles, CheckCircle2, Clock, RotateCcw } from "lucide-react";
 import { useState, useCallback } from "react";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 // 秒数を "m:ss" 形式に変換
@@ -217,6 +218,8 @@ export default function Videos() {
 
   const [activeVideo, setActiveVideo] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("すべて");
+  // 続きから再生確認ダイアログの対象動画イド
+  const [resumeTarget, setResumeTarget] = useState<{ videoId: number; position: number } | null>(null);
 
   // 進捗マップ (videoId → progress)
   const progressMap = new Map(
@@ -236,10 +239,22 @@ export default function Videos() {
 
   const handlePlay = (videoId: number) => {
     const prog = progressMap.get(videoId);
-    if (prog && prog.lastPosition > 0 && prog.completed !== "yes") {
-      toast.info(`${formatTime(prog.lastPosition)} から続きを再生します`);
+    // 未完了で一定以上視聴済みの場合は確認ダイアログを表示
+    if (prog && prog.lastPosition > 30 && prog.completed !== "yes") {
+      setResumeTarget({ videoId, position: prog.lastPosition });
+    } else {
+      setActiveVideo(videoId);
     }
-    setActiveVideo(videoId);
+  };
+
+  const handleResumeConfirm = (fromStart: boolean) => {
+    if (!resumeTarget) return;
+    if (fromStart) {
+      // 最初から再生：進捗リセットして再生
+      saveProgress.mutate({ videoId: resumeTarget.videoId, lastPosition: 0, duration: 0 });
+    }
+    setActiveVideo(resumeTarget.videoId);
+    setResumeTarget(null);
   };
 
   const handleProgressUpdate = useCallback(
@@ -342,6 +357,54 @@ export default function Videos() {
           </div>
         )}
       </div>
+
+      {/* 続きから再生 確認ダイアログ */}
+      {resumeTarget && (() => {
+        const targetVideo = (videos ?? []).find(v => v.id === resumeTarget.videoId);
+        return (
+          <div
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
+            style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}
+            onClick={() => setResumeTarget(null)}
+          >
+            <div
+              className="bg-card rounded-2xl p-6 w-full max-w-sm shadow-2xl border border-border"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex items-center gap-3 mb-1">
+                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <PlayCircle size={18} className="text-primary" />
+                </div>
+                <h3 className="font-semibold text-sm leading-snug">
+                  {targetVideo?.title ?? "動画"}
+                </h3>
+              </div>
+              <p className="text-xs text-muted-foreground mt-3 mb-5 leading-relaxed">
+                <span className="font-medium text-foreground">{formatTime(resumeTarget.position)}</span>まで視聴済みです。続きから再生しますか？
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 gap-1.5"
+                  onClick={() => handleResumeConfirm(true)}
+                >
+                  <RotateCcw size={13} />
+                  最初から
+                </Button>
+                <Button
+                  size="sm"
+                  className="flex-1 gap-1.5"
+                  onClick={() => handleResumeConfirm(false)}
+                >
+                  <PlayCircle size={13} />
+                  {formatTime(resumeTarget.position)}から続き
+                </Button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </MemberLayout>
   );
 }

@@ -138,41 +138,51 @@ export default function Home() {
       {/* ── Hero ───────────────────────────────────────────────────────── */}
       <section
         className="relative min-h-screen flex flex-col items-center justify-center pt-16 overflow-hidden"
-        style={{
-          background: "linear-gradient(160deg, oklch(0.960 0.018 82) 0%, oklch(0.940 0.025 78) 50%, oklch(0.920 0.030 76) 100%)",
-        }}
+        style={{ background: "oklch(0.200 0.040 145)" }}
       >
-        {/* Decorative blobs */}
+        {/* Background video */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ zIndex: 0 }}
+          poster=""
+        >
+          <source src="/manus-storage/forest_bg_loop_1b4e6054.mp4" type="video/mp4" />
+        </video>
+
+        {/* Overlay: dark gradient for text readability */}
         <div
-          className="absolute pointer-events-none"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            top: "-10%", right: "-5%",
-            width: "50vw", height: "50vw",
-            borderRadius: "50%",
-            background: "radial-gradient(circle, oklch(0.820 0.100 75 / 0.12) 0%, transparent 70%)",
-          }}
-        />
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            bottom: "5%", left: "-8%",
-            width: "40vw", height: "40vw",
-            borderRadius: "50%",
-            background: "radial-gradient(circle, oklch(0.540 0.090 145 / 0.08) 0%, transparent 70%)",
+            zIndex: 1,
+            background: "linear-gradient(160deg, rgba(10,30,15,0.55) 0%, rgba(15,40,20,0.45) 50%, rgba(20,50,25,0.55) 100%)",
           }}
         />
 
-        <div className="container relative text-center px-4 animate-fade-in-up">
+        {/* Subtle vignette */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 2,
+            background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.35) 100%)",
+          }}
+        />
+
+        <div className="container relative text-center px-4 animate-fade-in-up" style={{ zIndex: 3 }}>
           {/* Eyebrow */}
           <div
             className="inline-flex items-center gap-3 mb-8 px-4 py-1.5 rounded-full"
             style={{
-              border: "1px solid var(--gold-300)",
-              background: "rgba(255,255,255,0.5)",
+              border: "1px solid rgba(255,255,255,0.35)",
+              background: "rgba(255,255,255,0.12)",
+              backdropFilter: "blur(8px)",
             }}
           >
-            <Leaf className="w-3 h-3" style={{ color: "var(--gold-500)" }} />
-            <span style={{ fontFamily: "var(--font-display)", fontSize: "0.65rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--gold-600)" }}>
+            <Leaf className="w-3 h-3" style={{ color: "var(--gold-300)" }} />
+            <span style={{ fontFamily: "var(--font-display)", fontSize: "0.65rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(255,255,255,0.85)" }}>
               dōTERRA 愛用者専用ポータル
             </span>
           </div>
@@ -186,11 +196,12 @@ export default function Home() {
               fontWeight: 400,
               lineHeight: 1.35,
               letterSpacing: "0.06em",
-              color: "var(--brown-800)",
+              color: "rgba(255,255,255,0.95)",
+              textShadow: "0 2px 20px rgba(0,0,0,0.3)",
             }}
           >
             自然の恵みとともに、<br />
-            <em style={{ fontStyle: "normal", color: "var(--forest-500)" }}>豊かな毎日</em>へ。
+            <em style={{ fontStyle: "normal", color: "oklch(0.880 0.120 80)" }}>豊かな毎日</em>へ。
           </h1>
 
           <p
@@ -201,7 +212,7 @@ export default function Home() {
               fontWeight: 300,
               lineHeight: 2,
               letterSpacing: "0.06em",
-              color: "var(--brown-500)",
+              color: "rgba(255,255,255,0.75)",
             }}
           >
             学習動画・イベント情報・お役立ちリンクをまとめた、<br className="hidden sm:block" />
@@ -246,11 +257,12 @@ export default function Home() {
                     href={getLoginUrl()}
                     className="flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-medium transition-all"
                     style={{
-                      background: "transparent",
-                      border: "1px solid var(--brown-300)",
-                      color: "var(--brown-700)",
+                      background: "rgba(255,255,255,0.12)",
+                      border: "1px solid rgba(255,255,255,0.4)",
+                      color: "rgba(255,255,255,0.9)",
                       fontFamily: "var(--font-sans)",
                       letterSpacing: "0.08em",
+                      backdropFilter: "blur(8px)",
                     }}
                   >
                     ログイン
@@ -263,14 +275,14 @@ export default function Home() {
           {/* Scroll indicator */}
           <div
             className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-            style={{ color: "var(--brown-300)" }}
+            style={{ color: "rgba(255,255,255,0.5)" }}
           >
             <span style={{ fontFamily: "var(--font-display)", fontSize: "0.6rem", letterSpacing: "0.3em", textTransform: "uppercase" }}>
               Scroll
             </span>
             <div
               className="w-px h-10"
-              style={{ background: "linear-gradient(to bottom, var(--gold-400), transparent)" }}
+              style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.6), transparent)" }}
             />
           </div>
         </div>
