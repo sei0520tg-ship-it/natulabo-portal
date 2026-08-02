@@ -191,7 +191,32 @@ export const videoViews = mysqlTable("video_views", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
   videoId: int("videoId").notNull(),
+  lastPosition: int("lastPosition").default(0).notNull(), // 最後に視聴した位置（秒）
+  duration: int("duration").default(0).notNull(),         // 動画の総尺（秒）
+  progressPct: int("progressPct").default(0).notNull(),   // 視聴率（0〜100%）
+  completed: mysqlEnum("completed", ["yes", "no"]).default("no").notNull(), // 90%以上で完了
   viewedAt: timestamp("viewedAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
 export type VideoView = typeof videoViews.$inferSelect;
+export type InsertVideoView = typeof videoViews.$inferInsert;
+
+// 体験談テーブル
+export const testimonials = mysqlTable("testimonials", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 200 }).notNull(),
+  authorName: varchar("authorName", { length: 100 }).notNull(),
+  authorLabel: varchar("authorLabel", { length: 100 }), // 例: "2児の母 / 愛用歴3年"
+  category: varchar("category", { length: 50 }).notNull().default("健康"), // 健康・美容・メンタル・家族・その他
+  content: text("content").notNull(),
+  oilsUsed: text("oilsUsed"), // 使用したオイル（カンマ区切り）
+  imageUrl: text("imageUrl"), // アイコン画像URL（任意）
+  isPublished: mysqlEnum("isPublished", ["published", "draft"]).default("published").notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Testimonial = typeof testimonials.$inferSelect;
+export type InsertTestimonial = typeof testimonials.$inferInsert;

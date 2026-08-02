@@ -2,6 +2,7 @@ import { and, desc, eq, gte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser,
+  InsertTestimonial,
   contactItems,
   events,
   externalLinks,
@@ -10,6 +11,7 @@ import {
   managedImages,
   pageViews,
   setupSteps,
+  testimonials,
   users,
   videoViews,
   videos,
@@ -335,7 +337,90 @@ export async function recordPageView(userId: number, pageName: string, pageUrl: 
 export async function recordVideoView(userId: number, videoId: number) {
   const db = await getDb();
   if (!db) return;
-  await db.insert(videoViews).values({ userId, videoId });
+  // 既存レコードがない場合のみ初回記録を挿入
+  const existing = await db
+    .select({ id: videoViews.id })
+    .from(videoViews)
+    .where(and(eq(videoViews.userId, userId), eq(videoViews.videoId, videoId)))
+    .limit(1);
+  if (existing.length === 0) {
+    await db.insert(videoViews).values({ userId, videoId, lastPosition: 0, duration: 0, progressPct: 0, completed: "no" });
+  }
+}
+
+/** 視聴進捗を保存（アップサート） */
+export async function saveVideoProgress(
+  userId: number,
+  videoId: number,
+  lastPosition: number,
+  duration: number
+) {
+  const db = await getDb();
+  if (!db) return;
+  const progressPct = duration > 0 ? Math.min(100, Math.round((lastPosition / duration) * 100)) : 0;
+  const completed = progressPct >= 90 ? "yes" : "no";
+  const existing = await db
+    .select({ id: videoViews.id })
+    .from(videoViews)
+    .where(and(eq(videoViews.userId, userId), eq(videoViews.videoId, videoId)))
+    .limit(1);
+  if (existing.length > 0) {
+    await db
+      .update(videoViews)
+      .set({ lastPosition, duration, progressPct, completed, updatedAt: new Date() })
+      .where(and(eq(videoViews.userId, userId), eq(videoViews.videoId, videoId)));
+  } else {
+    await db.insert(videoViews).values({ userId, videoId, lastPosition, duration, progressPct, completed });
+  }
+}
+
+/** ユーザーの特定動画の視聴進捗を取得 */
+export async function getVideoProgress(userId: number, videoId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db
+    .select()
+    .from(videoViews)
+    .where(and(eq(videoViews.userId, userId), eq(videoViews.videoId, videoId)))
+    .limit(1);
+  return result[0] ?? null;
+}
+
+/** ユーザーの全動画の視聴進捗一覧を取得 */
+export async function getAllVideoProgressByUser(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select()
+    .from(videoViews)
+    .where(eq(videoViews.userId, userId))
+    .orderBy(desc(videoViews.updatedAt));
+}
+
+/** 管理者用：全会員の視聴進捗一覧 */
+export async function getAllVideoProgressAdmin() {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select({
+      id: videoViews.id,
+      userId: videoViews.userId,
+      videoId: videoViews.videoId,
+      lastPosition: videoViews.lastPosition,
+      duration: videoViews.duration,
+      progressPct: videoViews.progressPct,
+      completed: videoViews.completed,
+      viewedAt: videoViews.viewedAt,
+      updatedAt: videoViews.updatedAt,
+      userName: users.name,
+      userEmail: users.email,
+      videoTitle: videos.title,
+    })
+    .from(videoViews)
+    .leftJoin(users, eq(videoViews.userId, users.id))
+    .leftJoin(videos, eq(videoViews.videoId, videos.id))
+    .orderBy(desc(videoViews.updatedAt))
+    .limit(500);
 }
 
 export async function getLoginLogsByUser(userId: number) {
@@ -395,4 +480,32 @@ export async function deleteInvitation(id: number) {
   const db = await getDb();
   if (!db) return;
   await db.delete(invitations).where(eq(invitations.id, id));
+}
+
+// ── Testimonials ──────────────────────────────────────────────────────────
+export async function getTestimonials(onlyPublished = true) {
+  const db = await getDb();
+  if (!db) return [];
+  const query = db.select().from(testimonials);
+  if (onlyPublished) {
+    return query.where(eq(testimonials.isPublished, "published")).orderBy(testimonials.sortOrder, testimonials.createdAt);
+  }
+  return query.orderBy(testimonials.sortOrder, testimonials.createdAt);
+}
+
+export async function upsertTestimonial(data: InsertTestimonial & { id?: number }) {
+  const db = await getDb();
+  if (!db) return;
+  if (data.id) {
+    const { id, ...rest } = data;
+    await db.update(testimonials).set({ ...rest, updatedAt: new Date() }).where(eq(testimonials.id, id));
+  } else {
+    await db.insert(testimonials).values(data);
+  }
+}
+
+export async function deleteTestimonial(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(testimonials).where(eq(testimonials.id, id));
 }

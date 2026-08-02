@@ -57,3 +57,22 @@
 - [x] クラフトレシピ集ページ（/recipes）を新規作成
 - [x] App.tsxにクラフトレシピ集ルートを追加
 - [x] MemberLayoutのナビゲーションにクラフトレシピ集を追加
+
+## 動画視聴進捗機能
+- [x] video_viewsテーブルにlastPosition・duration・progressPctを追加
+- [x] バックエンド：saveProgress / getProgress APIを実装
+- [x] フロントエンド：動画プレイヤーに続きから再生・進捗バー表示
+- [x] 管理画面：会員ごとの視聴進捗一覧を追加
+
+## 追加変更2（ロゴ・レシピ・体験談）
+- [ ] ロゴ画像3種をアップロードしてヘッダー・ランディングページに反映
+- [ ] クラフトレシピ集ページをリッチにリニューアル
+- [ ] 体験談テーブルをDBに追加（スキーマ・マイグレーション）
+- [ ] 体験談ページ（/testimonials）を新規作成
+- [ ] 管理画面に体験談管理ページを追加
+- [ ] App.tsxにルート追加・ナビゲーション更新
+
+## YouTube iframe API対応（視聴進捗の正確化）
+- [x] YouTubePlayerコンポーネント作成（iframe API・再生位置リアルタイム取得）
+- [x] Videos.tsxをYouTube iframe API対応に書き直し（正確な続きから再生）
+- [x] Google Drive動画も引き続き埋め込み可能な設計を維持

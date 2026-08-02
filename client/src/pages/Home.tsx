@@ -81,17 +81,13 @@ export default function Home() {
       >
         <div className="container flex items-center justify-between h-16">
           <div className="flex items-center gap-2.5">
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center"
-              style={{ background: "var(--forest-500)" }}
-            >
-              <Leaf className="w-4 h-4 text-white" />
-            </div>
-            <span style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 500, letterSpacing: "0.08em" }}>
-              NatuLabo
-            </span>
-            <span style={{ fontFamily: "var(--font-display)", fontSize: "0.6rem", letterSpacing: "0.3em", color: "var(--brown-300)", textTransform: "uppercase" }}>
-              Portal
+            <img
+              src="/manus-storage/logo-circle_08be9919.png"
+              alt="NATU LABO."
+              className="w-9 h-9 rounded-full object-cover"
+            />
+            <span style={{ fontFamily: "var(--font-sans)", fontSize: "1rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--brown-800)" }}>
+              NATU LABO.
             </span>
           </div>
           <div className="flex items-center gap-3">

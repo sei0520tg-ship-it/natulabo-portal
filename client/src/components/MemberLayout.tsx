@@ -87,27 +87,26 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
       >
         {/* Logo */}
         <div
-          className="flex items-center gap-3 px-6 py-5"
+          className="flex items-center gap-3 px-6 py-4"
           style={{ borderBottom: "1px solid var(--cream-200)" }}
         >
-          <div
-            className="w-9 h-9 rounded-full flex items-center justify-center"
-            style={{ background: "var(--forest-500)" }}
-          >
-            <Leaf className="w-4.5 h-4.5 text-white" size={18} />
-          </div>
+          <img
+            src="/manus-storage/logo-circle_08be9919.png"
+            alt="NATU LABO."
+            className="w-10 h-10 rounded-full object-cover"
+          />
           <div>
             <p
               style={{
-                fontFamily: "var(--font-serif)",
-                fontSize: "0.9rem",
-                fontWeight: 500,
-                letterSpacing: "0.06em",
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.85rem",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
                 color: "var(--brown-800)",
                 lineHeight: 1.2,
               }}
             >
-              NatuLabo
+              NATU LABO.
             </p>
             <p
               style={{
@@ -295,22 +294,21 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
           }}
         >
           <div className="flex items-center gap-2">
-            <div
-              className="w-7 h-7 rounded-full flex items-center justify-center"
-              style={{ background: "var(--forest-500)" }}
-            >
-              <Leaf className="w-3.5 h-3.5 text-white" />
-            </div>
+            <img
+              src="/manus-storage/logo-circle_08be9919.png"
+              alt="NATU LABO."
+              className="w-8 h-8 rounded-full object-cover"
+            />
             <span
               style={{
-                fontFamily: "var(--font-serif)",
+                fontFamily: "var(--font-sans)",
                 fontSize: "0.85rem",
-                fontWeight: 500,
-                letterSpacing: "0.06em",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
                 color: "var(--brown-800)",
               }}
             >
-              NatuLabo Portal
+              NATU LABO.
             </span>
           </div>
           <Link href="/profile">

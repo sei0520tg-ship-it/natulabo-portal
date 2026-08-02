@@ -208,6 +208,27 @@ export const appRouter = router({
         await db.deleteVideo(input.id);
         return { success: true };
       }),
+    // 視聴進捗を保存（プレイヤーかず5秒ごとに呼び出す）
+    saveProgress: protectedProcedure
+      .input(z.object({
+        videoId: z.number(),
+        lastPosition: z.number(), // 秒
+        duration: z.number(),     // 秒
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await db.saveVideoProgress(ctx.user.id, input.videoId, input.lastPosition, input.duration);
+        return { success: true };
+      }),
+    // 特定動画の視聴進捗を取得（再生開始位置の後読み用）
+    getProgress: protectedProcedure
+      .input(z.object({ videoId: z.number() }))
+      .query(async ({ ctx, input }) => {
+        return db.getVideoProgress(ctx.user.id, input.videoId);
+      }),
+    // 自分の全動画視聴進捗一覧
+    myProgress: protectedProcedure.query(({ ctx }) => db.getAllVideoProgressByUser(ctx.user.id)),
+    // 管理者：全会員の視聴進捗一覧
+    allProgress: adminProcedure.query(() => db.getAllVideoProgressAdmin()),
   }),
 
   // ─── Events ───────────────────────────────────────────────────────────────
