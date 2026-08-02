@@ -88,10 +88,18 @@ export default function Dashboard() {
           className="animate-fade-in-up stagger-1 rounded-2xl overflow-hidden relative"
           style={{ height: "160px" }}
         >
+          {/* Background image */}
+          <img
+            src="/manus-storage/dashboard_banner_7efc6a80.jpg"
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+          />
+          {/* Overlay */}
           <div
             className="absolute inset-0"
             style={{
-              background: "linear-gradient(135deg, var(--forest-600) 0%, var(--forest-500) 60%, oklch(0.520 0.092 150) 100%)",
+              background: "linear-gradient(135deg, rgba(30,70,30,0.72) 0%, rgba(40,90,40,0.55) 60%, rgba(20,60,20,0.45) 100%)",
             }}
           />
           {/* Decorative circles */}
