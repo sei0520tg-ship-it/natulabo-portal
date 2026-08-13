@@ -1,575 +1,376 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
-import { BookOpen, Calendar, ExternalLink, Leaf, MessageCircle, Settings } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  BookOpen,
+  CalendarDays,
+  Leaf,
+  MessageCircleHeart,
+  Sparkles,
+} from "lucide-react";
 import { Link } from "wouter";
 
-/* ── Intersection-observer fade-in hook ───────────────────────────────── */
-function useReveal(threshold = 0.15) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return { ref, visible };
-}
+const heroLetters = ["N", "A", "T", "U", "L", "A", "B", "O", "."];
 
-/* ── Section label (01 VISION) ───────────────────────────────────────── */
-function SectionLabel({ num, label }: { num: string; label: string }) {
-  return (
-    <div className="flex items-center gap-3 mb-6">
-      <span style={{ fontFamily: "var(--font-display)", fontSize: "0.7rem", letterSpacing: "0.2em", color: "var(--gold-500)" }}>
-        {num}
-      </span>
-      <span style={{ width: "2rem", height: "1px", background: "var(--gold-400)", display: "inline-block" }} />
-      <span style={{ fontFamily: "var(--font-display)", fontSize: "0.65rem", letterSpacing: "0.25em", textTransform: "uppercase", color: "var(--gold-500)" }}>
-        {label}
-      </span>
-    </div>
-  );
-}
-
-/* ── Reveal wrapper ──────────────────────────────────────────────────── */
-function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const { ref, visible } = useReveal();
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(28px)",
-        transition: `opacity 0.8s cubic-bezier(0.23,1,0.32,1) ${delay}ms, transform 0.8s cubic-bezier(0.23,1,0.32,1) ${delay}ms`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-/* ── Feature cards data ───────────────────────────────────────────────── */
-const features = [
-  { icon: Settings,     label: "はじめての方へ",   en: "GETTING STARTED",  desc: "ステップ形式でスムーズにスタート",    href: "/setup" },
-  { icon: BookOpen,     label: "学習動画",         en: "VIDEO LIBRARY",    desc: "カテゴリ別に動画を整理・視聴",        href: "/videos" },
-  { icon: Calendar,     label: "イベント",         en: "EVENTS",           desc: "講座・イベントをカレンダーで確認",    href: "/calendar" },
-  { icon: MessageCircle,label: "お問い合わせ",     en: "CONTACT",          desc: "困ったときの相談窓口一覧",            href: "/contact" },
-  { icon: ExternalLink, label: "外部リンク集",     en: "USEFUL LINKS",     desc: "愛用に役立つリンクをまとめて",        href: "/links" },
+const featureCards = [
+  {
+    href: "/setup",
+    no: "01",
+    title: "はじめての方へ",
+    en: "GUIDE TO START",
+    description: "はじめの一歩から、日常に取り入れるための準備を丁寧にご案内します。",
+    icon: Leaf,
+    tone: "var(--forest-600)",
+  },
+  {
+    href: "/videos",
+    no: "02",
+    title: "学びの時間",
+    en: "VIDEO LIBRARY",
+    description: "あなたのペースで続けられる、会員限定の学習動画ライブラリです。",
+    icon: BookOpen,
+    tone: "var(--gold-600)",
+  },
+  {
+    href: "/calendar",
+    no: "03",
+    title: "つながりを育てる",
+    en: "EVENTS & COMMUNITY",
+    description: "イベントや講座の予定を確認し、心地よいつながりを広げられます。",
+    icon: CalendarDays,
+    tone: "var(--forest-500)",
+  },
+  {
+    href: "/testimonials",
+    no: "04",
+    title: "メンバーの声",
+    en: "TRUE STORIES",
+    description: "日々の変化や小さな発見を、仲間のリアルな言葉から受け取れます。",
+    icon: MessageCircleHeart,
+    tone: "var(--gold-500)",
+  },
 ];
 
-/* ─────────────────────────────────────────────────────────────────────── */
-export default function Home() {
-  const { isAuthenticated, loading } = useAuth();
-
+function SectionKicker({ number, title }: { number: string; title: string }) {
   return (
-    <div className="min-h-screen" style={{ background: "var(--cream-50)", color: "var(--brown-800)" }}>
-
-      {/* ── Navigation ─────────────────────────────────────────────────── */}
-      <header
-        className="fixed top-0 left-0 right-0 z-50"
+    <div className="flex items-center gap-3">
+      <span
         style={{
-          background: "rgba(250,248,243,0.88)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid var(--cream-300)",
+          color: "var(--gold-500)",
+          fontFamily: "var(--font-display)",
+          fontSize: "0.7rem",
+          letterSpacing: "0.24em",
         }}
       >
-        <div className="container flex items-center justify-between h-16">
-          <div className="flex items-center gap-2.5">
-            <img
-              src="/manus-storage/logo-circle_08be9919.png"
-              alt="NATU LABO."
-              className="w-9 h-9 rounded-full object-cover"
-            />
-            <span style={{ fontFamily: "var(--font-sans)", fontSize: "1rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--brown-800)" }}>
+        {number}
+      </span>
+      <span style={{ background: "var(--gold-400)", height: "1px", width: "2.25rem" }} />
+      <span
+        style={{
+          color: "var(--brown-500)",
+          fontFamily: "var(--font-display)",
+          fontSize: "0.65rem",
+          letterSpacing: "0.28em",
+          textTransform: "uppercase",
+        }}
+      >
+        {title}
+      </span>
+    </div>
+  );
+}
+
+export default function Home() {
+  const { isAuthenticated, loading } = useAuth();
+  const entryHref = isAuthenticated ? "/dashboard" : "/register";
+  const entryLabel = isAuthenticated ? "マイページへ進む" : "会員登録をはじめる";
+
+  return (
+    <main style={{ background: "var(--cream-50)", color: "var(--brown-800)" }}>
+      <header
+        className="fixed inset-x-0 top-0 z-50"
+        style={{
+          borderBottom: "1px solid rgba(255,255,255,0.15)",
+          background: "rgba(16, 31, 19, 0.28)",
+          backdropFilter: "blur(16px)",
+        }}
+      >
+        <div className="container flex h-[4.75rem] items-center justify-between">
+          <Link href="/" className="flex items-center gap-3" aria-label="NatuLabo ホーム">
+            <span
+              className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full"
+              style={{ background: "rgba(255,255,255,0.92)", boxShadow: "0 2px 12px rgba(0,0,0,0.12)" }}
+            >
+              <img
+                src="/manus-storage/logo-circle_08be9919.png"
+                alt=""
+                className="h-7 w-7 object-contain"
+              />
+            </span>
+            <span
+              className="hidden sm:block"
+              style={{
+                color: "white",
+                fontFamily: "var(--font-display)",
+                fontSize: "1.15rem",
+                letterSpacing: "0.16em",
+              }}
+            >
               NATU LABO.
             </span>
-          </div>
-          <div className="flex items-center gap-3">
-            {!loading && (
-              isAuthenticated ? (
-                <Link href="/dashboard">
-                  <button
-                    className="px-5 py-2 rounded-full text-sm font-medium transition-all"
-                    style={{
-                      background: "var(--forest-500)",
-                      color: "white",
-                      fontFamily: "var(--font-sans)",
-                      letterSpacing: "0.04em",
-                    }}
-                  >
-                    マイページへ
-                  </button>
-                </Link>
-              ) : (
-                <>
-                  <a
-                    href={getLoginUrl()}
-                    className="text-sm transition-colors hidden sm:block"
-                    style={{ color: "var(--brown-500)", fontFamily: "var(--font-sans)", letterSpacing: "0.04em" }}
-                  >
-                    ログイン
-                  </a>
-                  <Link href="/register">
-                    <button
-                      className="px-5 py-2 rounded-full text-sm font-medium transition-all"
-                      style={{
-                        background: "var(--forest-500)",
-                        color: "white",
-                        fontFamily: "var(--font-sans)",
-                        letterSpacing: "0.04em",
-                      }}
-                    >
-                      会員登録
-                    </button>
-                  </Link>
-                </>
-              )
-            )}
-          </div>
+          </Link>
+
+          {!loading && (
+            <div className="flex items-center gap-2 sm:gap-4">
+              {!isAuthenticated && (
+                <a
+                  href={getLoginUrl()}
+                  className="hidden text-xs sm:block"
+                  style={{ color: "rgba(255,255,255,0.8)", letterSpacing: "0.08em" }}
+                >
+                  ログイン
+                </a>
+              )}
+              <Link
+                href={entryHref}
+                className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs transition-transform duration-200 hover:-translate-y-0.5 sm:px-5"
+                style={{
+                  background: "rgba(255,255,255,0.94)",
+                  color: "var(--forest-600)",
+                  fontWeight: 500,
+                  letterSpacing: "0.06em",
+                }}
+              >
+                {isAuthenticated ? "マイページ" : "会員登録"}
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          )}
         </div>
       </header>
 
-      {/* ── Hero ───────────────────────────────────────────────────────── */}
       <section
-        className="relative min-h-screen flex flex-col items-center justify-center pt-16 overflow-hidden"
-        style={{ background: "oklch(0.200 0.040 145)" }}
+        className="relative flex min-h-[100svh] items-center overflow-hidden pt-20"
+        style={{ background: "oklch(0.20 0.04 145)" }}
       >
-        {/* Background video */}
         <video
           autoPlay
           muted
           loop
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ zIndex: 0 }}
-          poster=""
+          preload="metadata"
+          className="absolute inset-0 h-full w-full object-cover"
+          aria-hidden="true"
         >
           <source src="/manus-storage/forest_bg_loop_1b4e6054.mp4" type="video/mp4" />
         </video>
-
-        {/* Overlay: dark gradient for text readability */}
         <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            zIndex: 1,
-            background: "linear-gradient(160deg, rgba(10,30,15,0.55) 0%, rgba(15,40,20,0.45) 50%, rgba(20,50,25,0.55) 100%)",
-          }}
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(105deg, rgba(8,25,12,0.86) 0%, rgba(13,37,18,0.58) 52%, rgba(8,21,11,0.5) 100%)" }}
+        />
+        <div
+          className="natu-orbit absolute -right-[17vw] -top-[34vw] h-[68vw] w-[68vw] rounded-full"
+          style={{ border: "1px solid rgba(255,255,255,0.15)" }}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute bottom-[11%] left-[7%] h-28 w-28 rounded-full opacity-80 blur-[1px]"
+          style={{ border: "1px solid rgba(229,202,145,0.45)" }}
+          aria-hidden="true"
         />
 
-        {/* Subtle vignette */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            zIndex: 2,
-            background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.35) 100%)",
-          }}
-        />
-
-        <div className="container relative text-center px-4 animate-fade-in-up" style={{ zIndex: 3 }}>
-          {/* Eyebrow */}
-          <div
-            className="inline-flex items-center gap-3 mb-8 px-4 py-1.5 rounded-full"
-            style={{
-              border: "1px solid rgba(255,255,255,0.35)",
-              background: "rgba(255,255,255,0.12)",
-              backdropFilter: "blur(8px)",
-            }}
-          >
-            <Leaf className="w-3 h-3" style={{ color: "var(--gold-300)" }} />
-            <span style={{ fontFamily: "var(--font-display)", fontSize: "0.65rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(255,255,255,0.85)" }}>
-              dōTERRA 愛用者専用ポータル
-            </span>
-          </div>
-
-          {/* Main heading */}
-          <h1
-            className="mb-6"
-            style={{
-              fontFamily: "var(--font-serif)",
-              fontSize: "clamp(2.2rem, 6vw, 4rem)",
-              fontWeight: 400,
-              lineHeight: 1.35,
-              letterSpacing: "0.06em",
-              color: "rgba(255,255,255,0.95)",
-              textShadow: "0 2px 20px rgba(0,0,0,0.3)",
-            }}
-          >
-            自然の恵みとともに、<br />
-            <em style={{ fontStyle: "normal", color: "oklch(0.880 0.120 80)" }}>豊かな毎日</em>へ。
-          </h1>
-
-          <p
-            className="mx-auto mb-10 max-w-md"
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "0.9rem",
-              fontWeight: 300,
-              lineHeight: 2,
-              letterSpacing: "0.06em",
-              color: "rgba(255,255,255,0.75)",
-            }}
-          >
-            学習動画・イベント情報・お役立ちリンクをまとめた、<br className="hidden sm:block" />
-            あなたのための会員専用ポータルです。
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            {!loading && (
-              isAuthenticated ? (
-                <Link href="/dashboard">
-                  <button
-                    className="flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-medium transition-all"
-                    style={{
-                      background: "var(--forest-500)",
-                      color: "white",
-                      fontFamily: "var(--font-sans)",
-                      letterSpacing: "0.08em",
-                      boxShadow: "0 4px 20px oklch(0.480 0.095 145 / 0.25)",
-                    }}
-                  >
-                    マイページへ進む
-                  </button>
-                </Link>
-              ) : (
-                <>
-                  <Link href="/register">
-                    <button
-                      className="flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-medium transition-all"
-                      style={{
-                        background: "var(--forest-500)",
-                        color: "white",
-                        fontFamily: "var(--font-sans)",
-                        letterSpacing: "0.08em",
-                        boxShadow: "0 4px 20px oklch(0.480 0.095 145 / 0.25)",
-                      }}
-                    >
-                      無料で会員登録
-                      <span style={{ fontSize: "0.75rem" }}>›</span>
-                    </button>
-                  </Link>
-                  <a
-                    href={getLoginUrl()}
-                    className="flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-medium transition-all"
-                    style={{
-                      background: "rgba(255,255,255,0.12)",
-                      border: "1px solid rgba(255,255,255,0.4)",
-                      color: "rgba(255,255,255,0.9)",
-                      fontFamily: "var(--font-sans)",
-                      letterSpacing: "0.08em",
-                      backdropFilter: "blur(8px)",
-                    }}
-                  >
-                    ログイン
-                  </a>
-                </>
-              )
-            )}
-          </div>
-
-          {/* Scroll indicator */}
-          <div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-            style={{ color: "rgba(255,255,255,0.5)" }}
-          >
-            <span style={{ fontFamily: "var(--font-display)", fontSize: "0.6rem", letterSpacing: "0.3em", textTransform: "uppercase" }}>
-              Scroll
-            </span>
-            <div
-              className="w-px h-10"
-              style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.6), transparent)" }}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ── 01 ABOUT ───────────────────────────────────────────────────── */}
-      <section className="py-24 lg:py-32" style={{ background: "white" }}>
-        <div className="container">
-          <div className="max-w-2xl mx-auto text-center">
-            <Reveal>
-              <SectionLabel num="01" label="About NatuLabo" />
-              <h2
-                className="mb-6"
-                style={{
-                  fontFamily: "var(--font-serif)",
-                  fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
-                  fontWeight: 400,
-                  lineHeight: 1.5,
-                  letterSpacing: "0.05em",
-                  color: "var(--brown-800)",
-                }}
-              >
-                本質のウェルネスを、<br />
-                <em style={{ fontStyle: "normal", color: "var(--forest-500)" }}>日常の行動</em>から。
-              </h2>
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "0.875rem",
-                  fontWeight: 300,
-                  lineHeight: 2.1,
-                  letterSpacing: "0.05em",
-                  color: "var(--brown-500)",
-                }}
-              >
-                NatuLabo Portalは、dōTERRA愛用者のための会員専用サポートサイトです。
-                はじめての方向けのスタートガイドから、学習動画・イベント情報・お役立ちリンクまで、
-                あなたのウェルネスライフをトータルにサポートします。
-              </p>
-              <div
-                className="mt-8 pt-8 flex justify-center"
-                style={{ borderTop: "1px solid var(--cream-300)" }}
-              >
-                <p
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "1.1rem",
-                    fontStyle: "italic",
-                    color: "var(--gold-600)",
-                    letterSpacing: "0.04em",
-                    lineHeight: 1.8,
-                  }}
-                >
-                  "自然の力を、あなたの毎日に。"
-                </p>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 02 FEATURES ────────────────────────────────────────────────── */}
-      <section className="py-24 lg:py-32" style={{ background: "var(--cream-50)" }}>
-        <div className="container">
-          <Reveal className="text-center mb-16">
-            <SectionLabel num="02" label="Member Contents" />
-            <h2
-              style={{
-                fontFamily: "var(--font-serif)",
-                fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
-                fontWeight: 400,
-                letterSpacing: "0.06em",
-                color: "var(--brown-800)",
-              }}
-            >
-              会員限定コンテンツ
-            </h2>
+        <div className="container relative z-10 grid items-end gap-14 py-16 lg:grid-cols-[minmax(0,1.35fr)_minmax(220px,0.65fr)] lg:py-24">
+          <div className="max-w-4xl">
             <p
-              className="mt-4 mx-auto max-w-sm"
+              className="mb-8 flex items-center gap-3"
               style={{
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.85rem",
-                fontWeight: 300,
-                color: "var(--brown-500)",
-                lineHeight: 2,
-                letterSpacing: "0.05em",
+                color: "rgba(255,255,255,0.72)",
+                fontFamily: "var(--font-display)",
+                fontSize: "0.66rem",
+                letterSpacing: "0.32em",
+                textTransform: "uppercase",
               }}
             >
-              ログイン後にすべての機能をご利用いただけます。
+              <span className="h-px w-8" style={{ background: "var(--gold-300)" }} />
+              dōTERRA member&apos;s portal
             </p>
-          </Reveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f, i) => (
-              <Reveal key={f.href} delay={i * 80}>
-                <Link href={isAuthenticated ? f.href : "/register"}>
-                  <div
-                    className="group p-8 rounded-2xl cursor-pointer transition-all duration-300"
-                    style={{
-                      background: "white",
-                      border: "1px solid var(--cream-300)",
-                      boxShadow: "0 2px 12px oklch(0.200 0.030 60 / 0.04)",
-                    }}
-                    onMouseEnter={e => {
-                      (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)";
-                      (e.currentTarget as HTMLDivElement).style.boxShadow = "0 12px 32px oklch(0.200 0.030 60 / 0.10)";
-                      (e.currentTarget as HTMLDivElement).style.borderColor = "var(--gold-300)";
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
-                      (e.currentTarget as HTMLDivElement).style.boxShadow = "0 2px 12px oklch(0.200 0.030 60 / 0.04)";
-                      (e.currentTarget as HTMLDivElement).style.borderColor = "var(--cream-300)";
-                    }}
-                  >
-                    <div
-                      className="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
-                      style={{ background: "var(--cream-100)" }}
-                    >
-                      <f.icon className="w-5 h-5" style={{ color: "var(--forest-500)" }} />
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "0.6rem",
-                        letterSpacing: "0.25em",
-                        textTransform: "uppercase",
-                        color: "var(--gold-500)",
-                        marginBottom: "0.4rem",
-                      }}
-                    >
-                      {f.en}
-                    </div>
-                    <h3
-                      style={{
-                        fontFamily: "var(--font-serif)",
-                        fontSize: "1rem",
-                        fontWeight: 500,
-                        color: "var(--brown-800)",
-                        letterSpacing: "0.04em",
-                        marginBottom: "0.5rem",
-                      }}
-                    >
-                      {f.label}
-                    </h3>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-sans)",
-                        fontSize: "0.8rem",
-                        fontWeight: 300,
-                        color: "var(--brown-500)",
-                        lineHeight: 1.8,
-                        letterSpacing: "0.04em",
-                      }}
-                    >
-                      {f.desc}
-                    </p>
+            <div
+              className="mb-5 flex leading-none"
+              aria-label="NATU LABO"
+              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(4.2rem, 9vw, 8rem)", fontWeight: 300, letterSpacing: "0.035em", color: "rgba(255,255,255,0.96)", whiteSpace: "nowrap" }}
+            >
+              {heroLetters.map((letter, index) => (
+                <span
+                  key={`${letter}-${index}`}
+                  className="natu-hero-letter"
+                  style={{ "--letter-delay": `${200 + index * 85}ms` } as React.CSSProperties}
+                >
+                  {letter === "." ? letter : letter}
+                </span>
+              ))}
+            </div>
+
+            <h1
+              className="natu-hero-word max-w-2xl"
+              style={{
+                "--reveal-delay": "960ms",
+                color: "white",
+                fontFamily: "var(--font-serif)",
+                fontSize: "clamp(1.7rem, 4.1vw, 3.15rem)",
+                fontWeight: 400,
+                letterSpacing: "0.1em",
+                lineHeight: 1.55,
+              } as React.CSSProperties}
+            >
+              自然の恵みとともに、
+              <br />
+              <span style={{ color: "var(--gold-300)" }}>わたしらしい毎日</span>を育てる。
+            </h1>
+          </div>
+
+          <div className="natu-hero-word max-w-sm lg:justify-self-end" style={{ "--reveal-delay": "1180ms" } as React.CSSProperties}>
+            <p
+              className="mb-7 border-l pl-5"
+              style={{
+                borderColor: "rgba(226,201,146,0.75)",
+                color: "rgba(255,255,255,0.78)",
+                fontSize: "0.86rem",
+                fontWeight: 300,
+                letterSpacing: "0.08em",
+                lineHeight: 2.05,
+              }}
+            >
+              学び、つながり、日々の小さな発見を。
+              <br />
+              NatuLaboはあなたのウェルネスライフに寄り添う会員専用ポータルです。
+            </p>
+            <Link
+              href={entryHref}
+              className="group inline-flex items-center gap-5 rounded-full border px-6 py-3.5 text-sm transition-all duration-300 hover:bg-white hover:text-[var(--forest-600)]"
+              style={{ borderColor: "rgba(255,255,255,0.65)", color: "white", letterSpacing: "0.08em" }}
+            >
+              {entryLabel}
+              <ArrowDownRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:translate-y-0.5" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="absolute bottom-7 left-1/2 z-10 -translate-x-1/2 text-center">
+          <span style={{ color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-display)", fontSize: "0.6rem", letterSpacing: "0.3em" }}>SCROLL TO EXPLORE</span>
+          <div className="mx-auto mt-2 h-9 w-px" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.6), transparent)" }} />
+        </div>
+      </section>
+
+      <section className="overflow-hidden bg-white py-24 lg:py-36">
+        <div className="container grid items-start gap-14 lg:grid-cols-12">
+          <div className="lg:col-span-4 natu-scroll-reveal">
+            <SectionKicker number="01" title="Philosophy" />
+          </div>
+          <div className="lg:col-span-8 natu-scroll-reveal">
+            <p
+              className="max-w-3xl"
+              style={{ color: "var(--brown-800)", fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 4.2vw, 3.7rem)", fontWeight: 400, letterSpacing: "0.075em", lineHeight: 1.55 }}
+            >
+              本質のウェルネスを、
+              <br />
+              <span style={{ color: "var(--forest-500)" }}>日常の行動</span>から。
+            </p>
+            <div className="mt-10 grid gap-8 border-t pt-8 sm:grid-cols-[1.2fr_0.8fr]" style={{ borderColor: "var(--cream-300)" }}>
+              <p style={{ color: "var(--brown-500)", fontSize: "0.9rem", fontWeight: 300, letterSpacing: "0.06em", lineHeight: 2.1 }}>
+                NatuLabo Portalは、dōTERRA愛用者のための会員専用サポートサイトです。はじめての方向けのガイドから、動画、イベント、レシピ、体験談まで。毎日の選択がもっと心地よくなるための情報を、ひとつの場所に集めました。
+              </p>
+              <p className="natu-float self-end" style={{ color: "var(--gold-600)", fontFamily: "var(--font-display)", fontSize: "1.45rem", fontStyle: "italic", lineHeight: 1.55 }}>
+                “ Live naturally,
+                <br />
+                live beautifully. ”
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden py-24 lg:py-36" style={{ background: "var(--cream-100)" }}>
+        <div className="container">
+          <div className="mb-14 flex flex-col justify-between gap-8 sm:flex-row sm:items-end natu-scroll-reveal">
+            <div>
+              <SectionKicker number="02" title="Member Contents" />
+              <h2 className="mt-6" style={{ color: "var(--brown-800)", fontFamily: "var(--font-serif)", fontSize: "clamp(1.85rem, 3.5vw, 2.75rem)", fontWeight: 400, letterSpacing: "0.07em" }}>
+                暮らしに寄り添う、
+                <br />
+                会員限定コンテンツ。
+              </h2>
+            </div>
+            <p className="max-w-sm" style={{ color: "var(--brown-500)", fontSize: "0.82rem", fontWeight: 300, letterSpacing: "0.05em", lineHeight: 1.9 }}>
+              知ること、試すこと、分かち合うこと。今のあなたに必要なコンテンツへ、心地よくアクセスできます。
+            </p>
+          </div>
+
+          <div className="grid gap-px overflow-hidden border sm:grid-cols-2" style={{ borderColor: "var(--cream-300)", background: "var(--cream-300)" }}>
+            {featureCards.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <Link
+                  key={feature.href}
+                  href={isAuthenticated ? feature.href : "/register"}
+                  className="group relative min-h-[19rem] overflow-hidden bg-white p-7 transition-colors duration-300 hover:bg-[var(--cream-50)] sm:p-10 natu-scroll-reveal"
+                  style={{ animationDelay: `${index * 70}ms` }}
+                >
+                  <div className="flex items-start justify-between">
+                    <span style={{ color: "var(--gold-500)", fontFamily: "var(--font-display)", fontSize: "0.75rem", letterSpacing: "0.2em" }}>{feature.no}</span>
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105" style={{ background: "var(--cream-100)", color: feature.tone }}>
+                      <Icon className="h-4 w-4" />
+                    </span>
+                  </div>
+                  <div className="absolute inset-x-7 bottom-8 sm:inset-x-10 sm:bottom-10">
+                    <p style={{ color: "var(--gold-500)", fontFamily: "var(--font-display)", fontSize: "0.62rem", letterSpacing: "0.24em" }}>{feature.en}</p>
+                    <h3 className="mt-3" style={{ color: "var(--brown-800)", fontFamily: "var(--font-serif)", fontSize: "1.45rem", fontWeight: 400, letterSpacing: "0.06em" }}>{feature.title}</h3>
+                    <p className="mt-3 max-w-sm" style={{ color: "var(--brown-500)", fontSize: "0.78rem", fontWeight: 300, letterSpacing: "0.04em", lineHeight: 1.85 }}>{feature.description}</p>
+                    <span className="mt-5 flex items-center gap-2 text-xs" style={{ color: "var(--forest-500)", letterSpacing: "0.08em" }}>
+                      詳しく見る <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </span>
                   </div>
                 </Link>
-              </Reveal>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ── 03 CTA ─────────────────────────────────────────────────────── */}
-      <section className="py-24 lg:py-32" style={{ background: "white" }}>
-        <div className="container">
-          <Reveal>
-            <div
-              className="relative rounded-3xl overflow-hidden px-8 py-16 text-center"
-              style={{
-                background: "linear-gradient(135deg, var(--forest-600) 0%, var(--forest-500) 60%, oklch(0.520 0.092 150) 100%)",
-              }}
-            >
-              {/* Decorative circles */}
-              <div
-                className="absolute pointer-events-none"
-                style={{
-                  top: "-20%", right: "-5%",
-                  width: "40%", paddingBottom: "40%",
-                  borderRadius: "50%",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                }}
-              />
-              <div
-                className="absolute pointer-events-none"
-                style={{
-                  bottom: "-15%", left: "5%",
-                  width: "30%", paddingBottom: "30%",
-                  borderRadius: "50%",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                }}
-              />
-
-              <div className="relative">
-                <div
-                  className="inline-flex items-center gap-3 mb-6"
-                  style={{ color: "rgba(255,255,255,0.7)" }}
-                >
-                  <span style={{ width: "2rem", height: "1px", background: "var(--gold-300)", display: "inline-block" }} />
-                  <span style={{ fontFamily: "var(--font-display)", fontSize: "0.65rem", letterSpacing: "0.3em", textTransform: "uppercase" }}>
-                    Invitation
-                  </span>
-                  <span style={{ width: "2rem", height: "1px", background: "var(--gold-300)", display: "inline-block" }} />
-                </div>
-
-                <h2
-                  className="mb-4"
-                  style={{
-                    fontFamily: "var(--font-serif)",
-                    fontSize: "clamp(1.5rem, 3vw, 2rem)",
-                    fontWeight: 400,
-                    color: "white",
-                    letterSpacing: "0.06em",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  招待コードをお持ちの方へ
-                </h2>
-                <p
-                  className="mb-8 mx-auto max-w-sm"
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "0.85rem",
-                    fontWeight: 300,
-                    color: "rgba(255,255,255,0.75)",
-                    lineHeight: 2,
-                    letterSpacing: "0.05em",
-                  }}
-                >
-                  招待コードがあれば、すぐに会員登録できます。<br />
-                  コードをご準備のうえ登録ページへお進みください。
-                </p>
-                <Link href="/register">
-                  <button
-                    className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-medium transition-all"
-                    style={{
-                      background: "white",
-                      color: "var(--forest-600)",
-                      fontFamily: "var(--font-sans)",
-                      letterSpacing: "0.08em",
-                      boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-                    }}
-                  >
-                    会員登録はこちら
-                    <span style={{ fontSize: "0.75rem" }}>›</span>
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </Reveal>
+      <section className="relative overflow-hidden bg-[var(--brown-900)] py-24 lg:py-36">
+        <div className="absolute inset-0 opacity-30" style={{ background: "radial-gradient(circle at 82% 20%, var(--forest-500), transparent 34%)" }} />
+        <div className="container relative z-10 grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+          <div className="natu-scroll-reveal">
+            <SectionKicker number="03" title="Invitation" />
+            <h2 className="mt-6" style={{ color: "white", fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 4vw, 3.5rem)", fontWeight: 400, letterSpacing: "0.09em", lineHeight: 1.55 }}>
+              心地よい習慣を、
+              <br />
+              今日からはじめよう。
+            </h2>
+          </div>
+          <div className="natu-scroll-reveal">
+            <p style={{ color: "rgba(255,255,255,0.68)", fontSize: "0.86rem", fontWeight: 300, letterSpacing: "0.06em", lineHeight: 2 }}>
+              招待コードをお持ちの方は、すぐにNatuLabo Portalの会員登録を始められます。
+            </p>
+            <Link href="/register" className="mt-7 inline-flex items-center gap-5 rounded-full px-6 py-3.5 text-sm transition-transform duration-300 hover:-translate-y-1" style={{ background: "var(--gold-300)", color: "var(--brown-900)", letterSpacing: "0.08em" }}>
+              招待コードで登録する <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* ── Footer ─────────────────────────────────────────────────────── */}
-      <footer
-        className="py-12"
-        style={{
-          background: "var(--brown-900)",
-          borderTop: "1px solid rgba(255,255,255,0.05)",
-        }}
-      >
-        <div className="container text-center">
-          <div className="flex items-center justify-center gap-2.5 mb-4">
-            <div
-              className="w-7 h-7 rounded-full flex items-center justify-center"
-              style={{ background: "var(--forest-500)" }}
-            >
-              <Leaf className="w-3.5 h-3.5 text-white" />
-            </div>
-            <span style={{ fontFamily: "var(--font-serif)", fontSize: "0.9rem", color: "rgba(255,255,255,0.8)", letterSpacing: "0.08em" }}>
-              NatuLabo Portal
+      <footer className="bg-[var(--brown-900)] px-4 pb-10">
+        <div className="container flex flex-col gap-6 border-t pt-8 sm:flex-row sm:items-center sm:justify-between" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
+          <div className="flex items-center gap-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: "rgba(255,255,255,0.94)" }}>
+              <img src="/manus-storage/logo-circle_08be9919.png" alt="NatuLabo" className="h-7 w-7 object-contain" />
             </span>
+            <span style={{ color: "rgba(255,255,255,0.86)", fontFamily: "var(--font-display)", fontSize: "1rem", letterSpacing: "0.14em" }}>NatuLabo Portal</span>
           </div>
-          <p
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "0.75rem",
-              fontWeight: 300,
-              color: "rgba(255,255,255,0.35)",
-              letterSpacing: "0.06em",
-            }}
-          >
-            © {new Date().getFullYear()} NatuLabo. All rights reserved.
-          </p>
+          <p style={{ color: "rgba(255,255,255,0.38)", fontSize: "0.68rem", fontWeight: 300, letterSpacing: "0.08em" }}>© {new Date().getFullYear()} NatuLabo. All rights reserved.</p>
         </div>
       </footer>
-    </div>
+    </main>
   );
 }

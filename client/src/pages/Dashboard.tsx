@@ -3,430 +3,30 @@ import MemberLayout from "@/components/MemberLayout";
 import { usePageView } from "@/hooks/usePageView";
 import { trpc } from "@/lib/trpc";
 import {
+  ArrowUpRight,
   BookOpen,
-  Calendar,
+  CalendarDays,
+  ChevronLeft,
   ChevronRight,
+  Clock3,
   ExternalLink,
   Leaf,
-  MessageCircle,
-  Settings,
+  MessageCircleHeart,
+  Play,
+  Settings2,
   Sparkles,
-  ChevronLeft,
 } from "lucide-react";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 
 const menuItems = [
-  { href: "/setup",    icon: Settings,      title: "はじめての方へ",     subtitle: "初期設定・準備フロー",       en: "GETTING STARTED" },
-  { href: "/contact",  icon: MessageCircle, title: "お問い合わせ",       subtitle: "困ったときの相談窓口一覧",   en: "CONTACT" },
-  { href: "/videos",   icon: BookOpen,      title: "学習動画ライブラリ", subtitle: "カテゴリ別動画コンテンツ",   en: "VIDEO LIBRARY" },
-  { href: "/recipes",  icon: Sparkles,      title: "クラフトレシピ集",   subtitle: "エッセンシャルオイルレシピ",  en: "CRAFT RECIPES" },
-  { href: "/testimonials", icon: Leaf,       title: "体験談",           subtitle: "メンバーのリアルな声",         en: "TESTIMONIALS" },
-  { href: "/calendar", icon: Calendar,      title: "イベント・講座",     subtitle: "カレンダーで日程確認",       en: "EVENTS" },
-  { href: "/links",    icon: ExternalLink,  title: "外部リンク集",       subtitle: "愛用に役立つサイト一覧",     en: "USEFUL LINKS" },
+  { href: "/setup", icon: Settings2, title: "はじめての方へ", en: "START HERE", accent: "var(--forest-500)" },
+  { href: "/videos", icon: BookOpen, title: "学習動画", en: "VIDEO LIBRARY", accent: "var(--gold-600)" },
+  { href: "/recipes", icon: Sparkles, title: "クラフトレシピ", en: "RECIPES", accent: "var(--forest-500)" },
+  { href: "/testimonials", icon: MessageCircleHeart, title: "体験談", en: "STORIES", accent: "var(--gold-500)" },
+  { href: "/calendar", icon: CalendarDays, title: "イベント", en: "EVENTS", accent: "var(--forest-600)" },
+  { href: "/links", icon: ExternalLink, title: "リンク集", en: "USEFUL LINKS", accent: "var(--gold-600)" },
 ];
-
-export default function Dashboard() {
-  usePageView("ダッシュボード");
-  const { user } = useAuth();
-  const { data: events } = trpc.event.list.useQuery({});
-  const { data: videos } = trpc.video.list.useQuery();
-
-  const upcomingEvents = events
-    ?.filter((e) => new Date(e.startAt) >= new Date())
-    .slice(0, 3) ?? [];
-
-  const latestVideos = videos?.filter((v) => v.isLatest).slice(0, 2) ?? [];
-
-  return (
-    <MemberLayout>
-      <div className="container py-8 lg:py-10 space-y-10 max-w-3xl">
-
-        {/* ── Greeting ─────────────────────────────────────────────── */}
-        <div className="animate-fade-in-up">
-          <div
-            className="inline-flex items-center gap-2 mb-3"
-            style={{ color: "var(--gold-500)" }}
-          >
-            <span style={{ width: "1.5rem", height: "1px", background: "var(--gold-400)", display: "inline-block" }} />
-            <span style={{ fontFamily: "var(--font-display)", fontSize: "0.6rem", letterSpacing: "0.25em", textTransform: "uppercase" }}>
-              Welcome
-            </span>
-          </div>
-          <h1
-            style={{
-              fontFamily: "var(--font-serif)",
-              fontSize: "clamp(1.4rem, 3vw, 1.8rem)",
-              fontWeight: 400,
-              letterSpacing: "0.05em",
-              color: "var(--brown-800)",
-              lineHeight: 1.4,
-            }}
-          >
-            こんにちは、{user?.name ?? "ゲスト"}さん
-          </h1>
-          <p
-            className="mt-2"
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "0.85rem",
-              fontWeight: 300,
-              letterSpacing: "0.05em",
-              color: "var(--brown-500)",
-              lineHeight: 1.8,
-            }}
-          >
-            NatuLaboポータルへようこそ。今日も素敵な一日を。
-          </p>
-        </div>
-
-        {/* ── Topics Carousel ────────────────────────────────────── */}
-        <TopicsCarousel />
-
-        {/* ── Hero banner ──────────────────────────────────────────── */}
-        <div
-          className="animate-fade-in-up stagger-1 rounded-2xl overflow-hidden relative"
-          style={{ height: "160px" }}
-        >
-          {/* Background image */}
-          <img
-            src="/manus-storage/dashboard_banner_7efc6a80.jpg"
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover object-center"
-          />
-          {/* Overlay */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(135deg, rgba(30,70,30,0.72) 0%, rgba(40,90,40,0.55) 60%, rgba(20,60,20,0.45) 100%)",
-            }}
-          />
-          {/* Decorative circles */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              top: "-30%", right: "-5%",
-              width: "50%", paddingBottom: "50%",
-              borderRadius: "50%",
-              border: "1px solid rgba(255,255,255,0.1)",
-            }}
-          />
-          <div className="absolute inset-0 flex items-center px-8">
-            <div>
-              <p
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "0.6rem",
-                  letterSpacing: "0.3em",
-                  textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.6)",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                NatuLabo Portal
-              </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-serif)",
-                  fontSize: "1.2rem",
-                  fontWeight: 400,
-                  color: "white",
-                  letterSpacing: "0.06em",
-                  lineHeight: 1.5,
-                }}
-              >
-                自然の力で、<br />毎日をもっと豊かに。
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* ── Menu grid ────────────────────────────────────────────── */}
-        <div className="animate-fade-in-up stagger-2">
-          <div className="flex items-center gap-3 mb-5">
-            <span style={{ width: "1.5rem", height: "1px", background: "var(--gold-400)", display: "inline-block" }} />
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "0.6rem",
-                letterSpacing: "0.25em",
-                textTransform: "uppercase",
-                color: "var(--gold-500)",
-              }}
-            >
-              Contents
-            </span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {menuItems.map(({ href, icon: Icon, title, subtitle, en }) => (
-              <Link key={href} href={href}>
-                <div
-                  className="flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all duration-200"
-                  style={{
-                    background: "white",
-                    border: "1px solid var(--cream-300)",
-                  }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLDivElement).style.borderColor = "var(--gold-300)";
-                    (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)";
-                    (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 24px oklch(0.200 0.030 60 / 0.08)";
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLDivElement).style.borderColor = "var(--cream-300)";
-                    (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
-                    (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
-                  }}
-                >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: "var(--cream-100)" }}
-                  >
-                    <Icon size={18} style={{ color: "var(--forest-500)" }} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p
-                      style={{
-                        fontFamily: "var(--font-sans)",
-                        fontSize: "0.85rem",
-                        fontWeight: 500,
-                        letterSpacing: "0.04em",
-                        color: "var(--brown-800)",
-                        lineHeight: 1.3,
-                      }}
-                    >
-                      {title}
-                    </p>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-sans)",
-                        fontSize: "0.72rem",
-                        fontWeight: 300,
-                        letterSpacing: "0.04em",
-                        color: "var(--brown-500)",
-                        marginTop: "0.2rem",
-                      }}
-                    >
-                      {subtitle}
-                    </p>
-                  </div>
-                  <ChevronRight size={14} style={{ color: "var(--brown-300)", flexShrink: 0 }} />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* ── Upcoming events ──────────────────────────────────────── */}
-        {upcomingEvents.length > 0 && (
-          <div className="animate-fade-in-up stagger-3">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <span style={{ width: "1.5rem", height: "1px", background: "var(--gold-400)", display: "inline-block" }} />
-                <span
-                  style={{
-                    fontFamily: "var(--font-serif)",
-                    fontSize: "0.9rem",
-                    fontWeight: 500,
-                    letterSpacing: "0.06em",
-                    color: "var(--brown-800)",
-                  }}
-                >
-                  直近のイベント
-                </span>
-              </div>
-              <Link href="/calendar">
-                <span
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "0.75rem",
-                    fontWeight: 300,
-                    color: "var(--forest-500)",
-                    letterSpacing: "0.04em",
-                  }}
-                >
-                  すべて見る →
-                </span>
-              </Link>
-            </div>
-            <div className="space-y-2">
-              {upcomingEvents.map((event) => {
-                const date = new Date(event.startAt);
-                return (
-                  <div
-                    key={event.id}
-                    className="flex items-center gap-4 p-4 rounded-xl"
-                    style={{
-                      background: "white",
-                      border: "1px solid var(--cream-300)",
-                    }}
-                  >
-                    <div
-                      className="text-center w-12 shrink-0 rounded-lg py-1.5"
-                      style={{ background: "var(--cream-100)" }}
-                    >
-                      <p
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "0.55rem",
-                          letterSpacing: "0.2em",
-                          textTransform: "uppercase",
-                          color: "var(--gold-500)",
-                        }}
-                      >
-                        {date.getMonth() + 1}月
-                      </p>
-                      <p
-                        style={{
-                          fontFamily: "var(--font-serif)",
-                          fontSize: "1.3rem",
-                          fontWeight: 500,
-                          color: "var(--forest-500)",
-                          lineHeight: 1,
-                        }}
-                      >
-                        {date.getDate()}
-                      </p>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p
-                        style={{
-                          fontFamily: "var(--font-sans)",
-                          fontSize: "0.85rem",
-                          fontWeight: 500,
-                          color: "var(--brown-800)",
-                          letterSpacing: "0.04em",
-                        }}
-                        className="truncate"
-                      >
-                        {event.title}
-                      </p>
-                      {event.location && (
-                        <p
-                          style={{
-                            fontFamily: "var(--font-sans)",
-                            fontSize: "0.72rem",
-                            fontWeight: 300,
-                            color: "var(--brown-500)",
-                            marginTop: "0.2rem",
-                          }}
-                        >
-                          {event.location}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* ── Latest videos ────────────────────────────────────────── */}
-        {latestVideos.length > 0 && (
-          <div className="animate-fade-in-up stagger-4">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <span style={{ width: "1.5rem", height: "1px", background: "var(--gold-400)", display: "inline-block" }} />
-                <span
-                  style={{
-                    fontFamily: "var(--font-serif)",
-                    fontSize: "0.9rem",
-                    fontWeight: 500,
-                    letterSpacing: "0.06em",
-                    color: "var(--brown-800)",
-                  }}
-                >
-                  最新動画
-                </span>
-              </div>
-              <Link href="/videos">
-                <span
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "0.75rem",
-                    fontWeight: 300,
-                    color: "var(--forest-500)",
-                    letterSpacing: "0.04em",
-                  }}
-                >
-                  すべて見る →
-                </span>
-              </Link>
-            </div>
-            <div className="space-y-2">
-              {latestVideos.map((video) => (
-                <Link key={video.id} href={`/videos#video-${video.id}`}>
-                  <div
-                    className="flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all duration-200"
-                    style={{
-                      background: "white",
-                      border: "1px solid var(--cream-300)",
-                    }}
-                    onMouseEnter={e => {
-                      (e.currentTarget as HTMLDivElement).style.borderColor = "var(--gold-300)";
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget as HTMLDivElement).style.borderColor = "var(--cream-300)";
-                    }}
-                  >
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                      style={{ background: "var(--cream-100)" }}
-                    >
-                      <BookOpen size={18} style={{ color: "var(--forest-500)" }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p
-                        style={{
-                          fontFamily: "var(--font-sans)",
-                          fontSize: "0.85rem",
-                          fontWeight: 500,
-                          color: "var(--brown-800)",
-                          letterSpacing: "0.04em",
-                        }}
-                        className="truncate"
-                      >
-                        {video.title}
-                      </p>
-                      <p
-                        style={{
-                          fontFamily: "var(--font-sans)",
-                          fontSize: "0.72rem",
-                          fontWeight: 300,
-                          color: "var(--brown-500)",
-                          marginTop: "0.2rem",
-                        }}
-                      >
-                        {video.category}
-                      </p>
-                    </div>
-                    <span
-                      className="shrink-0 px-2 py-0.5 rounded-full text-xs"
-                      style={{
-                        background: "var(--cream-100)",
-                        color: "var(--gold-600)",
-                        fontFamily: "var(--font-display)",
-                        fontSize: "0.6rem",
-                        letterSpacing: "0.2em",
-                        textTransform: "uppercase",
-                        border: "1px solid var(--gold-300)",
-                      }}
-                    >
-                      NEW
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </MemberLayout>
-  );
-}
-
-// ─── Topics Carousel ─────────────────────────────────────────────────────────
 
 type Topic = {
   id: number;
@@ -441,263 +41,278 @@ type Topic = {
   updatedAt: Date;
 };
 
-// Gradient palettes for slides without images
-const GRADIENTS = [
-  "linear-gradient(135deg, var(--forest-600) 0%, var(--forest-500) 60%, oklch(0.520 0.092 150) 100%)",
-  "linear-gradient(135deg, oklch(0.480 0.080 200) 0%, oklch(0.540 0.090 180) 100%)",
-  "linear-gradient(135deg, var(--gold-600) 0%, var(--gold-500) 60%, oklch(0.600 0.100 60) 100%)",
-  "linear-gradient(135deg, oklch(0.420 0.060 280) 0%, oklch(0.500 0.080 260) 100%)",
-  "linear-gradient(135deg, oklch(0.480 0.070 20) 0%, oklch(0.540 0.080 40) 100%)",
+const gradients = [
+  "linear-gradient(125deg, oklch(0.255 0.06 145) 0%, oklch(0.43 0.09 145) 100%)",
+  "linear-gradient(125deg, oklch(0.30 0.05 225) 0%, oklch(0.52 0.08 205) 100%)",
+  "linear-gradient(125deg, oklch(0.38 0.07 65) 0%, oklch(0.67 0.10 75) 100%)",
+  "linear-gradient(125deg, oklch(0.27 0.04 35) 0%, oklch(0.48 0.07 20) 100%)",
+  "linear-gradient(125deg, oklch(0.31 0.05 285) 0%, oklch(0.50 0.07 270) 100%)",
 ];
+
+function SectionHeader({ no, title, href }: { no: string; title: string; href?: string }) {
+  return (
+    <div className="mb-5 flex items-end justify-between">
+      <div className="flex items-center gap-3">
+        <span style={{ color: "var(--gold-500)", fontFamily: "var(--font-display)", fontSize: "0.64rem", letterSpacing: "0.22em" }}>{no}</span>
+        <span className="h-px w-7" style={{ background: "var(--gold-400)" }} />
+        <span style={{ color: "var(--brown-800)", fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 500, letterSpacing: "0.07em" }}>{title}</span>
+      </div>
+      {href && (
+        <Link href={href} className="group flex items-center gap-1.5" style={{ color: "var(--brown-800)", fontSize: "0.72rem", fontWeight: 500, letterSpacing: "0.06em" }}>
+          すべて見る <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+        </Link>
+      )}
+    </div>
+  );
+}
+
+export default function Dashboard() {
+  usePageView("ダッシュボード");
+  const { user } = useAuth();
+  const { data: events } = trpc.event.list.useQuery({});
+  const { data: videos } = trpc.video.list.useQuery();
+  const now = new Date();
+  const upcomingEvents = events?.filter((event) => new Date(event.startAt) >= now).slice(0, 3) ?? [];
+  const latestVideos = videos?.filter((video) => video.isLatest).slice(0, 2) ?? [];
+
+  return (
+    <MemberLayout>
+      <div className="px-4 py-7 sm:px-7 sm:py-10 lg:px-10 lg:py-11">
+        <div className="mx-auto max-w-[1280px] space-y-14 lg:space-y-18">
+          <section className="grid gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)]">
+            <div className="relative min-h-[21rem] overflow-hidden rounded-[1.75rem] animate-fade-in-up">
+              <img src="/manus-storage/dashboard_banner_7efc6a80.jpg" alt="緑豊かな森" className="absolute inset-0 h-full w-full object-cover" />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(106deg, rgba(13,35,17,0.94) 0%, rgba(19,57,27,0.72) 58%, rgba(13,35,17,0.42) 100%)" }} />
+              <div className="absolute -right-16 -top-28 h-80 w-80 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.22)" }} />
+              <div className="relative flex h-full min-h-[21rem] flex-col justify-between p-7 sm:p-10">
+                <div className="flex items-center justify-between">
+                  <span style={{ color: "rgba(255,255,255,0.67)", fontFamily: "var(--font-display)", fontSize: "0.63rem", letterSpacing: "0.28em" }}>MEMBER&apos;S HOME</span>
+                  <span className="rounded-full border px-3 py-1" style={{ borderColor: "rgba(255,255,255,0.35)", color: "rgba(255,255,255,0.82)", fontFamily: "var(--font-display)", fontSize: "0.55rem", letterSpacing: "0.18em" }}>
+                    {now.toLocaleDateString("ja-JP", { month: "long", day: "numeric", weekday: "short" })}
+                  </span>
+                </div>
+                <div>
+                  <p className="mb-3" style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-display)", fontSize: "0.78rem", letterSpacing: "0.19em" }}>HELLO, {user?.name ?? "MEMBER"}</p>
+                  <h1 style={{ color: "white", fontFamily: "var(--font-serif)", fontSize: "clamp(1.85rem, 3.8vw, 3.1rem)", fontWeight: 400, letterSpacing: "0.08em", lineHeight: 1.55 }}>
+                    今日も、自然とともに。
+                  </h1>
+                  <p className="mt-4 max-w-md" style={{ color: "rgba(255,255,255,0.76)", fontSize: "0.82rem", fontWeight: 300, letterSpacing: "0.06em", lineHeight: 1.95 }}>
+                    小さな心地よさを積み重ねる一日へ。気になるコンテンツから、ゆっくり始めてみましょう。
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-[1.75rem] p-6 animate-fade-in-up stagger-1" style={{ background: "white", border: "1px solid var(--cream-300)" }}>
+              <p style={{ color: "var(--gold-500)", fontFamily: "var(--font-display)", fontSize: "0.62rem", letterSpacing: "0.26em" }}>YOUR PORTAL</p>
+              <p className="mt-5" style={{ color: "var(--brown-800)", fontFamily: "var(--font-serif)", fontSize: "1.35rem", fontWeight: 400, letterSpacing: "0.06em", lineHeight: 1.6 }}>暮らしの中に、<br />学びとつながりを。</p>
+              <div className="mt-7 grid grid-cols-2 gap-3">
+                <Link href="/videos" className="group rounded-2xl p-4 transition-transform hover:-translate-y-0.5" style={{ background: "var(--cream-100)" }}>
+                  <Play className="h-4 w-4" style={{ color: "var(--forest-600)" }} />
+                  <p className="mt-5" style={{ color: "var(--brown-800)", fontSize: "0.78rem", fontWeight: 500, letterSpacing: "0.04em" }}>動画を観る</p>
+                  <ArrowUpRight className="mt-2 h-3.5 w-3.5" style={{ color: "var(--gold-600)" }} />
+                </Link>
+                <Link href="/calendar" className="group rounded-2xl p-4 transition-transform hover:-translate-y-0.5" style={{ background: "var(--cream-100)" }}>
+                  <CalendarDays className="h-4 w-4" style={{ color: "var(--forest-600)" }} />
+                  <p className="mt-5" style={{ color: "var(--brown-800)", fontSize: "0.78rem", fontWeight: 500, letterSpacing: "0.04em" }}>予定を見る</p>
+                  <ArrowUpRight className="mt-2 h-3.5 w-3.5" style={{ color: "var(--gold-600)" }} />
+                </Link>
+              </div>
+              <Link href="/setup" className="mt-4 flex items-center justify-between rounded-xl px-4 py-3 transition-colors hover:bg-[var(--cream-100)]" style={{ border: "1px solid var(--cream-300)", color: "var(--brown-700)" }}>
+                <span className="flex items-center gap-2 text-xs" style={{ letterSpacing: "0.04em" }}><Leaf className="h-3.5 w-3.5" style={{ color: "var(--forest-500)" }} />はじめにを確認する</span>
+                <ChevronRight className="h-3.5 w-3.5" style={{ color: "var(--gold-500)" }} />
+              </Link>
+            </div>
+          </section>
+
+          <TopicsCarousel />
+
+          <section>
+            <SectionHeader no="01" title="あなたのためのコンテンツ" />
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {menuItems.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <Link key={item.href} href={item.href} className="group relative overflow-hidden rounded-2xl bg-white p-5 transition-all duration-300 hover:-translate-y-1" style={{ border: "1px solid var(--cream-300)", boxShadow: "0 4px 18px rgba(45,34,22,0.025)", animationDelay: `${index * 60}ms` }}>
+                    <div className="flex items-start justify-between">
+                      <span style={{ color: "var(--gold-500)", fontFamily: "var(--font-display)", fontSize: "0.59rem", letterSpacing: "0.22em" }}>{item.en}</span>
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" style={{ background: "var(--cream-100)", color: item.accent }}><Icon className="h-4 w-4" /></span>
+                    </div>
+                    <div className="mt-10 flex items-center justify-between gap-3">
+                      <p style={{ color: "var(--brown-800)", fontFamily: "var(--font-serif)", fontSize: "1.05rem", fontWeight: 500, letterSpacing: "0.06em" }}>{item.title}</p>
+                      <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" style={{ color: "var(--forest-500)" }} />
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="grid gap-10 xl:grid-cols-2">
+            <div>
+              <SectionHeader no="02" title="直近のイベント" href="/calendar" />
+              {upcomingEvents.length > 0 ? (
+                <div className="space-y-2">
+                  {upcomingEvents.map((event) => {
+                    const date = new Date(event.startAt);
+                    return (
+                      <div key={event.id} className="group flex items-center gap-4 rounded-2xl bg-white p-4 transition-shadow hover:shadow-md" style={{ border: "1px solid var(--cream-300)" }}>
+                        <div className="w-14 shrink-0 rounded-xl py-2 text-center" style={{ background: "var(--cream-100)" }}>
+                          <p style={{ color: "var(--gold-600)", fontFamily: "var(--font-display)", fontSize: "0.55rem", letterSpacing: "0.18em" }}>{date.getMonth() + 1}月</p>
+                          <p style={{ color: "var(--forest-600)", fontFamily: "var(--font-serif)", fontSize: "1.35rem", fontWeight: 500, lineHeight: 1.15 }}>{date.getDate()}</p>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate" style={{ color: "var(--brown-800)", fontSize: "0.84rem", fontWeight: 500, letterSpacing: "0.04em" }}>{event.title}</p>
+                          <p className="mt-1 flex items-center gap-1.5 truncate" style={{ color: "var(--brown-500)", fontSize: "0.7rem", fontWeight: 300 }}><Clock3 className="h-3 w-3" />{event.location ?? date.toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" })}</p>
+                        </div>
+                        <ChevronRight className="h-4 w-4" style={{ color: "var(--brown-300)" }} />
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <EmptyPanel label="これからのイベントは準備中です" />
+              )}
+            </div>
+
+            <div>
+              <SectionHeader no="03" title="最新動画" href="/videos" />
+              {latestVideos.length > 0 ? (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {latestVideos.map((video) => (
+                    <Link key={video.id} href={`/videos#video-${video.id}`} className="group overflow-hidden rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1" style={{ border: "1px solid var(--cream-300)" }}>
+                      <div className="relative h-28 overflow-hidden" style={{ background: "var(--forest-600)" }}>
+                        {video.thumbnailUrl && <img src={video.thumbnailUrl} alt="" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />}
+                        <div className="absolute inset-0" style={{ background: video.thumbnailUrl ? "linear-gradient(to top, rgba(9,25,12,0.48), transparent)" : "linear-gradient(130deg, var(--forest-600), var(--forest-400))" }} />
+                        <span className="absolute bottom-3 left-3 flex h-8 w-8 items-center justify-center rounded-full" style={{ background: "rgba(255,255,255,0.9)", color: "var(--forest-600)" }}><Play className="ml-0.5 h-3.5 w-3.5" /></span>
+                      </div>
+                      <div className="p-4">
+                        <p style={{ color: "var(--gold-600)", fontFamily: "var(--font-display)", fontSize: "0.55rem", letterSpacing: "0.18em" }}>{video.category}</p>
+                        <p className="mt-2 line-clamp-2" style={{ color: "var(--brown-800)", fontFamily: "var(--font-serif)", fontSize: "0.9rem", fontWeight: 500, letterSpacing: "0.04em", lineHeight: 1.55 }}>{video.title}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <EmptyPanel label="新しい動画を準備中です" />
+              )}
+            </div>
+          </section>
+        </div>
+      </div>
+    </MemberLayout>
+  );
+}
+
+function EmptyPanel({ label }: { label: string }) {
+  return (
+    <div className="flex min-h-[8rem] items-center justify-center rounded-2xl bg-white" style={{ border: "1px dashed var(--cream-400)" }}>
+      <p style={{ color: "var(--brown-500)", fontSize: "0.78rem", fontWeight: 300, letterSpacing: "0.05em" }}>{label}</p>
+    </div>
+  );
+}
 
 function TopicsCarousel() {
   const { data: rawTopics = [], isLoading } = trpc.topic.list.useQuery();
-  const topics = rawTopics.slice(0, 5);
+  const topics = rawTopics.slice(0, 5) as Topic[];
   const [current, setCurrent] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const dragStartX = useRef(0);
   const dragDeltaX = useRef(0);
   const autoPlayRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
   const count = topics.length;
 
-  const goTo = useCallback(
-    (idx: number) => {
-      setCurrent(((idx % count) + count) % count);
-    },
-    [count]
-  );
+  const goTo = useCallback((index: number) => {
+    if (count === 0) return;
+    setCurrent(((index % count) + count) % count);
+  }, [count]);
 
   const next = useCallback(() => goTo(current + 1), [current, goTo]);
-  const prev = useCallback(() => goTo(current - 1), [current, goTo]);
+  const previous = useCallback(() => goTo(current - 1), [current, goTo]);
 
-  // Auto-play every 5 seconds
   useEffect(() => {
     if (count <= 1) return;
-    autoPlayRef.current = setInterval(next, 5000);
+    autoPlayRef.current = setInterval(next, 6000);
     return () => {
       if (autoPlayRef.current) clearInterval(autoPlayRef.current);
     };
   }, [count, next]);
 
-  function resetAutoPlay() {
+  const resetAutoPlay = () => {
     if (autoPlayRef.current) clearInterval(autoPlayRef.current);
-    if (count > 1) autoPlayRef.current = setInterval(next, 5000);
-  }
+    if (count > 1) autoPlayRef.current = setInterval(next, 6000);
+  };
 
-  // Touch / mouse drag handlers
-  function onDragStart(clientX: number) {
+  const dragStart = (clientX: number) => {
     setIsDragging(true);
     dragStartX.current = clientX;
     dragDeltaX.current = 0;
     if (autoPlayRef.current) clearInterval(autoPlayRef.current);
-  }
+  };
 
-  function onDragMove(clientX: number) {
-    if (!isDragging) return;
-    dragDeltaX.current = clientX - dragStartX.current;
-  }
+  const dragMove = (clientX: number) => {
+    if (isDragging) dragDeltaX.current = clientX - dragStartX.current;
+  };
 
-  function onDragEnd() {
+  const dragEnd = () => {
     if (!isDragging) return;
     setIsDragging(false);
-    const threshold = 50;
-    if (dragDeltaX.current < -threshold) {
-      goTo(current + 1);
-    } else if (dragDeltaX.current > threshold) {
-      goTo(current - 1);
-    }
+    if (dragDeltaX.current < -45) next();
+    if (dragDeltaX.current > 45) previous();
     resetAutoPlay();
-  }
+  };
 
   if (isLoading || count === 0) return null;
+  const topic = topics[current];
+  const topicHref = topic.buttonUrl ?? "/dashboard";
+  const isExternal = /^https?:\/\//.test(topicHref);
 
-  const topic = topics[current] as Topic;
-  const gradient = GRADIENTS[current % GRADIENTS.length];
+  const content = (
+    <>
+      <div className="relative z-10 flex h-full flex-col justify-between p-7 sm:p-10">
+        <div className="flex items-center justify-between">
+          <span style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-display)", fontSize: "0.63rem", letterSpacing: "0.28em" }}>LATEST TOPICS</span>
+          <span style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-display)", fontSize: "0.62rem", letterSpacing: "0.2em" }}>{String(current + 1).padStart(2, "0")} — {String(count).padStart(2, "0")}</span>
+        </div>
+        <div className="max-w-xl">
+          <p style={{ color: "white", fontFamily: "var(--font-serif)", fontSize: "clamp(1.35rem, 3vw, 2.2rem)", fontWeight: 400, letterSpacing: "0.065em", lineHeight: 1.5 }}>{topic.title}</p>
+          {topic.body && <p className="mt-3 max-w-lg line-clamp-2" style={{ color: "rgba(255,255,255,0.82)", fontSize: "0.78rem", fontWeight: 300, letterSpacing: "0.05em", lineHeight: 1.85 }}>{topic.body}</p>}
+          {topic.buttonText && topic.buttonUrl && <span className="mt-5 inline-flex items-center gap-2" style={{ color: "white", fontSize: "0.75rem", fontWeight: 500, letterSpacing: "0.08em" }}>{topic.buttonText}<ArrowUpRight className="h-3.5 w-3.5" /></span>}
+        </div>
+      </div>
+    </>
+  );
 
   return (
-    <div className="animate-fade-in-up">
-      {/* Label */}
-      <div className="flex items-center gap-3 mb-3">
-        <span style={{ width: "1.5rem", height: "1px", background: "var(--gold-400)", display: "inline-block" }} />
-        <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "0.6rem",
-            letterSpacing: "0.25em",
-            textTransform: "uppercase",
-            color: "var(--gold-500)",
-          }}
-        >
-          Topics
-        </span>
-      </div>
-
-      {/* Carousel container */}
+    <section>
+      <SectionHeader no="NEWS" title="お知らせ" />
       <div
-        className="relative rounded-2xl overflow-hidden select-none"
-        style={{ height: "180px", cursor: isDragging ? "grabbing" : "grab" }}
-        onMouseDown={(e) => onDragStart(e.clientX)}
-        onMouseMove={(e) => onDragMove(e.clientX)}
-        onMouseUp={onDragEnd}
-        onMouseLeave={onDragEnd}
-        onTouchStart={(e) => onDragStart(e.touches[0].clientX)}
-        onTouchMove={(e) => onDragMove(e.touches[0].clientX)}
-        onTouchEnd={onDragEnd}
+        className="relative h-[18rem] select-none overflow-hidden rounded-[1.75rem] sm:h-[20rem]"
+        style={{ cursor: isDragging ? "grabbing" : "grab" }}
+        onMouseDown={(event) => dragStart(event.clientX)}
+        onMouseMove={(event) => dragMove(event.clientX)}
+        onMouseUp={dragEnd}
+        onMouseLeave={dragEnd}
+        onTouchStart={(event) => dragStart(event.touches[0].clientX)}
+        onTouchMove={(event) => dragMove(event.touches[0].clientX)}
+        onTouchEnd={dragEnd}
       >
-        {/* Background */}
-        <div
-          className="absolute inset-0 transition-all duration-500"
-          style={{
-            background: topic.imageUrl
-              ? `url(${topic.imageUrl}) center/cover no-repeat`
-              : gradient,
-          }}
-        />
-        {/* Overlay */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: topic.imageUrl
-              ? "linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.20) 100%)"
-              : "linear-gradient(to right, rgba(0,0,0,0.20) 0%, transparent 100%)",
-          }}
-        />
-
-        {/* Decorative circle */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            top: "-30%", right: "-5%",
-            width: "50%", paddingBottom: "50%",
-            borderRadius: "50%",
-            border: "1px solid rgba(255,255,255,0.1)",
-          }}
-        />
-
-        {/* Content */}
-        <div className="absolute inset-0 flex items-center px-6 pr-16">
-          <div className="flex-1 min-w-0">
-            {/* Slide indicator label */}
-            <p
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "0.55rem",
-                letterSpacing: "0.3em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.6)",
-                marginBottom: "0.4rem",
-              }}
-            >
-              {String(current + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
-            </p>
-            <p
-              style={{
-                fontFamily: "var(--font-serif)",
-                fontSize: "clamp(0.95rem, 2.5vw, 1.15rem)",
-                fontWeight: 400,
-                color: "white",
-                letterSpacing: "0.04em",
-                lineHeight: 1.5,
-                marginBottom: topic.body ? "0.5rem" : "0",
-              }}
-            >
-              {topic.title}
-            </p>
-            {topic.body && (
-              <p
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "0.75rem",
-                  fontWeight: 300,
-                  color: "rgba(255,255,255,0.85)",
-                  letterSpacing: "0.03em",
-                  lineHeight: 1.6,
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                }}
-              >
-                {topic.body}
-              </p>
-            )}
-            {topic.buttonText && topic.buttonUrl && (
-              <Link href={topic.buttonUrl}>
-                <span
-                  className="inline-flex items-center gap-1 mt-3 px-3 py-1 rounded-full transition-all duration-200"
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "0.7rem",
-                    fontWeight: 400,
-                    letterSpacing: "0.05em",
-                    color: "white",
-                    background: "rgba(255,255,255,0.2)",
-                    border: "1px solid rgba(255,255,255,0.3)",
-                    backdropFilter: "blur(4px)",
-                    cursor: "pointer",
-                  }}
-                >
-                  {topic.buttonText}
-                  <ChevronRight className="w-3 h-3" />
-                </span>
-              </Link>
-            )}
-          </div>
-        </div>
-
-        {/* Prev / Next arrows (desktop) */}
+        <div className="absolute inset-0 transition-all duration-700" style={{ background: topic.imageUrl ? `url(${topic.imageUrl}) center/cover no-repeat` : gradients[current % gradients.length] }} />
+        <div className="absolute inset-0" style={{ background: topic.imageUrl ? "linear-gradient(100deg, rgba(10,25,13,0.92), rgba(10,25,13,0.42))" : "linear-gradient(100deg, rgba(0,0,0,0.18), transparent)" }} />
+        <div className="absolute -right-20 -top-36 h-96 w-96 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.16)" }} />
+        {topic.buttonUrl ? (
+          isExternal ? <a href={topicHref} target="_blank" rel="noreferrer" className="absolute inset-0 z-10">{content}</a> : <Link href={topicHref} className="absolute inset-0 z-10">{content}</Link>
+        ) : content}
         {count > 1 && (
           <>
-            <button
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 hidden sm:flex"
-              style={{
-                background: "rgba(255,255,255,0.15)",
-                border: "1px solid rgba(255,255,255,0.25)",
-                color: "white",
-                backdropFilter: "blur(4px)",
-              }}
-              onClick={(e) => { e.stopPropagation(); prev(); resetAutoPlay(); }}
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <button
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 hidden sm:flex"
-              style={{
-                background: "rgba(255,255,255,0.15)",
-                border: "1px solid rgba(255,255,255,0.25)",
-                color: "white",
-                backdropFilter: "blur(4px)",
-              }}
-              onClick={(e) => { e.stopPropagation(); next(); resetAutoPlay(); }}
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
+            <button aria-label="前のお知らせ" onClick={(event) => { event.stopPropagation(); previous(); resetAutoPlay(); }} className="absolute left-4 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full sm:flex" style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)", color: "white", backdropFilter: "blur(8px)" }}><ChevronLeft className="h-4 w-4" /></button>
+            <button aria-label="次のお知らせ" onClick={(event) => { event.stopPropagation(); next(); resetAutoPlay(); }} className="absolute right-4 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full sm:flex" style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)", color: "white", backdropFilter: "blur(8px)" }}><ChevronRight className="h-4 w-4" /></button>
+            <div className="absolute bottom-5 left-7 z-20 flex gap-1.5 sm:left-10">
+              {topics.map((item, index) => <button key={item.id} aria-label={`${index + 1}件目のお知らせを表示`} onClick={(event) => { event.stopPropagation(); goTo(index); resetAutoPlay(); }} className="rounded-full transition-all duration-300" style={{ width: index === current ? "1.45rem" : "0.42rem", height: "0.42rem", background: index === current ? "var(--gold-300)" : "rgba(255,255,255,0.45)" }} />)}
+            </div>
           </>
         )}
-
-        {/* Dot indicators */}
-        {count > 1 && (
-          <div
-            className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5"
-          >
-            {topics.map((_, i) => (
-              <button
-                key={i}
-                className="rounded-full transition-all duration-300"
-                style={{
-                  width: i === current ? "1.5rem" : "0.4rem",
-                  height: "0.4rem",
-                  background: i === current ? "white" : "rgba(255,255,255,0.4)",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-                onClick={(e) => { e.stopPropagation(); goTo(i); resetAutoPlay(); }}
-              />
-            ))}
-          </div>
-        )}
       </div>
-    </div>
+    </section>
   );
 }

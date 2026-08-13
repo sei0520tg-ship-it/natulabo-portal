@@ -87,3 +87,15 @@
 - [x] tRPCルーターにtopic.list/upsert/deleteを追加
 - [x] 管理画面にトピックス管理ページを追加
 - [x] Dashboard.tsx上部に横スワイプ式トピックスカルーセルを実装（最大5件・ループ・ドットインジケーター）
+
+## 追加変更5（Minerva参考・全体UIリニューアル）
+- [x] Minerva参考の没入型ヒーロー・ブランド文字出現モーションをHome.tsxに実装
+- [x] ランディングページの各セクションを編集的な余白・タイポグラフィ・カード表現へ刷新
+- [x] MemberLayoutをミニマルな会員コンテンツハブUIへ刷新
+- [x] Dashboardを大型ビジュアル・トピックス・学習導線を軸とした会員ホームへ刷新
+- [x] リニューアル後のTypeScript・Vitest検証
+- [x] Homeのデスクトップ表示・基本アクセシビリティ（focus、alt、動画aria）を確認
+- [x] 認証済み環境でMemberLayout・Dashboardのモバイル/タブレット/デスクトップ表示を確認し、必要な崩れを修正
+- [x] 認証済み環境でMemberLayout・Dashboardのキーボード操作・focus表示を確認し、必要な修正を行う
+- [x] 認証済み環境でMemberLayout・Dashboardの主要操作要素のaria属性・名前付けを確認し、必要な修正を行う
+- [x] 配色調整後のMemberLayout・Dashboardについて、主要テキスト・ボタン・ナビゲーションのコントラスト比を要素別に再計算し、必要な修正を行う
