@@ -21,12 +21,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 
 const menuItems = [
-  { href: "/setup", icon: Settings2, title: "はじめての方へ", en: "START HERE", accent: "var(--forest-500)" },
-  { href: "/videos", icon: BookOpen, title: "学習動画", en: "VIDEO LIBRARY", accent: "var(--gold-600)" },
-  { href: "/recipes", icon: Sparkles, title: "クラフトレシピ", en: "RECIPES", accent: "var(--forest-500)" },
-  { href: "/testimonials", icon: MessageCircleHeart, title: "体験談", en: "STORIES", accent: "var(--gold-500)" },
-  { href: "/calendar", icon: CalendarDays, title: "イベント", en: "EVENTS", accent: "var(--forest-600)" },
-  { href: "/links", icon: ExternalLink, title: "リンク集", en: "USEFUL LINKS", accent: "var(--gold-600)" },
+  { href: "/setup", icon: Settings2, title: "はじめての方へ", en: "START HERE", image: doterraAssets.sourceFarmer },
+  { href: "/videos", icon: BookOpen, title: "学習動画", en: "VIDEO LIBRARY", image: doterraAssets.essentialOils },
+  { href: "/recipes", icon: Sparkles, title: "クラフトレシピ", en: "RECIPES", image: doterraAssets.memberRoseField },
+  { href: "/testimonials", icon: MessageCircleHeart, title: "体験談", en: "STORIES", image: doterraAssets.loginGarden },
+  { href: "/calendar", icon: CalendarDays, title: "イベント", en: "EVENTS", image: doterraAssets.memberRoseField },
+  { href: "/links", icon: ExternalLink, title: "リンク集", en: "USEFUL LINKS", image: doterraAssets.sourceFarmer },
 ];
 
 type Topic = {
@@ -137,14 +137,18 @@ export default function Dashboard() {
               {menuItems.map((item, index) => {
                 const Icon = item.icon;
                 return (
-                  <Link key={item.href} href={item.href} className="group relative overflow-hidden rounded-2xl bg-white p-5 transition-all duration-300 hover:-translate-y-1" style={{ border: "1px solid var(--cream-300)", boxShadow: "0 4px 18px rgba(45,34,22,0.025)", animationDelay: `${index * 60}ms` }}>
-                    <div className="flex items-start justify-between">
-                      <span style={{ color: "var(--gold-500)", fontFamily: "var(--font-display)", fontSize: "0.59rem", letterSpacing: "0.22em" }}>{item.en}</span>
-                      <span className="flex h-9 w-9 items-center justify-center rounded-full transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" style={{ background: "var(--cream-100)", color: item.accent }}><Icon className="h-4 w-4" /></span>
-                    </div>
-                    <div className="mt-10 flex items-center justify-between gap-3">
-                      <p style={{ color: "var(--brown-800)", fontFamily: "var(--font-serif)", fontSize: "1.05rem", fontWeight: 500, letterSpacing: "0.06em" }}>{item.title}</p>
-                      <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" style={{ color: "var(--forest-500)" }} />
+                  <Link key={item.href} href={item.href} className="group relative min-h-48 overflow-hidden rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1" style={{ boxShadow: "0 10px 24px rgba(35,44,27,0.12)", animationDelay: `${index * 60}ms` }}>
+                    <img src={item.image} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <span className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(9,32,15,0.80) 0%, rgba(9,32,15,0.32) 65%, rgba(9,32,15,0.58) 100%)" }} />
+                    <div className="relative flex h-full min-h-36 flex-col justify-between">
+                      <div className="flex items-start justify-between">
+                        <span style={{ color: "rgba(255,255,255,0.82)", fontFamily: "var(--font-display)", fontSize: "0.59rem", letterSpacing: "0.22em" }}>{item.en}</span>
+                        <span className="flex h-9 w-9 items-center justify-center rounded-full transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" style={{ background: "rgba(255,255,255,0.88)", color: "var(--forest-600)" }}><Icon className="h-4 w-4" /></span>
+                      </div>
+                      <div className="flex items-center justify-between gap-3">
+                        <p style={{ color: "white", fontFamily: "var(--font-serif)", fontSize: "1.12rem", fontWeight: 500, letterSpacing: "0.06em" }}>{item.title}</p>
+                        <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" style={{ color: "white" }} />
+                      </div>
                     </div>
                   </Link>
                 );
@@ -273,15 +277,15 @@ function TopicsCarousel() {
 
   const content = (
     <>
-      <div className="relative z-10 flex h-full flex-col justify-between p-5 sm:p-7">
-        <div className="flex w-fit items-center gap-4 rounded-full px-3 py-1.5" style={{ background: "rgba(10,25,13,0.60)", backdropFilter: "blur(10px)" }}>
-          <span style={{ color: "rgba(255,255,255,0.94)", fontFamily: "var(--font-display)", fontSize: "0.60rem", letterSpacing: "0.24em" }}>LATEST TOPICS</span>
-          <span style={{ color: "rgba(255,255,255,0.82)", fontFamily: "var(--font-display)", fontSize: "0.58rem", letterSpacing: "0.16em" }}>{String(current + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}</span>
-        </div>
-        <div className="max-w-xl rounded-2xl p-5 sm:p-6" style={{ background: "rgba(10,25,13,0.74)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.18)" }}>
-          <p style={{ color: "white", fontFamily: "var(--font-serif)", fontSize: "clamp(1.35rem, 3vw, 2.2rem)", fontWeight: 400, letterSpacing: "0.065em", lineHeight: 1.5 }}>{topic.title}</p>
-          {topic.body && <p className="mt-3 max-w-lg line-clamp-2" style={{ color: "rgba(255,255,255,0.82)", fontSize: "0.78rem", fontWeight: 300, letterSpacing: "0.05em", lineHeight: 1.85 }}>{topic.body}</p>}
-          {topic.buttonText && topic.buttonUrl && <span className="mt-5 inline-flex items-center gap-2" style={{ color: "white", fontSize: "0.75rem", fontWeight: 500, letterSpacing: "0.08em" }}>{topic.buttonText}<ArrowUpRight className="h-3.5 w-3.5" /></span>}
+        <div className="relative z-10 flex h-full flex-col justify-between p-5 sm:p-7">
+          <div className="flex w-fit items-center gap-4 rounded-full px-3 py-1.5" style={{ background: "rgba(255,255,255,0.84)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.72)" }}>
+            <span style={{ color: "var(--forest-600)", fontFamily: "var(--font-display)", fontSize: "0.60rem", letterSpacing: "0.24em" }}>LATEST TOPICS</span>
+            <span style={{ color: "var(--brown-600)", fontFamily: "var(--font-display)", fontSize: "0.58rem", letterSpacing: "0.16em" }}>{String(current + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}</span>
+          </div>
+        <div className="max-w-xl rounded-2xl p-5 sm:p-6" style={{ background: "rgba(255,255,255,0.80)", backdropFilter: "blur(14px)", border: "1px solid rgba(255,255,255,0.74)", boxShadow: "0 12px 34px rgba(30,48,27,0.16)" }}>
+          <p style={{ color: "var(--brown-800)", fontFamily: "var(--font-serif)", fontSize: "clamp(1.35rem, 3vw, 2.2rem)", fontWeight: 400, letterSpacing: "0.065em", lineHeight: 1.5 }}>{topic.title}</p>
+          {topic.body && <p className="mt-3 max-w-lg line-clamp-2" style={{ color: "var(--brown-600)", fontSize: "0.78rem", fontWeight: 400, letterSpacing: "0.05em", lineHeight: 1.85 }}>{topic.body}</p>}
+          {topic.buttonText && topic.buttonUrl && <span className="mt-5 inline-flex items-center gap-2" style={{ color: "var(--forest-600)", fontSize: "0.75rem", fontWeight: 600, letterSpacing: "0.08em" }}>{topic.buttonText}<ArrowUpRight className="h-3.5 w-3.5" /></span>}
         </div>
       </div>
     </>
@@ -302,17 +306,17 @@ function TopicsCarousel() {
         onTouchEnd={dragEnd}
       >
         <div className="absolute inset-0 transition-all duration-700" style={{ background: topic.imageUrl ? `url(${topic.imageUrl}) center/cover no-repeat` : gradients[current % gradients.length] }} />
-        <div className="absolute inset-0" style={{ background: topic.imageUrl ? "linear-gradient(to top, rgba(10,25,13,0.72) 0%, rgba(10,25,13,0.16) 55%, rgba(10,25,13,0.04) 100%)" : "linear-gradient(to top, rgba(0,0,0,0.45), transparent)" }} />
+        <div className="absolute inset-0" style={{ background: topic.imageUrl ? "linear-gradient(to top, rgba(10,25,13,0.24) 0%, rgba(10,25,13,0.04) 58%, rgba(10,25,13,0.08) 100%)" : "linear-gradient(to top, rgba(0,0,0,0.20), transparent)" }} />
         <div className="absolute -right-20 -top-36 h-96 w-96 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.16)" }} />
         {topic.buttonUrl ? (
           isExternal ? <a href={topicHref} target="_blank" rel="noreferrer" className="absolute inset-0 z-10">{content}</a> : <Link href={topicHref} className="absolute inset-0 z-10">{content}</Link>
         ) : content}
         {count > 1 && (
           <>
-            <button aria-label="前のお知らせ" onClick={(event) => { event.stopPropagation(); previous(); resetAutoPlay(); }} className="absolute left-4 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full sm:flex" style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)", color: "white", backdropFilter: "blur(8px)" }}><ChevronLeft className="h-4 w-4" /></button>
-            <button aria-label="次のお知らせ" onClick={(event) => { event.stopPropagation(); next(); resetAutoPlay(); }} className="absolute right-4 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full sm:flex" style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)", color: "white", backdropFilter: "blur(8px)" }}><ChevronRight className="h-4 w-4" /></button>
-            <div className="absolute bottom-5 left-7 z-20 flex gap-1.5 sm:left-10">
-              {topics.map((item, index) => <button key={item.id} aria-label={`${index + 1}件目のお知らせを表示`} onClick={(event) => { event.stopPropagation(); goTo(index); resetAutoPlay(); }} className="rounded-full transition-all duration-300" style={{ width: index === current ? "1.45rem" : "0.42rem", height: "0.42rem", background: index === current ? "var(--gold-300)" : "rgba(255,255,255,0.45)" }} />)}
+            <button aria-label="前のお知らせ" onClick={(event) => { event.stopPropagation(); previous(); resetAutoPlay(); }} className="absolute left-4 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full sm:flex" style={{ background: "rgba(255,255,255,0.78)", border: "1px solid rgba(255,255,255,0.72)", color: "var(--forest-600)", backdropFilter: "blur(8px)" }}><ChevronLeft className="h-4 w-4" /></button>
+            <button aria-label="次のお知らせ" onClick={(event) => { event.stopPropagation(); next(); resetAutoPlay(); }} className="absolute right-4 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full sm:flex" style={{ background: "rgba(255,255,255,0.78)", border: "1px solid rgba(255,255,255,0.72)", color: "var(--forest-600)", backdropFilter: "blur(8px)" }}><ChevronRight className="h-4 w-4" /></button>
+            <div className="absolute bottom-5 left-7 z-20 flex gap-1.5 rounded-full p-2 sm:left-10" style={{ background: "rgba(20,40,20,0.58)", backdropFilter: "blur(8px)" }}>
+              {topics.map((item, index) => <button key={item.id} aria-label={`${index + 1}件目のお知らせを表示`} onClick={(event) => { event.stopPropagation(); goTo(index); resetAutoPlay(); }} className="rounded-full transition-all duration-300" style={{ width: index === current ? "1.45rem" : "0.42rem", height: "0.42rem", background: index === current ? "var(--gold-500)" : "rgba(255,255,255,0.82)", boxShadow: "0 1px 4px rgba(20,40,20,0.22)" }} />)}
             </div>
           </>
         )}

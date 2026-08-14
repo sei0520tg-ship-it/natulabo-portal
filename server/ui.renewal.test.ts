@@ -6,10 +6,11 @@ const readProjectFile = (relativePath: string) =>
   fs.readFileSync(path.resolve(process.cwd(), relativePath), "utf8");
 
 describe("UIリニューアルの構成", () => {
-  it("ランディングページに森林ヒーローとブランド文字出現演出を保持する", () => {
+  it("ランディングページに公式写真ヒーローとブランド文字出現演出を保持する", () => {
     const home = readProjectFile("client/src/pages/Home.tsx");
 
-    expect(home).toContain("forest_bg_loop_1b4e6054.mp4");
+    expect(home).toContain("doterraAssets.memberRoseField");
+    expect(home).not.toContain("forest_bg_loop_1b4e6054.mp4");
     expect(home).toContain("NATU LABO");
     expect(home).toContain("natu-hero-letter");
     expect(home).toContain("NatuLabo Portal");
@@ -21,7 +22,8 @@ describe("UIリニューアルの構成", () => {
     expect(dashboard).toContain('aria-label="前のお知らせ"');
     expect(dashboard).toContain('aria-label="次のお知らせ"');
     expect(dashboard).toContain("doterraAssets.memberRoseField");
-    expect(dashboard).toContain("rgba(10,25,13,0.74)");
+    expect(dashboard).toContain("rgba(255,255,255,0.80)");
+    expect(dashboard).toContain("item.image");
   });
 
   it("ログイン・レシピ・初期設定に公式画像と誤リンクのない導線を保持する", () => {

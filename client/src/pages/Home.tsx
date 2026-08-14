@@ -10,6 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Link } from "wouter";
+import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
 
 const heroLetters = ["N", "A", "T", "U", "L", "A", "B", "O", "."];
 
@@ -105,6 +106,7 @@ export default function Home() {
               <img
                 src="/manus-storage/logo-circle_08be9919.png"
                 alt=""
+                aria-hidden="true"
                 className="h-7 w-7 object-contain"
               />
             </span>
@@ -154,17 +156,7 @@ export default function Home() {
         className="relative flex min-h-[100svh] items-center overflow-hidden pt-20"
         style={{ background: "oklch(0.20 0.04 145)" }}
       >
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="absolute inset-0 h-full w-full object-cover"
-          aria-hidden="true"
-        >
-          <source src="/manus-storage/forest_bg_loop_1b4e6054.mp4" type="video/mp4" />
-        </video>
+        <img src={doterraAssets.memberRoseField} alt="dōTERRA公式掲載のローズ畑" className="absolute inset-0 h-full w-full object-cover" />
         <div
           className="absolute inset-0"
           style={{ background: "linear-gradient(105deg, rgba(8,25,12,0.86) 0%, rgba(13,37,18,0.58) 52%, rgba(8,21,11,0.5) 100%)" }}
