@@ -9,8 +9,8 @@ import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-type VideoForm = { title: string; category: string; videoUrl: string; description: string; isLatest: boolean; sortOrder: number };
-const emptyForm: VideoForm = { title: "", category: "", videoUrl: "", description: "", isLatest: false, sortOrder: 0 };
+type VideoForm = { title: string; category: string; videoUrl: string; thumbnailUrl: string; description: string; isLatest: boolean; sortOrder: number };
+const emptyForm: VideoForm = { title: "", category: "", videoUrl: "", thumbnailUrl: "", description: "", isLatest: false, sortOrder: 0 };
 
 export default function AdminVideos() {
   const { data: videos, refetch } = trpc.video.list.useQuery();
@@ -29,7 +29,7 @@ export default function AdminVideos() {
 
   const openCreate = () => { setForm(emptyForm); setEditId(null); setOpen(true); };
   const openEdit = (v: NonNullable<typeof videos>[0]) => {
-    setForm({ title: v.title, category: v.category, videoUrl: v.videoUrl, description: v.description ?? "", isLatest: v.isLatest, sortOrder: v.sortOrder });
+    setForm({ title: v.title, category: v.category, videoUrl: v.videoUrl, thumbnailUrl: v.thumbnailUrl ?? "", description: v.description ?? "", isLatest: v.isLatest, sortOrder: v.sortOrder });
     setEditId(v.id);
     setOpen(true);
   };
@@ -56,7 +56,7 @@ export default function AdminVideos() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/30">
-                  <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">タイトル</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">画像・タイトル</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground hidden sm:table-cell">カテゴリ</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">最新</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">操作</th>
@@ -65,7 +65,12 @@ export default function AdminVideos() {
               <tbody className="divide-y divide-border">
                 {videos?.map((v) => (
                   <tr key={v.id} className="hover:bg-muted/20 transition-colors">
-                    <td className="px-4 py-3 text-xs font-medium max-w-xs truncate">{v.title}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex min-w-0 items-center gap-2.5">
+                        {v.thumbnailUrl ? <img src={v.thumbnailUrl} alt="" className="h-9 w-14 shrink-0 rounded-md object-cover" /> : <div className="h-9 w-14 shrink-0 rounded-md" style={{ background: "var(--cream-100)" }} />}
+                        <span className="truncate text-xs font-medium">{v.title}</span>
+                      </div>
+                    </td>
                     <td className="px-4 py-3 text-xs text-muted-foreground hidden sm:table-cell">{v.category}</td>
                     <td className="px-4 py-3">
                       {v.isLatest && <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full">NEW</span>}
@@ -104,6 +109,10 @@ export default function AdminVideos() {
               <div>
                 <Label className="text-xs">動画URL（Google Drive / YouTube等） *</Label>
                 <Input value={form.videoUrl} onChange={(e) => setForm({ ...form, videoUrl: e.target.value })} placeholder="https://..." className="mt-1 h-10 rounded-xl text-sm" required />
+              </div>
+              <div>
+                <Label className="text-xs">サムネイル画像URL</Label>
+                <Input value={form.thumbnailUrl} onChange={(e) => setForm({ ...form, thumbnailUrl: e.target.value })} placeholder="/manus-storage/... または https://..." className="mt-1 h-10 rounded-xl text-sm" />
               </div>
               <div>
                 <Label className="text-xs">説明</Label>

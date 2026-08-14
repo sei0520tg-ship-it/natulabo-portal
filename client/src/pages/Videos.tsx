@@ -1,7 +1,9 @@
 import MemberLayout from "@/components/MemberLayout";
 import YouTubePlayer, { extractYouTubeId } from "@/components/YouTubePlayer";
+import ContentVisualHero from "@/components/ContentVisualHero";
 import { trpc } from "@/lib/trpc";
 import { usePageView } from "@/hooks/usePageView";
+import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
 import { Badge } from "@/components/ui/badge";
 import { PlayCircle, Sparkles, CheckCircle2, Clock, RotateCcw } from "lucide-react";
 import { useState, useCallback } from "react";
@@ -79,6 +81,13 @@ function DrivePlayer({ url }: { url: string }) {
   );
 }
 
+const videoFallbackImages = [
+  doterraAssets.essentialOils,
+  doterraAssets.memberRoseField,
+  doterraAssets.loginGarden,
+  doterraAssets.sourceFarmer,
+];
+
 // 個別動画カードコンポーネント
 function VideoCard({
   video,
@@ -93,6 +102,7 @@ function VideoCard({
     category: string;
     description?: string | null;
     videoUrl: string;
+    thumbnailUrl?: string | null;
     isLatest?: boolean | null;
   };
   isActive: boolean;
@@ -112,6 +122,7 @@ function VideoCard({
 
   const youtubeId = extractYouTubeId(video.videoUrl);
   const isYouTube = !!youtubeId;
+  const previewImage = video.thumbnailUrl ?? videoFallbackImages[video.id % videoFallbackImages.length];
 
   const handleProgress = useCallback(
     (pos: number, dur: number) => {
@@ -140,17 +151,15 @@ function VideoCard({
         ) : (
           <button
             onClick={() => onPlay(video.id)}
-            className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-muted/50 to-muted/20 hover:from-primary/20 transition-colors group gap-2"
+            aria-label={`「${video.title}」を再生`}
+            className="relative w-full h-full overflow-hidden group"
           >
-            <PlayCircle
-              size={44}
-              className="text-primary/70 group-hover:text-primary group-hover:scale-105 transition-all"
-            />
-            {startSec > 0 && (
-              <span className="text-xs text-primary/80 bg-primary/10 px-3 py-1 rounded-full">
-                {formatTime(startSec)} から続きを再生
-              </span>
-            )}
+            <img src={previewImage} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <span className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(9,27,13,0.68), rgba(9,27,13,0.15))" }} />
+            <span className="relative flex h-full flex-col items-center justify-center gap-2">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full" style={{ background: "rgba(255,255,255,0.92)", color: "var(--forest-600)" }}><PlayCircle size={25} /></span>
+              {startSec > 0 && <span className="rounded-full px-3 py-1 text-xs" style={{ color: "white", background: "rgba(9,27,13,0.70)" }}>{formatTime(startSec)} から続きを再生</span>}
+            </span>
           </button>
         )}
 
@@ -271,13 +280,7 @@ export default function Videos() {
   return (
     <MemberLayout>
       <div className="container py-6 lg:py-8 space-y-8">
-        {/* Header */}
-        <div className="animate-fade-in-up">
-          <h1 className="text-2xl font-serif font-semibold">学習動画ライブラリ</h1>
-          <p className="text-muted-foreground text-sm mt-1.5">
-            カテゴリ別に動画を整理しています。YouTubeの動画は続きから正確に再生できます。
-          </p>
-        </div>
+        <ContentVisualHero eyebrow="VIDEO LIBRARY" title="学習動画ライブラリ" description="カテゴリ別に動画を整理しています。視聴の続きから、あなたのペースで学びを深めましょう。" imageUrl={doterraAssets.essentialOils} imageAlt="dōTERRA公式掲載のエッセンシャルオイル" sourceHref={doterraSources.japanHome} />
 
         {/* Latest videos */}
         {latestVideos.length > 0 && (

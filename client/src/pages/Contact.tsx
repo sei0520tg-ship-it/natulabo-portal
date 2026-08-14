@@ -1,6 +1,8 @@
 import MemberLayout from "@/components/MemberLayout";
 import { trpc } from "@/lib/trpc";
 import { usePageView } from "@/hooks/usePageView";
+import ContentVisualHero from "@/components/ContentVisualHero";
+import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
 import { ExternalLink, Mail, MessageCircle, Smartphone, Stethoscope, HelpCircle } from "lucide-react";
 
 const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
@@ -32,12 +34,7 @@ export default function Contact() {
   return (
     <MemberLayout>
       <div className="container py-6 lg:py-8">
-        <div className="mb-8 animate-fade-in-up">
-          <h1 className="text-2xl font-serif font-semibold">お問い合わせ窓口</h1>
-          <p className="text-muted-foreground text-sm mt-1.5 leading-relaxed">
-            お困りの内容に合わせて、最適な窓口にご相談ください。
-          </p>
-        </div>
+        <ContentVisualHero eyebrow="SUPPORT & CARE" title="お問い合わせ窓口" description="お困りの内容に合わせて、最適な窓口にご相談ください。" imageUrl={doterraAssets.memberRoseField} imageAlt="dōTERRA公式掲載の植物" sourceHref={doterraSources.japanHome} />
 
         {isLoading ? (
           <div className="space-y-3">

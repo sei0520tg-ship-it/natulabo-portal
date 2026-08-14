@@ -1,6 +1,8 @@
 import MemberLayout from "@/components/MemberLayout";
+import ContentVisualHero from "@/components/ContentVisualHero";
 import { trpc } from "@/lib/trpc";
 import { usePageView } from "@/hooks/usePageView";
+import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, ExternalLink, MapPin } from "lucide-react";
 import { useState } from "react";
@@ -66,22 +68,17 @@ export default function CalendarPage() {
   return (
     <MemberLayout>
       <div className="container py-6 lg:py-8 space-y-6">
-        <div className="animate-fade-in-up">
-          <h1 className="text-2xl font-serif font-semibold">イベント・講座カレンダー</h1>
-          <p className="text-muted-foreground text-sm mt-1.5">
-            開催予定のイベントや講座をカレンダーで確認できます。
-          </p>
-        </div>
+        <ContentVisualHero eyebrow="EVENTS & COMMUNITY" title="イベント・講座カレンダー" description="学び、つながり、日々の暮らしを豊かにする予定をカレンダーから確認できます。" imageUrl={doterraAssets.memberRoseField} imageAlt="dōTERRA公式掲載のローズ畑" sourceHref={doterraSources.japanHome} />
 
         {/* Calendar */}
         <div className="bg-card rounded-2xl border border-border p-4 animate-fade-in-up stagger-1">
           {/* Month nav */}
           <div className="flex items-center justify-between mb-4">
-            <Button variant="ghost" size="icon" onClick={prevMonth} className="rounded-xl">
+            <Button variant="ghost" size="icon" onClick={prevMonth} aria-label="前の月を表示" className="rounded-xl">
               <ChevronLeft size={18} />
             </Button>
             <h2 className="font-semibold text-base">{year}年 {month + 1}月</h2>
-            <Button variant="ghost" size="icon" onClick={nextMonth} className="rounded-xl">
+            <Button variant="ghost" size="icon" onClick={nextMonth} aria-label="次の月を表示" className="rounded-xl">
               <ChevronRight size={18} />
             </Button>
           </div>

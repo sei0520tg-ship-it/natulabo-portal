@@ -1,6 +1,8 @@
 import MemberLayout from "@/components/MemberLayout";
+import ContentVisualHero from "@/components/ContentVisualHero";
 import { trpc } from "@/lib/trpc";
 import { usePageView } from "@/hooks/usePageView";
+import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
 import { CheckCircle2, ChevronDown, ChevronUp, ExternalLink, PlayCircle } from "lucide-react";
 import { useState } from "react";
 
@@ -12,13 +14,7 @@ export default function Setup() {
   return (
     <MemberLayout>
       <div className="container py-6 lg:py-8">
-        {/* Header */}
-        <div className="mb-8 animate-fade-in-up">
-          <h1 className="text-2xl font-serif font-semibold">はじめての方へ</h1>
-          <p className="text-muted-foreground text-sm mt-1.5 leading-relaxed">
-            dōTERRAをより楽しむために、まずこちらの準備ステップを順番に進めてください。
-          </p>
-        </div>
+        <ContentVisualHero eyebrow="START HERE" title="はじめての方へ" description="dōTERRAをより楽しむために、まずこちらの準備ステップを順番に進めてください。" imageUrl={doterraAssets.sourceFarmer} imageAlt="dōTERRA公式掲載の原料生産地" sourceHref={doterraSources.japanHome} />
 
         {isLoading ? (
           <div className="space-y-3">

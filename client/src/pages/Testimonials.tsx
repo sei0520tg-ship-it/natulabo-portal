@@ -1,6 +1,8 @@
 import MemberLayout from "@/components/MemberLayout";
 import { usePageView } from "@/hooks/usePageView";
 import { trpc } from "@/lib/trpc";
+import ContentVisualHero from "@/components/ContentVisualHero";
+import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
 import { useState } from "react";
 import { MessageCircle, Heart, Sparkles, Users, Leaf, Star, AlertCircle, RefreshCw } from "lucide-react";
 
@@ -41,49 +43,7 @@ export default function Testimonials() {
   return (
     <MemberLayout>
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* ヘッダー */}
-        <div className="text-center mb-10">
-          <div
-            className="inline-flex items-center gap-2 mb-3"
-            style={{ color: "var(--gold-500)" }}
-          >
-            <MessageCircle className="w-5 h-5" />
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "0.6rem",
-                letterSpacing: "0.3em",
-                textTransform: "uppercase",
-              }}
-            >
-              Testimonials
-            </span>
-          </div>
-          <h1
-            style={{
-              fontFamily: "var(--font-serif)",
-              fontSize: "clamp(1.4rem, 3vw, 1.8rem)",
-              fontWeight: 400,
-              letterSpacing: "0.06em",
-              color: "var(--forest-500)",
-            }}
-            className="mb-3"
-          >
-            体験談
-          </h1>
-          <p
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "0.85rem",
-              fontWeight: 300,
-              color: "var(--brown-500)",
-              lineHeight: 1.8,
-            }}
-            className="max-w-md mx-auto"
-          >
-            dōTERRAのエッセンシャルオイルで生活が変わった、メンバーの皆さんのリアルな声をお届けします。
-          </p>
-        </div>
+        <ContentVisualHero eyebrow="MEMBER STORIES" title="体験談" description="dōTERRAのエッセンシャルオイルとともに暮らす、メンバーの皆さんのリアルな声をお届けします。" imageUrl={doterraAssets.loginGarden} imageAlt="dōTERRA公式掲載の自然豊かな暮らし" sourceHref={doterraSources.japanHome} />
 
         {/* カテゴリタブ */}
         <div className="flex flex-wrap gap-2 justify-center mb-8">

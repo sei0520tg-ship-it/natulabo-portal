@@ -44,6 +44,7 @@ function Router() {
       <Route path="/videos" component={Videos} />
       <Route path="/calendar" component={CalendarPage} />
       <Route path="/links" component={Links} />
+      <Route path="/recipes/:id" component={Recipes} />
       <Route path="/recipes" component={Recipes} />
       <Route path="/testimonials" component={Testimonials} />
       <Route path="/profile" component={Profile} />

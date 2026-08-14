@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
+import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
 import { CheckCircle2, Leaf, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -59,8 +60,10 @@ export default function Register() {
 
   if (step === "done") {
     return (
-      <div className="min-h-screen bg-hero-gradient flex items-center justify-center px-4">
-        <div className="text-center animate-fade-in-up">
+      <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4">
+        <img src={doterraAssets.loginGarden} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(13,35,17,0.84), rgba(28,58,31,0.56))" }} />
+        <div className="relative z-10 rounded-3xl bg-white/95 p-10 text-center shadow-2xl animate-fade-in-up">
           <CheckCircle2 className="w-16 h-16 text-primary mx-auto mb-4" />
           <h2 className="text-2xl font-serif font-semibold mb-2">登録完了</h2>
           <p className="text-muted-foreground mb-6">NatuLaboポータルへようこそ！</p>
@@ -73,13 +76,12 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen bg-hero-gradient flex flex-col items-center justify-center px-4 py-12">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-primary/8 blur-3xl" />
-        <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-accent/8 blur-3xl" />
-      </div>
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-12">
+      <img src={doterraAssets.loginGarden} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
+      <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(13,35,17,0.84), rgba(28,58,31,0.56))" }} />
+      <div className="absolute -right-20 -top-28 h-96 w-96 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.18)" }} />
 
-      <div className="relative w-full max-w-sm animate-fade-in-up">
+      <div className="relative z-10 w-full max-w-sm animate-fade-in-up">
         <div className="text-center mb-8">
           <div
             className="inline-flex items-center justify-center mb-3"
@@ -103,7 +105,7 @@ export default function Register() {
               fontSize: "1.5rem",
               fontWeight: 400,
               letterSpacing: "0.05em",
-              color: "var(--brown-800)",
+              color: "white",
             }}
           >
             会員登録
@@ -114,7 +116,7 @@ export default function Register() {
               fontSize: "0.62rem",
               letterSpacing: "0.25em",
               textTransform: "uppercase",
-              color: "var(--brown-400)",
+              color: "rgba(255,255,255,0.72)",
               marginTop: "0.3rem",
             }}
           >
@@ -123,7 +125,7 @@ export default function Register() {
         </div>
 
         {/* Step indicator */}
-        <div className="flex items-center justify-center gap-2 mb-8">
+        <div className="flex items-center justify-center gap-2 mb-8" style={{ color: "white" }}>
           {["招待コード確認", "プロフィール入力"].map((label, i) => (
             <div key={i} className="flex items-center gap-2">
               <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium transition-colors ${
@@ -135,13 +137,13 @@ export default function Register() {
               }`}>
                 {i + 1}
               </div>
-              <span className="text-xs text-muted-foreground hidden sm:block">{label}</span>
-              {i === 0 && <div className="w-8 h-px bg-border" />}
+              <span className="hidden text-xs sm:block" style={{ color: "rgba(255,255,255,0.78)" }}>{label}</span>
+              {i === 0 && <div className="h-px w-8" style={{ background: "rgba(255,255,255,0.35)" }} />}
             </div>
           ))}
         </div>
 
-        <div className="bg-card rounded-2xl shadow-lg border border-border/50 p-8">
+        <div className="rounded-2xl border p-8 shadow-2xl" style={{ background: "rgba(255,255,255,0.95)", borderColor: "rgba(255,255,255,0.48)", backdropFilter: "blur(16px)" }}>
           {step === "invite" && (
             <form onSubmit={handleInviteSubmit} className="space-y-5">
               <div>
@@ -234,6 +236,9 @@ export default function Register() {
             </form>
           )}
         </div>
+        <a href={doterraSources.coImpact} target="_blank" rel="noreferrer" className="mt-4 block text-center" style={{ color: "rgba(255,255,255,0.54)", fontSize: "0.62rem", letterSpacing: "0.04em" }}>
+          背景画像：dōTERRA公式掲載画像
+        </a>
       </div>
     </div>
   );

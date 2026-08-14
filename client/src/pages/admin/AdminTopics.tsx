@@ -165,7 +165,7 @@ export default function AdminTopics() {
               <TableHeader>
                 <TableRow style={{ background: "var(--cream-50)" }}>
                   <TableHead className="w-12 text-center">順序</TableHead>
-                  <TableHead>タイトル</TableHead>
+                  <TableHead>画像・タイトル</TableHead>
                   <TableHead>本文（抜粋）</TableHead>
                   <TableHead className="w-24">ボタン</TableHead>
                   <TableHead className="w-24">状態</TableHead>
@@ -179,14 +179,17 @@ export default function AdminTopics() {
                       {t.sortOrder}
                     </TableCell>
                     <TableCell>
-                      <div className="font-medium text-sm" style={{ color: "var(--brown-800)" }}>
-                        {t.title}
-                      </div>
-                      {t.imageUrl && (
-                        <div className="text-xs mt-0.5" style={{ color: "var(--brown-400)" }}>
-                          🖼 画像あり
+                      <div className="flex items-center gap-3">
+                        {t.imageUrl ? <img src={t.imageUrl} alt="" className="h-10 w-14 rounded-lg object-cover" /> : <div className="h-10 w-14 rounded-lg" style={{ background: "var(--cream-100)" }} />}
+                        <div>
+                          <div className="font-medium text-sm" style={{ color: "var(--brown-800)" }}>
+                            {t.title}
+                          </div>
+                          <div className="text-xs mt-0.5" style={{ color: "var(--brown-400)" }}>
+                            {t.imageUrl ? "画像あり" : "画像未設定"}
+                          </div>
                         </div>
-                      )}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <span className="text-xs" style={{ color: "var(--brown-500)" }}>

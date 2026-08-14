@@ -2,6 +2,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import MemberLayout from "@/components/MemberLayout";
 import { usePageView } from "@/hooks/usePageView";
 import { trpc } from "@/lib/trpc";
+import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
 import {
   ArrowUpRight,
   BookOpen,
@@ -81,7 +82,7 @@ export default function Dashboard() {
         <div className="mx-auto max-w-[1280px] space-y-14 lg:space-y-18">
           <section className="grid gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)]">
             <div className="relative min-h-[21rem] overflow-hidden rounded-[1.75rem] animate-fade-in-up">
-              <img src="/manus-storage/dashboard_banner_7efc6a80.jpg" alt="緑豊かな森" className="absolute inset-0 h-full w-full object-cover" />
+              <img src={doterraAssets.memberRoseField} alt="dōTERRA公式掲載のローズ畑" className="absolute inset-0 h-full w-full object-cover" />
               <div className="absolute inset-0" style={{ background: "linear-gradient(106deg, rgba(13,35,17,0.94) 0%, rgba(19,57,27,0.72) 58%, rgba(13,35,17,0.42) 100%)" }} />
               <div className="absolute -right-16 -top-28 h-80 w-80 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.22)" }} />
               <div className="relative flex h-full min-h-[21rem] flex-col justify-between p-7 sm:p-10">
@@ -99,6 +100,9 @@ export default function Dashboard() {
                   <p className="mt-4 max-w-md" style={{ color: "rgba(255,255,255,0.76)", fontSize: "0.82rem", fontWeight: 300, letterSpacing: "0.06em", lineHeight: 1.95 }}>
                     小さな心地よさを積み重ねる一日へ。気になるコンテンツから、ゆっくり始めてみましょう。
                   </p>
+                  <a href={doterraSources.shop} target="_blank" rel="noreferrer" className="mt-4 inline-block" style={{ color: "rgba(255,255,255,0.62)", fontSize: "0.62rem", letterSpacing: "0.04em" }}>
+                    背景画像：dōTERRA公式掲載画像
+                  </a>
                 </div>
               </div>
             </div>
@@ -269,12 +273,12 @@ function TopicsCarousel() {
 
   const content = (
     <>
-      <div className="relative z-10 flex h-full flex-col justify-between p-7 sm:p-10">
-        <div className="flex items-center justify-between">
-          <span style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-display)", fontSize: "0.63rem", letterSpacing: "0.28em" }}>LATEST TOPICS</span>
-          <span style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-display)", fontSize: "0.62rem", letterSpacing: "0.2em" }}>{String(current + 1).padStart(2, "0")} — {String(count).padStart(2, "0")}</span>
+      <div className="relative z-10 flex h-full flex-col justify-between p-5 sm:p-7">
+        <div className="flex w-fit items-center gap-4 rounded-full px-3 py-1.5" style={{ background: "rgba(10,25,13,0.60)", backdropFilter: "blur(10px)" }}>
+          <span style={{ color: "rgba(255,255,255,0.94)", fontFamily: "var(--font-display)", fontSize: "0.60rem", letterSpacing: "0.24em" }}>LATEST TOPICS</span>
+          <span style={{ color: "rgba(255,255,255,0.82)", fontFamily: "var(--font-display)", fontSize: "0.58rem", letterSpacing: "0.16em" }}>{String(current + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}</span>
         </div>
-        <div className="max-w-xl">
+        <div className="max-w-xl rounded-2xl p-5 sm:p-6" style={{ background: "rgba(10,25,13,0.74)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.18)" }}>
           <p style={{ color: "white", fontFamily: "var(--font-serif)", fontSize: "clamp(1.35rem, 3vw, 2.2rem)", fontWeight: 400, letterSpacing: "0.065em", lineHeight: 1.5 }}>{topic.title}</p>
           {topic.body && <p className="mt-3 max-w-lg line-clamp-2" style={{ color: "rgba(255,255,255,0.82)", fontSize: "0.78rem", fontWeight: 300, letterSpacing: "0.05em", lineHeight: 1.85 }}>{topic.body}</p>}
           {topic.buttonText && topic.buttonUrl && <span className="mt-5 inline-flex items-center gap-2" style={{ color: "white", fontSize: "0.75rem", fontWeight: 500, letterSpacing: "0.08em" }}>{topic.buttonText}<ArrowUpRight className="h-3.5 w-3.5" /></span>}
@@ -287,7 +291,7 @@ function TopicsCarousel() {
     <section>
       <SectionHeader no="NEWS" title="お知らせ" />
       <div
-        className="relative h-[18rem] select-none overflow-hidden rounded-[1.75rem] sm:h-[20rem]"
+        className="relative h-[20rem] select-none overflow-hidden rounded-[1.75rem] sm:h-[22rem]"
         style={{ cursor: isDragging ? "grabbing" : "grab" }}
         onMouseDown={(event) => dragStart(event.clientX)}
         onMouseMove={(event) => dragMove(event.clientX)}
@@ -298,7 +302,7 @@ function TopicsCarousel() {
         onTouchEnd={dragEnd}
       >
         <div className="absolute inset-0 transition-all duration-700" style={{ background: topic.imageUrl ? `url(${topic.imageUrl}) center/cover no-repeat` : gradients[current % gradients.length] }} />
-        <div className="absolute inset-0" style={{ background: topic.imageUrl ? "linear-gradient(100deg, rgba(10,25,13,0.92), rgba(10,25,13,0.42))" : "linear-gradient(100deg, rgba(0,0,0,0.18), transparent)" }} />
+        <div className="absolute inset-0" style={{ background: topic.imageUrl ? "linear-gradient(to top, rgba(10,25,13,0.72) 0%, rgba(10,25,13,0.16) 55%, rgba(10,25,13,0.04) 100%)" : "linear-gradient(to top, rgba(0,0,0,0.45), transparent)" }} />
         <div className="absolute -right-20 -top-36 h-96 w-96 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.16)" }} />
         {topic.buttonUrl ? (
           isExternal ? <a href={topicHref} target="_blank" rel="noreferrer" className="absolute inset-0 z-10">{content}</a> : <Link href={topicHref} className="absolute inset-0 z-10">{content}</Link>

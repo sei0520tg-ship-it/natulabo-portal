@@ -121,7 +121,7 @@ export default function AdminTestimonials() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/30">
-                  <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">タイトル</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">画像・タイトル</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground hidden sm:table-cell">著者</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground hidden md:table-cell">カテゴリ</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">公開</th>
@@ -132,9 +132,14 @@ export default function AdminTestimonials() {
                 {testimonials?.map((t) => (
                   <tr key={t.id} className="hover:bg-muted/20 transition-colors">
                     <td className="px-4 py-3 text-xs font-medium max-w-xs">
-                      <div className="truncate max-w-[180px]">{t.title}</div>
-                      <div className="text-muted-foreground truncate max-w-[180px] mt-0.5 text-[11px]">
-                        {t.content.slice(0, 40)}…
+                      <div className="flex min-w-0 items-center gap-2.5">
+                        {t.imageUrl ? <img src={t.imageUrl} alt="" className="h-9 w-14 shrink-0 rounded-md object-cover" /> : <div className="h-9 w-14 shrink-0 rounded-md" style={{ background: "var(--cream-100)" }} />}
+                        <div className="min-w-0">
+                          <div className="truncate max-w-[180px]">{t.title}</div>
+                          <div className="text-muted-foreground truncate max-w-[180px] mt-0.5 text-[11px]">
+                            {t.content.slice(0, 40)}…
+                          </div>
+                        </div>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-xs text-muted-foreground hidden sm:table-cell">

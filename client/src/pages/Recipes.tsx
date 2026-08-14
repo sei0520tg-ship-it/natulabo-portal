@@ -1,7 +1,9 @@
 import MemberLayout from "@/components/MemberLayout";
 import { usePageView } from "@/hooks/usePageView";
-import { Search, X, Leaf, Droplets, Home, Sparkles, Wind } from "lucide-react";
+import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
+import { ArrowLeft, Search, X, Leaf, Droplets, Home, Sparkles, Wind } from "lucide-react";
 import { useState } from "react";
+import { useLocation, useRoute } from "wouter";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 interface Recipe {
@@ -163,8 +165,16 @@ const categories = [
   { label: "クリーニング", icon: Home },
 ];
 
+const recipeImages: Record<string, string> = {
+  "アロマ": doterraAssets.memberRoseField,
+  "スキンケア": doterraAssets.essentialOils,
+  "クリーニング": doterraAssets.sourceFarmer,
+  "ボディケア": doterraAssets.loginGarden,
+};
+
 /* ── Recipe Card ────────────────────────────────────────────────────────── */
 function RecipeCard({ recipe, onClick }: { recipe: Recipe; onClick: () => void }) {
+  const imageUrl = recipeImages[recipe.category] ?? doterraAssets.sourceFarmer;
   return (
     <button
       onClick={onClick}
@@ -183,27 +193,14 @@ function RecipeCard({ recipe, onClick }: { recipe: Recipe; onClick: () => void }
         (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
       }}
     >
-      {/* Color band */}
-      <div
-        className="h-1.5 w-full"
-        style={{ background: recipe.oilColor, opacity: 0.7 }}
-      />
-      <div className="p-5">
-        {/* Category badge */}
-        <span
-          className="inline-block px-2.5 py-0.5 rounded-full mb-3"
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "0.58rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            background: "var(--cream-100)",
-            color: "var(--brown-500)",
-          }}
-        >
+      <div className="relative h-48 overflow-hidden">
+        <img src={imageUrl} alt="" aria-hidden="true" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(11,29,14,0.55), transparent 60%)" }} />
+        <span className="absolute bottom-3 left-4 rounded-full px-3 py-1" style={{ background: "rgba(255,255,255,0.90)", color: "var(--forest-600)", fontFamily: "var(--font-display)", fontSize: "0.58rem", letterSpacing: "0.18em" }}>
           {recipe.category}
         </span>
-
+      </div>
+      <div className="p-5">
         {/* Title */}
         <h3
           style={{
@@ -279,42 +276,29 @@ function RecipeCard({ recipe, onClick }: { recipe: Recipe; onClick: () => void }
   );
 }
 
-/* ── Recipe Modal ────────────────────────────────────────────────────────── */
-function RecipeModal({ recipe, onClose }: { recipe: Recipe; onClose: () => void }) {
+/* ── Recipe detail page ─────────────────────────────────────────────────── */
+function RecipeDetailPage({ recipe, onBack }: { recipe: Recipe; onBack: () => void }) {
+  const imageUrl = recipeImages[recipe.category] ?? doterraAssets.sourceFarmer;
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
-      style={{ background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}
-      onClick={onClose}
-    >
-      <div
-        className="w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-3xl sm:rounded-2xl"
-        style={{ background: "var(--cream-50)" }}
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Color header */}
-        <div
-          className="h-2 w-full rounded-t-3xl sm:rounded-t-2xl"
-          style={{ background: recipe.oilColor, opacity: 0.8 }}
-        />
+    <MemberLayout>
+      <div className="container max-w-2xl py-8 lg:py-10">
+        <button onClick={onBack} className="mb-5 inline-flex items-center gap-2 rounded-full px-3 py-2 transition-colors hover:bg-[var(--cream-100)]" style={{ color: "var(--brown-600)", fontSize: "0.76rem", letterSpacing: "0.04em" }}>
+          <ArrowLeft size={15} /> レシピ一覧へ戻る
+        </button>
+        <article
+          className="overflow-hidden rounded-3xl shadow-sm"
+          style={{ background: "var(--cream-50)" }}
+        >
+        <div className="relative h-48 overflow-hidden rounded-t-3xl sm:rounded-t-2xl">
+          <img src={imageUrl} alt={recipe.title} className="h-full w-full object-cover" />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(11,29,14,0.54), transparent)" }} />
+          <span className="absolute bottom-4 left-5 rounded-full px-3 py-1" style={{ background: "rgba(255,255,255,0.90)", color: "var(--forest-600)", fontFamily: "var(--font-display)", fontSize: "0.58rem", letterSpacing: "0.18em" }}>{recipe.category}</span>
+        </div>
 
         <div className="p-6 space-y-6">
           {/* Header */}
           <div className="flex items-start justify-between gap-4">
             <div>
-              <span
-                className="inline-block px-2.5 py-0.5 rounded-full mb-2"
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "0.58rem",
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                  background: "var(--cream-200)",
-                  color: "var(--brown-500)",
-                }}
-              >
-                {recipe.category}
-              </span>
               <h2
                 style={{
                   fontFamily: "var(--font-serif)",
@@ -340,7 +324,7 @@ function RecipeModal({ recipe, onClose }: { recipe: Recipe; onClose: () => void 
               </p>
             </div>
             <button
-              onClick={onClose}
+              onClick={onBack}
               className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors"
               style={{ background: "var(--cream-200)" }}
             >
@@ -361,6 +345,9 @@ function RecipeModal({ recipe, onClose }: { recipe: Recipe; onClose: () => void 
           >
             {recipe.description}
           </p>
+          <a href={doterraSources.japanHome} target="_blank" rel="noreferrer" style={{ color: "var(--brown-500)", fontSize: "0.65rem", letterSpacing: "0.04em" }}>
+            ビジュアル：dōTERRA公式掲載画像
+          </a>
 
           {/* Ingredients */}
           <div
@@ -486,8 +473,9 @@ function RecipeModal({ recipe, onClose }: { recipe: Recipe; onClose: () => void 
             </div>
           )}
         </div>
+        </article>
       </div>
-    </div>
+    </MemberLayout>
   );
 }
 
@@ -496,7 +484,15 @@ export default function Recipes() {
   usePageView("クラフトレシピ集");
   const [selectedCategory, setSelectedCategory] = useState("すべて");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [, setLocation] = useLocation();
+  const [isDetailRoute, routeParams] = useRoute("/recipes/:id");
+  const selectedRecipe = isDetailRoute
+    ? recipes.find((recipe) => recipe.id === Number(routeParams?.id)) ?? null
+    : null;
+
+  if (selectedRecipe) {
+    return <RecipeDetailPage recipe={selectedRecipe} onBack={() => setLocation("/recipes")} />;
+  }
 
   const filtered = recipes.filter((r) => {
     const matchCat = selectedCategory === "すべて" || r.category === selectedCategory;
@@ -660,7 +656,7 @@ export default function Recipes() {
                 <RecipeCard
                   key={recipe.id}
                   recipe={recipe}
-                  onClick={() => setSelectedRecipe(recipe)}
+                  onClick={() => setLocation(`/recipes/${recipe.id}`)}
                 />
               ))}
             </div>
@@ -688,13 +684,6 @@ export default function Recipes() {
         </div>
       </div>
 
-      {/* ── Modal ───────────────────────────────────────────────────── */}
-      {selectedRecipe && (
-        <RecipeModal
-          recipe={selectedRecipe}
-          onClose={() => setSelectedRecipe(null)}
-        />
-      )}
     </MemberLayout>
   );
 }
