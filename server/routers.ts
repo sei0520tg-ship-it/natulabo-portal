@@ -5,6 +5,8 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { storagePut } from "./storage";
+import { getYouTubeConfig, syncYouTubeVideos } from "./youtube";
+import { importSeedVideos } from "./seed/importSeed";
 import * as db from "./db";
 
 // Admin guard middleware
@@ -229,6 +231,35 @@ export const appRouter = router({
     myProgress: protectedProcedure.query(({ ctx }) => db.getAllVideoProgressByUser(ctx.user.id)),
     // 管理者：全会員の視聴進捗一覧
     allProgress: adminProcedure.query(() => db.getAllVideoProgressAdmin()),
+    // 管理者：YouTube再生リストを今すぐ同期する（cronと同じ処理を手動実行）
+    syncNow: adminProcedure.mutation(async () => {
+      try {
+        const result = await syncYouTubeVideos();
+        return { success: true as const, ...result };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: (error as Error).message,
+        });
+      }
+    }),
+    // 管理者：限定公開動画180本を一括インポート（APIキー不要・何度実行しても安全）
+    importSeed: adminProcedure.mutation(async () => {
+      try {
+        const result = await importSeedVideos();
+        return { success: true as const, ...result };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: (error as Error).message,
+        });
+      }
+    }),
+    // 管理者：YouTube連携の設定状況と最終同期日時
+    syncStatus: adminProcedure.query(async () => {
+      const status = await db.getYouTubeSyncStatus();
+      return { configured: getYouTubeConfig() !== null, ...status };
+    }),
   }),
 
   // ─── Events ───────────────────────────────────────────────────────────────

@@ -5,8 +5,11 @@ import { trpc } from "@/lib/trpc";
 import { usePageView } from "@/hooks/usePageView";
 import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
 import { Badge } from "@/components/ui/badge";
-import { PlayCircle, Sparkles, CheckCircle2, Clock, RotateCcw } from "lucide-react";
-import { useState, useCallback } from "react";
+import { PlayCircle, Sparkles, CheckCircle2, Clock, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useCallback, useEffect, useRef } from "react";
+
+// 1ページあたりの動画数。カードは2列表示なので偶数が収まりが良い。
+const PAGE_SIZE = 12;
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -246,6 +249,27 @@ export default function Videos() {
 
   const latestVideos = (videos ?? []).filter((v) => v.isLatest);
 
+  // ── ページネーション ──────────────────────────────────────────────
+  const [page, setPage] = useState(1);
+  const gridTopRef = useRef<HTMLDivElement | null>(null);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  // カテゴリ変更や動画削除で件数が減ったとき、存在しないページに取り残されないようにする
+  const currentPage = Math.min(page, totalPages);
+  const paged = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  useEffect(() => {
+    if (page !== currentPage) setPage(currentPage);
+  }, [page, currentPage]);
+
+  const goToPage = (next: number) => {
+    const target = Math.min(Math.max(next, 1), totalPages);
+    if (target === currentPage) return;
+    setPage(target);
+    setActiveVideo(null); // 再生中の動画がページ外へ消えるのを防ぐ
+    gridTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const handlePlay = (videoId: number) => {
     const prog = progressMap.get(videoId);
     // 未完了で一定以上視聴済みの場合は確認ダイアログを表示
@@ -305,13 +329,13 @@ export default function Videos() {
         )}
 
         {/* Category filter */}
-        <div className="animate-fade-in-up stagger-2">
+        <div ref={gridTopRef} className="animate-fade-in-up stagger-2 scroll-mt-20">
           <h2 className="text-base font-semibold mb-3">カテゴリ別</h2>
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => setActiveCategory(cat)}
+                onClick={() => { setActiveCategory(cat); setPage(1); setActiveVideo(null); }}
                 className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                   activeCategory === cat
                     ? "bg-primary text-primary-foreground"
@@ -336,7 +360,7 @@ export default function Videos() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {filtered.map((video, index) => (
+            {paged.map((video, index) => (
               <div
                 key={video.id}
                 className="animate-fade-in-up"
@@ -352,6 +376,41 @@ export default function Videos() {
               </div>
             ))}
           </div>
+        )}
+
+        {/* ページ送り */}
+        {!isLoading && filtered.length > 0 && (
+          <nav aria-label="動画一覧のページ送り" className="flex flex-col items-center gap-3 pt-2">
+            <p className="text-xs text-muted-foreground" aria-live="polite">
+              全{filtered.length}件中 {(currentPage - 1) * PAGE_SIZE + 1}〜
+              {Math.min(currentPage * PAGE_SIZE, filtered.length)}件を表示
+            </p>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl gap-1"
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage <= 1}
+              >
+                <ChevronLeft size={15} />
+                前のページ
+              </Button>
+              <span className="px-3 text-sm font-medium tabular-nums">
+                {currentPage} / {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl gap-1"
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage >= totalPages}
+              >
+                次のページ
+                <ChevronRight size={15} />
+              </Button>
+            </div>
+          </nav>
         )}
 
         {filtered.length === 0 && !isLoading && (
