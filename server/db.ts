@@ -234,6 +234,21 @@ export async function deleteVideo(id: number) {
   await db.delete(videos).where(eq(videos.id, id));
 }
 
+/** YouTube から取り込んだ動画の件数と、最後に同期した日時を返す（管理画面の表示用）。 */
+export async function getYouTubeSyncStatus() {
+  const db = await getDb();
+  if (!db) return { syncedCount: 0, lastSyncedAt: null as Date | null };
+  const rows = await db
+    .select({ syncedAt: videos.syncedAt })
+    .from(videos)
+    .where(sql`${videos.youtubeVideoId} is not null`)
+    .orderBy(desc(videos.syncedAt));
+  return {
+    syncedCount: rows.length,
+    lastSyncedAt: rows[0]?.syncedAt ?? null,
+  };
+}
+
 // ─── Events ──────────────────────────────────────────────────────────────────
 
 export async function getEvents(from?: Date) {

@@ -102,6 +102,10 @@ export const videos = mysqlTable("videos", {
   isLatest: boolean("isLatest").default(false).notNull(),
   isPublished: boolean("isPublished").default(true).notNull(),
   sortOrder: int("sortOrder").default(0).notNull(),
+  // YouTube 自動同期用。手動登録した動画では null のまま。
+  youtubeVideoId: varchar("youtubeVideoId", { length: 32 }).unique(),
+  publishedAt: timestamp("publishedAt"), // YouTube 上の公開日時
+  syncedAt: timestamp("syncedAt"),       // 最後に同期した日時
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

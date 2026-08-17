@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus, RefreshCw, Trash2, Youtube } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -24,6 +24,19 @@ export default function AdminVideos() {
   });
   const deleteMutation = trpc.video.delete.useMutation({
     onSuccess: () => { toast.success("削除しました"); refetch(); },
+    onError: (e: { message: string }) => toast.error(e.message),
+  });
+
+  // YouTube 再生リストとの同期（通常は cron が自動実行。ここは手動トリガー用）
+  const { data: syncStatus, refetch: refetchStatus } = trpc.video.syncStatus.useQuery();
+  const syncMutation = trpc.video.syncNow.useMutation({
+    onSuccess: (r) => {
+      toast.success(
+        `同期しました（取得 ${r.fetched}件 / 新規 ${r.inserted} / 更新 ${r.updated} / 紐付け ${r.linked} / 非表示 ${r.unpublished}）`
+      );
+      refetch();
+      refetchStatus();
+    },
     onError: (e: { message: string }) => toast.error(e.message),
   });
 
@@ -49,6 +62,40 @@ export default function AdminVideos() {
           <Button onClick={openCreate} size="sm" className="rounded-xl gap-1.5">
             <Plus size={15} /> 追加
           </Button>
+        </div>
+
+        {/* YouTube 自動連携の状態 */}
+        <div className="bg-card rounded-xl border border-border p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-start gap-2.5 min-w-0">
+              <Youtube size={18} className="mt-0.5 shrink-0 text-red-600" />
+              <div className="min-w-0">
+                <p className="text-sm font-medium">YouTube自動連携</p>
+                {syncStatus?.configured ? (
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    同期済み {syncStatus.syncedCount}件
+                    {syncStatus.lastSyncedAt
+                      ? ` ・ 最終同期 ${new Date(syncStatus.lastSyncedAt).toLocaleString("ja-JP")}`
+                      : " ・ 未同期"}
+                  </p>
+                ) : (
+                  <p className="text-xs text-amber-600 mt-0.5">
+                    未設定です。環境変数 YOUTUBE_API_KEY と YOUTUBE_PLAYLIST_ID を設定してください。
+                  </p>
+                )}
+              </div>
+            </div>
+            <Button
+              onClick={() => syncMutation.mutate()}
+              disabled={!syncStatus?.configured || syncMutation.isPending}
+              size="sm"
+              variant="outline"
+              className="rounded-xl gap-1.5"
+            >
+              <RefreshCw size={15} className={syncMutation.isPending ? "animate-spin" : ""} />
+              {syncMutation.isPending ? "同期中..." : "今すぐ同期"}
+            </Button>
+          </div>
         </div>
 
         <div className="bg-card rounded-xl border border-border overflow-hidden">

@@ -8,6 +8,7 @@ import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { syncYoutubeHandler } from "../scheduled/syncYoutube";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -44,6 +45,9 @@ async function startServer() {
       createContext,
     })
   );
+  // Scheduled (cron) callbacks — /api/scheduled/* は自動登録されないので明示的に生やす。
+  // Vite / static のフォールスルーより前に置くこと。
+  app.post("/api/scheduled/syncYoutube", syncYoutubeHandler);
   // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
