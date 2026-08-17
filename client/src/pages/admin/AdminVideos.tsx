@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Pencil, Plus, RefreshCw, Trash2, Youtube } from "lucide-react";
+import { Download, Pencil, Plus, RefreshCw, Trash2, Youtube } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -24,6 +24,17 @@ export default function AdminVideos() {
   });
   const deleteMutation = trpc.video.delete.useMutation({
     onSuccess: () => { toast.success("削除しました"); refetch(); },
+    onError: (e: { message: string }) => toast.error(e.message),
+  });
+
+  // 限定公開動画180本の一括インポート（APIキー不要）
+  const importMutation = trpc.video.importSeed.useMutation({
+    onSuccess: (r) => {
+      toast.success(
+        `インポート完了（対象 ${r.seedCount}件 / 新規 ${r.inserted} / 更新 ${r.updated} / 紐付け ${r.linked}）`
+      );
+      refetch();
+    },
     onError: (e: { message: string }) => toast.error(e.message),
   });
 
@@ -62,6 +73,32 @@ export default function AdminVideos() {
           <Button onClick={openCreate} size="sm" className="rounded-xl gap-1.5">
             <Plus size={15} /> 追加
           </Button>
+        </div>
+
+        {/* 限定公開動画の一括インポート */}
+        <div className="bg-card rounded-xl border border-border p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-start gap-2.5 min-w-0">
+              <Youtube size={18} className="mt-0.5 shrink-0 text-red-600" />
+              <div className="min-w-0">
+                <p className="text-sm font-medium">YouTube動画を一括インポート</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  限定公開の180本を一度に登録します。何度押しても重複しません。
+                  <br />
+                  非公開の24本は会員が再生できないため含まれていません。
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={() => importMutation.mutate()}
+              disabled={importMutation.isPending}
+              size="sm"
+              className="rounded-xl gap-1.5"
+            >
+              <Download size={15} />
+              {importMutation.isPending ? "インポート中..." : "180本をインポート"}
+            </Button>
+          </div>
         </div>
 
         {/* YouTube 自動連携の状態 */}

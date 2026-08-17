@@ -6,6 +6,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { storagePut } from "./storage";
 import { getYouTubeConfig, syncYouTubeVideos } from "./youtube";
+import { importSeedVideos } from "./seed/importSeed";
 import * as db from "./db";
 
 // Admin guard middleware
@@ -234,6 +235,18 @@ export const appRouter = router({
     syncNow: adminProcedure.mutation(async () => {
       try {
         const result = await syncYouTubeVideos();
+        return { success: true as const, ...result };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: (error as Error).message,
+        });
+      }
+    }),
+    // 管理者：限定公開動画180本を一括インポート（APIキー不要・何度実行しても安全）
+    importSeed: adminProcedure.mutation(async () => {
+      try {
+        const result = await importSeedVideos();
         return { success: true as const, ...result };
       } catch (error) {
         throw new TRPCError({
