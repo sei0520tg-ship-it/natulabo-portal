@@ -131,3 +131,15 @@
 - [x] 追加変更8の白パネル上テキストのコントラストを確認する
 - [x] 追加変更8の画像カードリンク・お知らせ前後ボタン・ドットインジケーターのコントラスト比を実測し、結果をdocsに記録する
 - [x] 上記確認後にTypeScript・Vitestを再実行する
+
+## 追加変更9（YouTube Studio動画の最新順反映）
+- [ ] 指定YouTube Studioチャンネルのログイン状態・公開動画・埋め込み可否を確認
+- [ ] 公開動画のタイトル・YouTube ID・公開日・サムネイルを最新順で取得
+- [ ] 動画データへ最新順で登録し、既存デモ動画との重複を整理
+- [ ] 学習動画ページで最新順の並び・再生・続きから再生を確認
+- [ ] TypeScript・Vitest検証とチェックポイント保存
+
+## 追加変更10（GitHub main同期・videosスキーマ移行）
+- [ ] GitHub mainの最新コミットを同期し、videos関連差分を確認
+- [ ] videosテーブルへyoutubeVideoId・publishedAt・syncedAtを安全に適用
+- [ ] DBスキーマ・TypeScript・Vitestを検証し、公開用チェックポイントを保存
