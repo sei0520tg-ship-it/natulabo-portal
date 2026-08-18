@@ -21,12 +21,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 
 const menuItems = [
-  { href: "/setup", icon: Settings2, title: "はじめての方へ", en: "START HERE", image: doterraAssets.sourceFarmer },
+  { href: "/setup", icon: Settings2, title: "はじめての方へ", en: "START HERE", image: doterraAssets.leafyBlossom },
   { href: "/videos", icon: BookOpen, title: "学習動画", en: "VIDEO LIBRARY", image: doterraAssets.essentialOils },
   { href: "/recipes", icon: Sparkles, title: "クラフトレシピ", en: "RECIPES", image: doterraAssets.memberRoseField },
   { href: "/testimonials", icon: MessageCircleHeart, title: "体験談", en: "STORIES", image: doterraAssets.loginGarden },
-  { href: "/calendar", icon: CalendarDays, title: "イベント", en: "EVENTS", image: doterraAssets.memberRoseField },
-  { href: "/links", icon: ExternalLink, title: "リンク集", en: "USEFUL LINKS", image: doterraAssets.sourceFarmer },
+  { href: "/calendar", icon: CalendarDays, title: "イベント", en: "EVENTS", image: doterraAssets.botanicalSprigs },
+  { href: "/links", icon: ExternalLink, title: "リンク集", en: "USEFUL LINKS", image: doterraAssets.greenLeaves },
 ];
 
 type Topic = {
@@ -190,7 +190,7 @@ export default function Dashboard() {
                   {latestVideos.map((video) => (
                     <Link key={video.id} href={`/videos#video-${video.id}`} className="group overflow-hidden rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1" style={{ border: "1px solid var(--cream-300)" }}>
                       <div className="relative h-28 overflow-hidden" style={{ background: "var(--forest-600)" }}>
-                        {video.thumbnailUrl && <img src={video.thumbnailUrl} alt="" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />}
+                        {video.thumbnailUrl && <img src={video.thumbnailUrl} alt="" aria-hidden="true" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />}
                         <div className="absolute inset-0" style={{ background: video.thumbnailUrl ? "linear-gradient(to top, rgba(9,25,12,0.48), transparent)" : "linear-gradient(130deg, var(--forest-600), var(--forest-400))" }} />
                         <span className="absolute bottom-3 left-3 flex h-8 w-8 items-center justify-center rounded-full" style={{ background: "rgba(255,255,255,0.9)", color: "var(--forest-600)" }}><Play className="ml-0.5 h-3.5 w-3.5" /></span>
                       </div>

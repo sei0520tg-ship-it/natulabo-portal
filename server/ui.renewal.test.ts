@@ -26,6 +26,23 @@ describe("UIリニューアルの構成", () => {
     expect(dashboard).toContain("item.image");
   });
 
+  it("あなたのためのコンテンツに重複しない植物系ビジュアルを割り当てる", () => {
+    const dashboard = readProjectFile("client/src/pages/Dashboard.tsx");
+    const assets = readProjectFile("client/src/lib/doterraAssets.ts");
+
+    [
+      "doterraAssets.leafyBlossom",
+      "doterraAssets.essentialOils",
+      "doterraAssets.memberRoseField",
+      "doterraAssets.loginGarden",
+      "doterraAssets.botanicalSprigs",
+      "doterraAssets.greenLeaves",
+    ].forEach((asset) => expect(dashboard).toContain(asset));
+    expect(assets).toContain("leafyBlossom");
+    expect(assets).toContain("botanicalSprigs");
+    expect(assets).toContain("greenLeaves");
+  });
+
   it("ログイン・レシピ・初期設定に公式画像と誤リンクのない導線を保持する", () => {
     const login = readProjectFile("client/src/pages/Login.tsx");
     const recipes = readProjectFile("client/src/pages/Recipes.tsx");
@@ -73,5 +90,26 @@ describe("UIリニューアルの構成", () => {
     expect(memberLayout).toContain('aria-label="プロフィールを開く"');
     expect(css).toContain(":focus-visible");
     expect(css).toContain("prefers-reduced-motion: reduce");
+  });
+
+  it("イベント画面に共有カレンダー購読と個別予定追加の導線を保持する", () => {
+    const calendar = readProjectFile("client/src/pages/CalendarPage.tsx");
+    const server = readProjectFile("server/_core/index.ts");
+
+    expect(calendar).toContain("NatuLaboイベントをカレンダーに購読");
+    expect(calendar).toContain("Googleで購読");
+    expect(calendar).toContain("/api/calendar/events/${event.id}.ics");
+    expect(server).toContain('/api/calendar/natulabo.ics');
+    expect(server).toContain('/api/calendar/events/:id.ics');
+  });
+
+  it("YouTubeプレイヤーをReact管理DOMから隔離し、公開日が新しい順で動画を取得する", () => {
+    const player = readProjectFile("client/src/components/YouTubePlayer.tsx");
+    const database = readProjectFile("server/db.ts");
+
+    expect(player).toContain("const hostRef = useRef<HTMLDivElement | null>(null)");
+    expect(player).toContain('document.createElement("div")');
+    expect(player).toContain("hostRef.current?.replaceChildren(mountNode)");
+    expect(database).toContain("orderBy(desc(videos.publishedAt), videos.sortOrder)");
   });
 });

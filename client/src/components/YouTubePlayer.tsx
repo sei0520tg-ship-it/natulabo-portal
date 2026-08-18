@@ -123,6 +123,7 @@ export default function YouTubePlayer({
   className = "",
 }: YouTubePlayerProps) {
   const containerId = useRef(`yt-player-${++playerInstanceCounter}`);
+  const hostRef = useRef<HTMLDivElement | null>(null);
   const playerRef = useRef<YTPlayer | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const onProgressRef = useRef(onProgress);
@@ -157,6 +158,13 @@ export default function YouTubePlayer({
   useEffect(() => {
     setErrorMsg(null);
 
+    // IFrame APIがReact管理の要素そのものを置換すると、アンマウント時に
+    // ReactのDOM差分処理と衝突する。プレイヤー専用の子要素を命令的に作成して隔離する。
+    const mountNode = document.createElement("div");
+    mountNode.id = containerId.current;
+    mountNode.className = "h-full w-full";
+    hostRef.current?.replaceChildren(mountNode);
+
     loadYouTubeAPI(() => {
       if (!window.YT?.Player) return;
       if (playerRef.current) {
@@ -164,7 +172,7 @@ export default function YouTubePlayer({
         playerRef.current = null;
       }
 
-      playerRef.current = new window.YT.Player(containerId.current, {
+      playerRef.current = new window.YT.Player(mountNode.id, {
         videoId,
         playerVars: {
           autoplay: 1,
@@ -214,6 +222,9 @@ export default function YouTubePlayer({
       stopProgressTracking();
       playerRef.current?.destroy();
       playerRef.current = null;
+      if (hostRef.current?.contains(mountNode)) {
+        hostRef.current.replaceChildren();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoId]);
@@ -237,7 +248,7 @@ export default function YouTubePlayer({
 
   return (
     <div className={`w-full h-full ${className}`}>
-      <div id={containerId.current} className="w-full h-full" />
+      <div ref={hostRef} className="w-full h-full" />
     </div>
   );
 }

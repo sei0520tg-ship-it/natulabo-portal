@@ -9,6 +9,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { syncYoutubeHandler } from "../scheduled/syncYoutube";
+import { getNatuLaboCalendarIcs, getNatuLaboEventIcs } from "../calendarFeed";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -48,6 +49,35 @@ async function startServer() {
   // Scheduled (cron) callbacks — /api/scheduled/* は自動登録されないので明示的に生やす。
   // Vite / static のフォールスルーより前に置くこと。
   app.post("/api/scheduled/syncYoutube", syncYoutubeHandler);
+  // 会員がGoogle・Apple・Outlookカレンダーで購読できる公開イベントフィード。
+  // 外部カレンダーはセッション認証を送れないため、公開済みイベントのみを返す。
+  app.get("/api/calendar/natulabo.ics", async (_req, res) => {
+    const ics = await getNatuLaboCalendarIcs();
+    res.set({
+      "Content-Type": "text/calendar; charset=utf-8",
+      "Content-Disposition": "inline; filename=natulabo-events.ics",
+      "Cache-Control": "no-store",
+    });
+    res.send(ics);
+  });
+  app.get("/api/calendar/events/:id.ics", async (req, res) => {
+    const id = Number.parseInt(req.params.id, 10);
+    if (!Number.isInteger(id)) {
+      res.status(400).send("Invalid event id");
+      return;
+    }
+    const ics = await getNatuLaboEventIcs(id);
+    if (!ics) {
+      res.status(404).send("Event not found");
+      return;
+    }
+    res.set({
+      "Content-Type": "text/calendar; charset=utf-8",
+      "Content-Disposition": `attachment; filename=natulabo-event-${id}.ics`,
+      "Cache-Control": "no-store",
+    });
+    res.send(ics);
+  });
   // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);

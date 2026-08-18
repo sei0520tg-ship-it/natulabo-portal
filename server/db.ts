@@ -208,7 +208,11 @@ export async function deleteContactItem(id: number) {
 export async function getVideos() {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(videos).where(eq(videos.isPublished, true)).orderBy(videos.category, videos.sortOrder);
+  return db
+    .select()
+    .from(videos)
+    .where(eq(videos.isPublished, true))
+    .orderBy(desc(videos.publishedAt), videos.sortOrder);
 }
 
 export async function getAllVideos() {

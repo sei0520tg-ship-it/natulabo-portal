@@ -8,6 +8,9 @@ export const doterraAssets = {
   sourceFarmer: "/manus-storage/doterra-source-farmer_9fb55667.jpg",
   essentialOils: "/manus-storage/doterra-essential-oils_94997a61.png",
   sourceToYouCampaign: "/manus-storage/doterra-source-to-you-reference_8f83909a.png",
+  leafyBlossom: "/manus-storage/doterra-leafy-blossom_243261bf.jpg",
+  botanicalSprigs: "/manus-storage/doterra-botanical-sprigs_b339d129.jpg",
+  greenLeaves: "/manus-storage/doterra-green-leaves_63d609b7.jpg",
 } as const;
 
 export const doterraSources = {

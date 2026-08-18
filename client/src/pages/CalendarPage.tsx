@@ -4,7 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { usePageView } from "@/hooks/usePageView";
 import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, ExternalLink, MapPin } from "lucide-react";
+import { CalendarPlus, ChevronLeft, ChevronRight, Copy, ExternalLink, MapPin, Rss } from "lucide-react";
 import { useState } from "react";
 
 const categoryColors: Record<string, { bg: string; text: string; dot: string }> = {
@@ -30,6 +30,17 @@ export default function CalendarPage() {
   const { data: events } = trpc.event.list.useQuery({});
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const calendarFeedUrl = `${window.location.origin}/api/calendar/natulabo.ics`;
+  const googleSubscribeUrl = `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(calendarFeedUrl)}`;
+  const appleSubscribeUrl = calendarFeedUrl.replace(/^https?:/, "webcal:");
+
+  const copyCalendarFeedUrl = async () => {
+    await navigator.clipboard.writeText(calendarFeedUrl);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2200);
+  };
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -69,6 +80,29 @@ export default function CalendarPage() {
     <MemberLayout>
       <div className="container py-6 lg:py-8 space-y-6">
         <ContentVisualHero eyebrow="EVENTS & COMMUNITY" title="イベント・講座カレンダー" description="学び、つながり、日々の暮らしを豊かにする予定をカレンダーから確認できます。" imageUrl={doterraAssets.memberRoseField} imageAlt="dōTERRA公式掲載のローズ畑" sourceHref={doterraSources.japanHome} />
+
+        <section className="rounded-3xl border border-primary/15 bg-primary/[0.055] p-5 sm:p-6 animate-fade-in-up" aria-labelledby="calendar-subscribe-title">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-2xl">
+              <div className="mb-2 flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-primary">
+                <Rss size={14} aria-hidden="true" /> SHARED CALENDAR
+              </div>
+              <h2 id="calendar-subscribe-title" className="font-serif text-xl text-foreground sm:text-2xl">NatuLaboイベントをカレンダーに購読</h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">最初に一度だけ登録すれば、管理者が追加・変更した公開予定がご利用のカレンダーにも反映されます。</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild className="rounded-full bg-primary px-4 text-primary-foreground hover:bg-primary/90">
+                <a href={googleSubscribeUrl} target="_blank" rel="noopener noreferrer"><CalendarPlus size={15} aria-hidden="true" />Googleで購読</a>
+              </Button>
+              <Button asChild variant="outline" className="rounded-full border-primary/25 bg-background/75 px-4 text-primary hover:bg-primary/10">
+                <a href={appleSubscribeUrl}><CalendarPlus size={15} aria-hidden="true" />Apple / Outlook</a>
+              </Button>
+              <Button type="button" variant="ghost" onClick={copyCalendarFeedUrl} className="rounded-full px-3 text-primary hover:bg-primary/10" aria-label="共有カレンダーの購読用URLをコピー">
+                <Copy size={15} aria-hidden="true" />{copied ? "コピーしました" : "URLをコピー"}
+              </Button>
+            </div>
+          </div>
+        </section>
 
         {/* Calendar */}
         <div className="bg-card rounded-2xl border border-border p-4 animate-fade-in-up stagger-1">
@@ -176,6 +210,15 @@ export default function CalendarPage() {
 function EventCard({ event }: { event: { id: number; title: string; description?: string | null; category: string; startAt: Date; endAt?: Date | null; location?: string | null; formUrl?: string | null } }) {
   const colors = categoryColors[event.category] ?? categoryColors.online;
   const start = new Date(event.startAt);
+  const end = event.endAt ? new Date(event.endAt) : new Date(start.getTime() + 60 * 60 * 1000);
+  const googleCalendarUrl = (() => {
+    const format = (date: Date) => date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+    const details = [event.description, event.formUrl ? `申込み・詳細: ${event.formUrl}` : null].filter(Boolean).join("\n\n");
+    const query = new URLSearchParams({ action: "TEMPLATE", text: event.title, dates: `${format(start)}/${format(end)}` });
+    if (details) query.set("details", details);
+    if (event.location) query.set("location", event.location);
+    return `https://calendar.google.com/calendar/render?${query.toString()}`;
+  })();
   return (
     <div className={`bg-card rounded-2xl border p-4 ${colors.bg.replace("bg-", "border-").replace("-50", "-100")}`}>
       <div className="flex items-start gap-3">
@@ -219,6 +262,14 @@ function EventCard({ event }: { event: { id: number; title: string; description?
               申込みフォームへ
             </a>
           )}
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+            <a href={googleCalendarUrl} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center gap-1.5 text-xs font-semibold ${colors.text} hover:underline`}>
+              <CalendarPlus size={13} aria-hidden="true" />Googleカレンダーに追加
+            </a>
+            <a href={`/api/calendar/events/${event.id}.ics`} download className={`inline-flex items-center gap-1.5 text-xs font-semibold ${colors.text} hover:underline`}>
+              <CalendarPlus size={13} aria-hidden="true" />Apple / Outlookに追加
+            </a>
+          </div>
         </div>
       </div>
     </div>
