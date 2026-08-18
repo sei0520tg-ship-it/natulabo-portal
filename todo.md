@@ -140,6 +140,9 @@
 - [ ] TypeScript・Vitest検証とチェックポイント保存
 
 ## 追加変更10（GitHub main同期・videosスキーマ移行）
-- [ ] GitHub mainの最新コミットを同期し、videos関連差分を確認
-- [ ] videosテーブルへyoutubeVideoId・publishedAt・syncedAtを安全に適用
-- [ ] DBスキーマ・TypeScript・Vitestを検証し、公開用チェックポイントを保存
+- [x] チェックポイント経由でGitHub mainの最新変更を同期し、videos関連差分を確認
+- [x] videosテーブルへyoutubeVideoId・publishedAt・syncedAtを安全に適用
+- [x] DBスキーマ・TypeScript・Vitestを検証
+- [ ] GitHub同期・DB移行後の公開用チェックポイントを保存
+- [x] GitHub mainの同期コミットIDとvideos関連差分を確認・記録する
+- [x] Drizzleの既存テーブルと移行履歴の不整合を確認し、db:push失敗の原因・代替適用内容を記録する
