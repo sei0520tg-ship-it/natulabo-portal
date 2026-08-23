@@ -61,8 +61,10 @@ describe("UIリニューアルの構成", () => {
     const app = readProjectFile("client/src/App.tsx");
     const recipes = readProjectFile("client/src/pages/Recipes.tsx");
 
-    expect(visualHero).toContain("dōTERRA公式掲載画像");
-    expect(videos).toContain("videoFallbackImages");
+    // 写真をやめてパステルの面にしたので、ヒーローに img は存在しない
+    expect(visualHero).not.toContain("<img");
+    expect(visualHero).not.toContain("dōTERRA公式掲載画像");
+    expect(videos).toContain("fallbackTones");
     expect(setup).toContain("ContentVisualHero");
     expect(app).toContain('path="/recipes/:id"');
     expect(recipes).toContain('useRoute("/recipes/:id")');
@@ -76,11 +78,44 @@ describe("UIリニューアルの構成", () => {
     const adminVideos = readProjectFile("client/src/pages/admin/AdminVideos.tsx");
     const adminTestimonials = readProjectFile("client/src/pages/admin/AdminTestimonials.tsx");
 
-    expect(visualHero).toContain("sm:min-h-[17rem]");
-    expect(visualHero).toContain('alt={imageAlt}');
+    // アイコンチップとトーンで構成されていること
+    expect(visualHero).toContain("icon: Icon");
+    expect(visualHero).toContain("tone(toneName)");
+    // 装飾は読み上げ対象から外す
+    expect(visualHero).toContain('aria-hidden="true"');
     pages.forEach((page) => expect(page).toContain("ContentVisualHero"));
     expect(adminVideos).toContain("サムネイル画像URL");
     expect(adminTestimonials).toContain("t.imageUrl ? <img");
+  });
+
+  it("参照しているCSS変数がすべて index.css で定義されている", () => {
+    // 以前 --brown-600 など5変数が未定義のまま参照され、色が当たっていなかった。
+    // 文字列の一致ではなく構造的な不変条件として検証し、再発を防ぐ。
+    const css = readProjectFile("client/src/index.css");
+    const defined = new Set(Array.from(css.matchAll(/^\s*(--[a-z0-9-]+)\s*:/gm), (m) => m[1]));
+
+    // shadcn/ui と Tailwind が実行時に注入するものは対象外
+    const runtimeProvided = /^--(tw-|radix-|sidebar-width|spacing$|reveal-delay|letter-delay)/;
+
+    const dir = path.resolve(process.cwd(), "client/src");
+    const walk = (d: string): string[] =>
+      fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => {
+        const full = path.join(d, e.name);
+        if (e.isDirectory()) return walk(full);
+        return /\.(tsx?|css)$/.test(e.name) ? [full] : [];
+      });
+
+    const missing = new Map<string, string>();
+    for (const file of walk(dir)) {
+      const text = fs.readFileSync(file, "utf8");
+      for (const m of text.matchAll(/var\((--[a-zA-Z0-9-]+)/g)) {
+        const name = m[1];
+        if (defined.has(name) || runtimeProvided.test(name)) continue;
+        if (!missing.has(name)) missing.set(name, path.relative(dir, file));
+      }
+    }
+
+    expect(Array.from(missing.entries())).toEqual([]);
   });
 
   it("会員レイアウトと全体テーマにキーボードフォーカス導線を保持する", () => {

@@ -63,6 +63,16 @@
   --lilac-500: oklch(0.720 0.105 300);
   --lilac-700: oklch(0.510 0.125 300);
 
+  --sage-100: oklch(0.952 0.028 135);
+  --sage-300: oklch(0.878 0.055 133);
+  --sage-500: oklch(0.700 0.085 132);
+  --sage-700: oklch(0.475 0.080 132);
+
+  --apricot-100: oklch(0.958 0.035 55);
+  --apricot-300: oklch(0.885 0.070 52);
+  --apricot-500: oklch(0.745 0.115 48);
+  --apricot-700: oklch(0.530 0.110 45);
+
   /* Semantic tokens */
   --background:           var(--cream-50);
   --foreground:           var(--brown-800);
@@ -182,6 +192,14 @@
   --color-lilac-300: var(--lilac-300);
   --color-lilac-500: var(--lilac-500);
   --color-lilac-700: var(--lilac-700);
+  --color-sage-100: var(--sage-100);
+  --color-sage-300: var(--sage-300);
+  --color-sage-500: var(--sage-500);
+  --color-sage-700: var(--sage-700);
+  --color-apricot-100: var(--apricot-100);
+  --color-apricot-300: var(--apricot-300);
+  --color-apricot-500: var(--apricot-500);
+  --color-apricot-700: var(--apricot-700);
 
   --radius-sm:   calc(var(--radius) - 8px);
   --radius-md:   calc(var(--radius) - 4px);

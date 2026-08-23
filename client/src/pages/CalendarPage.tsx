@@ -2,9 +2,8 @@ import MemberLayout from "@/components/MemberLayout";
 import ContentVisualHero from "@/components/ContentVisualHero";
 import { trpc } from "@/lib/trpc";
 import { usePageView } from "@/hooks/usePageView";
-import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
 import { Button } from "@/components/ui/button";
-import { CalendarPlus, ChevronLeft, ChevronRight, Copy, ExternalLink, MapPin, Rss } from "lucide-react";
+import { CalendarDays, CalendarPlus, ChevronLeft, ChevronRight, Copy, ExternalLink, MapPin, Rss } from "lucide-react";
 import { useState } from "react";
 
 const categoryColors: Record<string, { bg: string; text: string; dot: string }> = {
@@ -88,7 +87,7 @@ export default function CalendarPage() {
   return (
     <MemberLayout>
       <div className="container py-6 lg:py-8 space-y-6">
-        <ContentVisualHero eyebrow="EVENTS & COMMUNITY" title="イベント・講座カレンダー" description="学び、つながり、日々の暮らしを豊かにする予定をカレンダーから確認できます。" imageUrl={doterraAssets.memberRoseField} imageAlt="dōTERRA公式掲載のローズ畑" sourceHref={doterraSources.japanHome} />
+        <ContentVisualHero eyebrow="EVENTS & COMMUNITY" title="イベント・講座カレンダー" description="学び、つながり、日々の暮らしを豊かにする予定をカレンダーから確認できます。" icon={CalendarDays} tone="lilac" />
 
         <section className="rounded-3xl border border-primary/15 bg-primary/[0.055] p-5 sm:p-6 animate-fade-in-up" aria-labelledby="calendar-subscribe-title">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">

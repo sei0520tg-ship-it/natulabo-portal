@@ -2,7 +2,6 @@ import MemberLayout from "@/components/MemberLayout";
 import { trpc } from "@/lib/trpc";
 import { usePageView } from "@/hooks/usePageView";
 import ContentVisualHero from "@/components/ContentVisualHero";
-import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
 import { ExternalLink } from "lucide-react";
 
 const categoryColors: Record<string, { bg: string; text: string; border: string }> = {
@@ -28,7 +27,7 @@ export default function Links() {
   return (
     <MemberLayout>
       <div className="container py-6 lg:py-8 space-y-8">
-        <ContentVisualHero eyebrow="USEFUL LINKS" title="外部リンク集" description="dōTERRAの愛用に役立つ外部サイトを、カテゴリ別にまとめています。" imageUrl={doterraAssets.sourceFarmer} imageAlt="dōTERRA公式掲載の原料生産地" sourceHref={doterraSources.japanHome} />
+        <ContentVisualHero eyebrow="USEFUL LINKS" title="外部リンク集" description="dōTERRAの愛用に役立つ外部サイトを、カテゴリ別にまとめています。" icon={ExternalLink} tone="butter" />
 
         {isLoading ? (
           <div className="space-y-6">
