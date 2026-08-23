@@ -27,10 +27,19 @@ const DAYS = ["日", "月", "火", "水", "木", "金", "土"];
 
 export default function CalendarPage() {
   usePageView("カレンダー");
-  const { data: events } = trpc.event.list.useQuery({});
+  const { data: allEvents } = trpc.event.list.useQuery({});
+  const { data: groups } = trpc.event.groups.useQuery();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [activeGroup, setActiveGroup] = useState<string>("すべて");
   const [copied, setCopied] = useState(false);
+
+  // グループ（なちゅらぼ公式 / 樹里エリー限定 など）での絞り込み。
+  // グループが1つも設定されていなければタブ自体を出さない。
+  const events =
+    activeGroup === "すべて"
+      ? allEvents
+      : (allEvents ?? []).filter((e) => e.groupName === activeGroup);
 
   const calendarFeedUrl = `${window.location.origin}/api/calendar/natulabo.ics`;
   const googleSubscribeUrl = `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(calendarFeedUrl)}`;
@@ -103,6 +112,27 @@ export default function CalendarPage() {
             </div>
           </div>
         </section>
+
+        {/* グループ絞り込み */}
+        {groups && groups.length > 0 && (
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide animate-fade-in-up" role="tablist" aria-label="グループで絞り込み">
+            {["すべて", ...groups].map((g) => (
+              <button
+                key={g}
+                role="tab"
+                aria-selected={activeGroup === g}
+                onClick={() => { setActiveGroup(g); setSelectedDate(null); }}
+                className={`shrink-0 rounded-pill px-4 py-1.5 text-sm font-medium transition-colors ${
+                  activeGroup === g
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                }`}
+              >
+                {g}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Calendar */}
         <div className="bg-card rounded-2xl border border-border p-4 animate-fade-in-up stagger-1">
