@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
+import SoftBackdrop from "@/components/SoftBackdrop";
 
 export default function Login() {
   const { isAuthenticated, loading } = useAuth();
@@ -22,9 +22,7 @@ export default function Login() {
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4">
-      <img src={doterraAssets.loginGarden} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
-      <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(13,35,17,0.84), rgba(28,58,31,0.56))" }} />
-      <div className="absolute -right-20 -top-28 h-96 w-96 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.18)" }} />
+      <SoftBackdrop />
 
       <div className="relative z-10 w-full max-w-sm animate-fade-in-up">
         {/* Logo */}
@@ -34,9 +32,9 @@ export default function Login() {
             style={{
               width: "5rem",
               height: "5rem",
-              borderRadius: "1.25rem",
-              background: "var(--cream-100, oklch(0.970 0.012 80))",
-              boxShadow: "0 2px 12px oklch(0.200 0.030 60 / 0.08)",
+              borderRadius: "var(--radius-card)",
+              background: "var(--card)",
+              boxShadow: "var(--shadow-soft)",
             }}
           >
             <img
@@ -63,7 +61,7 @@ export default function Login() {
               fontSize: "0.65rem",
               letterSpacing: "0.3em",
               textTransform: "uppercase",
-              color: "rgba(255,255,255,0.72)",
+              color: "var(--brown-400)",
               marginTop: "0.3rem",
             }}
           >
@@ -72,15 +70,15 @@ export default function Login() {
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl border p-8 shadow-2xl" style={{ background: "rgba(255,255,255,0.95)", borderColor: "rgba(255,255,255,0.48)", backdropFilter: "blur(16px)" }}>
-          <h2 className="text-xl font-serif font-medium text-foreground mb-2">ようこそ</h2>
+        <div className="rounded-card border border-cream-300 bg-card p-8 shadow-float">
+          <h2 className="text-xl font-semibold text-foreground mb-2">ようこそ</h2>
           <p className="text-sm text-muted-foreground mb-8 leading-relaxed">
             NatuLabo会員専用ポータルへログインしてください。
           </p>
 
           <Button
             onClick={handleLogin}
-            className="w-full h-12 text-base font-medium rounded-xl bg-primary hover:bg-primary/90 transition-colors"
+            className="w-full h-12 text-base font-medium rounded-pill bg-primary hover:bg-primary/90 transition-colors"
             disabled={loading}
           >
             {loading ? "確認中..." : "ログイン / 新規登録"}
@@ -92,12 +90,9 @@ export default function Login() {
           </p>
         </div>
 
-        <p className="mt-6 text-center text-xs" style={{ color: "rgba(255,255,255,0.72)" }}>
+        <p className="mt-6 text-center text-xs text-brown-400">
           © {new Date().getFullYear()} NatuLabo. All rights reserved.
         </p>
-        <a href={doterraSources.coImpact} target="_blank" rel="noreferrer" className="mt-2 block text-center" style={{ color: "rgba(255,255,255,0.54)", fontSize: "0.62rem", letterSpacing: "0.04em" }}>
-          背景画像：dōTERRA公式掲載画像
-        </a>
       </div>
     </div>
   );

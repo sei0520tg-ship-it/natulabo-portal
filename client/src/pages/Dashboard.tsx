@@ -2,7 +2,8 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import MemberLayout from "@/components/MemberLayout";
 import { usePageView } from "@/hooks/usePageView";
 import { trpc } from "@/lib/trpc";
-import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
+import { doterraSources } from "@/lib/doterraAssets";
+import { sectionTone, tone } from "@/lib/categoryTheme";
 import {
   ArrowUpRight,
   BookOpen,
@@ -21,12 +22,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 
 const menuItems = [
-  { href: "/setup", icon: Settings2, title: "はじめての方へ", en: "START HERE", image: doterraAssets.leafyBlossom },
-  { href: "/videos", icon: BookOpen, title: "学習動画", en: "VIDEO LIBRARY", image: doterraAssets.essentialOils },
-  { href: "/recipes", icon: Sparkles, title: "クラフトレシピ", en: "RECIPES", image: doterraAssets.memberRoseField },
-  { href: "/testimonials", icon: MessageCircleHeart, title: "体験談", en: "STORIES", image: doterraAssets.loginGarden },
-  { href: "/calendar", icon: CalendarDays, title: "イベント", en: "EVENTS", image: doterraAssets.botanicalSprigs },
-  { href: "/links", icon: ExternalLink, title: "リンク集", en: "USEFUL LINKS", image: doterraAssets.greenLeaves },
+  { href: "/setup", icon: Settings2, title: "はじめての方へ", en: "START HERE" },
+  { href: "/videos", icon: BookOpen, title: "学習動画", en: "VIDEO LIBRARY" },
+  { href: "/recipes", icon: Sparkles, title: "クラフトレシピ", en: "RECIPES" },
+  { href: "/testimonials", icon: MessageCircleHeart, title: "体験談", en: "STORIES" },
+  { href: "/calendar", icon: CalendarDays, title: "イベント", en: "EVENTS" },
+  { href: "/links", icon: ExternalLink, title: "リンク集", en: "USEFUL LINKS" },
 ];
 
 type Topic = {
@@ -42,12 +43,13 @@ type Topic = {
   updatedAt: Date;
 };
 
+// お知らせに画像が無いときの背景。写真をやめたのでパステルにそろえる。
 const gradients = [
-  "linear-gradient(125deg, oklch(0.255 0.06 145) 0%, oklch(0.43 0.09 145) 100%)",
-  "linear-gradient(125deg, oklch(0.30 0.05 225) 0%, oklch(0.52 0.08 205) 100%)",
-  "linear-gradient(125deg, oklch(0.38 0.07 65) 0%, oklch(0.67 0.10 75) 100%)",
-  "linear-gradient(125deg, oklch(0.27 0.04 35) 0%, oklch(0.48 0.07 20) 100%)",
-  "linear-gradient(125deg, oklch(0.31 0.05 285) 0%, oklch(0.50 0.07 270) 100%)",
+  "linear-gradient(125deg, var(--mint-100) 0%, var(--mint-300) 100%)",
+  "linear-gradient(125deg, var(--aqua-100) 0%, var(--aqua-300) 100%)",
+  "linear-gradient(125deg, var(--butter-100) 0%, var(--butter-300) 100%)",
+  "linear-gradient(125deg, var(--blossom-100) 0%, var(--blossom-300) 100%)",
+  "linear-gradient(125deg, var(--lilac-100) 0%, var(--lilac-300) 100%)",
 ];
 
 function SectionHeader({ no, title, href }: { no: string; title: string; href?: string }) {
@@ -82,22 +84,24 @@ export default function Dashboard() {
         <div className="mx-auto max-w-[1280px] space-y-14 lg:space-y-18">
           <section className="grid gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)]">
             <div className="relative min-h-[21rem] overflow-hidden rounded-[1.75rem] animate-fade-in-up">
-              <img src={doterraAssets.memberRoseField} alt="dōTERRA公式掲載のローズ畑" className="absolute inset-0 h-full w-full object-cover" />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(106deg, rgba(13,35,17,0.94) 0%, rgba(19,57,27,0.72) 58%, rgba(13,35,17,0.42) 100%)" }} />
-              <div className="absolute -right-16 -top-28 h-80 w-80 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.22)" }} />
+              <div aria-hidden="true" className="absolute inset-0 bg-mint-100">
+                <span className="soft-blob natu-float -right-10 -top-16 h-72 w-72 bg-mint-500 opacity-25" />
+                <span className="soft-blob -bottom-24 right-32 h-56 w-56 bg-butter-500 opacity-20" />
+                <span className="soft-blob -left-16 bottom-0 h-52 w-52 bg-blossom-500 opacity-20" />
+              </div>
               <div className="relative flex h-full min-h-[21rem] flex-col justify-between p-7 sm:p-10">
                 <div className="flex items-center justify-between">
-                  <span style={{ color: "rgba(255,255,255,0.67)", fontFamily: "var(--font-display)", fontSize: "0.63rem", letterSpacing: "0.28em" }}>MEMBER&apos;S HOME</span>
-                  <span className="rounded-full border px-3 py-1" style={{ borderColor: "rgba(255,255,255,0.35)", color: "rgba(255,255,255,0.82)", fontFamily: "var(--font-display)", fontSize: "0.55rem", letterSpacing: "0.18em" }}>
+                  <span className="font-display text-mint-700" style={{ fontSize: "0.63rem", letterSpacing: "0.2em" }}>MEMBER&apos;S HOME</span>
+                  <span className="rounded-pill border border-mint-300 bg-card px-3 py-1 font-display text-brown-600" style={{ fontSize: "0.58rem", letterSpacing: "0.14em" }}>
                     {now.toLocaleDateString("ja-JP", { month: "long", day: "numeric", weekday: "short" })}
                   </span>
                 </div>
                 <div>
-                  <p className="mb-3" style={{ color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-display)", fontSize: "0.78rem", letterSpacing: "0.19em" }}>HELLO, {user?.name ?? "MEMBER"}</p>
-                  <h1 style={{ color: "white", fontFamily: "var(--font-serif)", fontSize: "clamp(1.85rem, 3.8vw, 3.1rem)", fontWeight: 400, letterSpacing: "0.08em", lineHeight: 1.55 }}>
+                  <p className="mb-3 font-display text-mint-700" style={{ fontSize: "0.78rem", letterSpacing: "0.14em" }}>HELLO, {user?.name ?? "MEMBER"}</p>
+                  <h1 className="text-brown-800" style={{ fontSize: "clamp(1.75rem, 3.6vw, 2.8rem)", letterSpacing: "0.04em", lineHeight: 1.45 }}>
                     今日も、自然とともに。
                   </h1>
-                  <p className="mt-4 max-w-md" style={{ color: "rgba(255,255,255,0.76)", fontSize: "0.82rem", fontWeight: 300, letterSpacing: "0.06em", lineHeight: 1.95 }}>
+                  <p className="mt-4 max-w-md text-brown-600" style={{ fontSize: "0.84rem", letterSpacing: "0.03em", lineHeight: 1.9 }}>
                     小さな心地よさを積み重ねる一日へ。気になるコンテンツから、ゆっくり始めてみましょう。
                   </p>
                   <a href={doterraSources.shop} target="_blank" rel="noreferrer" className="mt-4 inline-block" style={{ color: "rgba(255,255,255,0.62)", fontSize: "0.62rem", letterSpacing: "0.04em" }}>
@@ -136,18 +140,18 @@ export default function Dashboard() {
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {menuItems.map((item, index) => {
                 const Icon = item.icon;
+                const t = tone(sectionTone[item.href]);
                 return (
-                  <Link key={item.href} href={item.href} className="group relative min-h-48 overflow-hidden rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1" style={{ boxShadow: "0 10px 24px rgba(35,44,27,0.12)", animationDelay: `${index * 60}ms` }}>
-                    <img src={item.image} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                    <span className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(9,32,15,0.80) 0%, rgba(9,32,15,0.32) 65%, rgba(9,32,15,0.58) 100%)" }} />
+                  <Link key={item.href} href={item.href} className={`group card-hover relative min-h-48 overflow-hidden rounded-card p-5 shadow-soft ${t.surface}`} style={{ animationDelay: `${index * 60}ms` }}>
+                    <span aria-hidden="true" className={`soft-blob -right-8 -top-10 h-40 w-40 ${t.dot} opacity-25`} />
                     <div className="relative flex h-full min-h-36 flex-col justify-between">
                       <div className="flex items-start justify-between">
-                        <span style={{ color: "rgba(255,255,255,0.82)", fontFamily: "var(--font-display)", fontSize: "0.59rem", letterSpacing: "0.22em" }}>{item.en}</span>
-                        <span className="flex h-9 w-9 items-center justify-center rounded-full transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" style={{ background: "rgba(255,255,255,0.88)", color: "var(--forest-600)" }}><Icon className="h-4 w-4" /></span>
+                        <span className={`font-display ${t.ink}`} style={{ fontSize: "0.59rem", letterSpacing: "0.16em" }}>{item.en}</span>
+                        <span className={`flex h-11 w-11 items-center justify-center rounded-pill bg-card shadow-soft transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110 ${t.ink}`}><Icon className="h-5 w-5" /></span>
                       </div>
                       <div className="flex items-center justify-between gap-3">
-                        <p style={{ color: "white", fontFamily: "var(--font-serif)", fontSize: "1.12rem", fontWeight: 500, letterSpacing: "0.06em" }}>{item.title}</p>
-                        <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" style={{ color: "white" }} />
+                        <p className="text-brown-800" style={{ fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.03em" }}>{item.title}</p>
+                        <ArrowUpRight className={`h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ${t.ink}`} />
                       </div>
                     </div>
                   </Link>

@@ -10,7 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Link } from "wouter";
-import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
+import { doterraSources } from "@/lib/doterraAssets";
 
 const heroLetters = ["N", "A", "T", "U", "L", "A", "B", "O", "."];
 
@@ -92,7 +92,7 @@ export default function Home() {
       <header
         className="fixed inset-x-0 top-0 z-50"
         style={{
-          borderBottom: "1px solid rgba(255,255,255,0.15)",
+          borderBottom: "1px solid var(--cream-300)",
           background: "rgba(16, 31, 19, 0.28)",
           backdropFilter: "blur(16px)",
         }}
@@ -101,7 +101,7 @@ export default function Home() {
           <Link href="/" className="flex items-center gap-3" aria-label="NatuLabo ホーム">
             <span
               className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full"
-              style={{ background: "rgba(255,255,255,0.92)", boxShadow: "0 2px 12px rgba(0,0,0,0.12)" }}
+              style={{ background: "var(--card)", boxShadow: "var(--shadow-soft)" }}
             >
               <img
                 src="/manus-storage/logo-circle_08be9919.png"
@@ -113,7 +113,7 @@ export default function Home() {
             <span
               className="hidden sm:block"
               style={{
-                color: "white",
+                color: "var(--brown-800)",
                 fontFamily: "var(--font-display)",
                 fontSize: "1.15rem",
                 letterSpacing: "0.16em",
@@ -129,7 +129,7 @@ export default function Home() {
                 <a
                   href={getLoginUrl()}
                   className="hidden text-xs sm:block"
-                  style={{ color: "rgba(255,255,255,0.8)", letterSpacing: "0.08em" }}
+                  style={{ color: "var(--brown-600)", letterSpacing: "0.06em" }}
                 >
                   ログイン
                 </a>
@@ -138,7 +138,7 @@ export default function Home() {
                 href={entryHref}
                 className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs transition-transform duration-200 hover:-translate-y-0.5 sm:px-5"
                 style={{
-                  background: "rgba(255,255,255,0.94)",
+                  background: "var(--forest-500)",
                   color: "var(--forest-600)",
                   fontWeight: 500,
                   letterSpacing: "0.06em",
@@ -154,21 +154,15 @@ export default function Home() {
 
       <section
         className="relative flex min-h-[100svh] items-center overflow-hidden pt-20"
-        style={{ background: "oklch(0.20 0.04 145)" }}
       >
-        <img src={doterraAssets.memberRoseField} alt="dōTERRA公式掲載のローズ畑" className="absolute inset-0 h-full w-full object-cover" />
+        <div aria-hidden="true" className="absolute inset-0 bg-hero-gradient">
+          <span className="soft-blob natu-float -left-24 -top-20 h-[34rem] w-[34rem] bg-blossom-300 opacity-40" />
+          <span className="soft-blob -right-32 top-10 h-[30rem] w-[30rem] bg-aqua-300 opacity-35" />
+          <span className="soft-blob natu-float bottom-[-10rem] left-1/3 h-[26rem] w-[26rem] bg-butter-300 opacity-35" />
+          <span className="soft-blob -bottom-20 -right-10 h-72 w-72 bg-mint-300 opacity-30" />
+        </div>
         <div
-          className="absolute inset-0"
-          style={{ background: "linear-gradient(105deg, rgba(8,25,12,0.86) 0%, rgba(13,37,18,0.58) 52%, rgba(8,21,11,0.5) 100%)" }}
-        />
-        <div
-          className="natu-orbit absolute -right-[17vw] -top-[34vw] h-[68vw] w-[68vw] rounded-full"
-          style={{ border: "1px solid rgba(255,255,255,0.15)" }}
-          aria-hidden="true"
-        />
-        <div
-          className="absolute bottom-[11%] left-[7%] h-28 w-28 rounded-full opacity-80 blur-[1px]"
-          style={{ border: "1px solid rgba(229,202,145,0.45)" }}
+          className="natu-orbit absolute -right-[17vw] -top-[34vw] h-[68vw] w-[68vw] rounded-full border border-cream-300"
           aria-hidden="true"
         />
 
@@ -177,7 +171,7 @@ export default function Home() {
             <p
               className="mb-8 flex items-center gap-3"
               style={{
-                color: "rgba(255,255,255,0.72)",
+                color: "var(--gold-600)",
                 fontFamily: "var(--font-display)",
                 fontSize: "0.66rem",
                 letterSpacing: "0.32em",
@@ -191,7 +185,7 @@ export default function Home() {
             <div
               className="mb-5 flex leading-none"
               aria-label="NATU LABO"
-              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(4.2rem, 9vw, 8rem)", fontWeight: 300, letterSpacing: "0.035em", color: "rgba(255,255,255,0.96)", whiteSpace: "nowrap" }}
+              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(4.2rem, 9vw, 8rem)", fontWeight: 300, letterSpacing: "0.035em", color: "var(--brown-800)", whiteSpace: "nowrap" }}
             >
               {heroLetters.map((letter, index) => (
                 <span
@@ -208,7 +202,7 @@ export default function Home() {
               className="natu-hero-word max-w-2xl"
               style={{
                 "--reveal-delay": "960ms",
-                color: "white",
+                color: "var(--brown-800)",
                 fontFamily: "var(--font-serif)",
                 fontSize: "clamp(1.7rem, 4.1vw, 3.15rem)",
                 fontWeight: 400,
@@ -227,7 +221,7 @@ export default function Home() {
               className="mb-7 border-l pl-5"
               style={{
                 borderColor: "rgba(226,201,146,0.75)",
-                color: "rgba(255,255,255,0.78)",
+                color: "var(--brown-600)",
                 fontSize: "0.86rem",
                 fontWeight: 300,
                 letterSpacing: "0.08em",
@@ -241,7 +235,7 @@ export default function Home() {
             <Link
               href={entryHref}
               className="group inline-flex items-center gap-5 rounded-full border px-6 py-3.5 text-sm transition-all duration-300 hover:bg-white hover:text-[var(--forest-600)]"
-              style={{ borderColor: "rgba(255,255,255,0.65)", color: "white", letterSpacing: "0.08em" }}
+              style={{ borderColor: "var(--forest-500)", color: "var(--forest-600)", letterSpacing: "0.06em" }}
             >
               {entryLabel}
               <ArrowDownRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:translate-y-0.5" />
@@ -250,8 +244,8 @@ export default function Home() {
         </div>
 
         <div className="absolute bottom-7 left-1/2 z-10 -translate-x-1/2 text-center">
-          <span style={{ color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-display)", fontSize: "0.6rem", letterSpacing: "0.3em" }}>SCROLL TO EXPLORE</span>
-          <div className="mx-auto mt-2 h-9 w-px" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.6), transparent)" }} />
+          <span className="font-display text-brown-400" style={{ fontSize: "0.6rem", letterSpacing: "0.24em" }}>SCROLL TO EXPLORE</span>
+          <div className="mx-auto mt-2 h-9 w-px" style={{ background: "linear-gradient(to bottom, var(--brown-300), transparent)" }} />
         </div>
       </section>
 
