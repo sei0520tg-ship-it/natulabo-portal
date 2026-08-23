@@ -1,35 +1,67 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
 /* ─── Design Tokens ─────────────────────────────────────────────────────── */
 :root {
-  /* Cream / Warm Beige palette — inspired by B-VAX */
-  --cream-50:  oklch(0.985 0.010 80);   /* #faf8f3 */
-  --cream-100: oklch(0.970 0.015 80);   /* #f5f0e8 */
-  --cream-200: oklch(0.945 0.022 78);   /* #ede8dc */
-  --cream-300: oklch(0.900 0.030 76);   /* #ddd5c4 */
-  --cream-400: oklch(0.840 0.040 74);   /* #c9bca6 */
+  /* Cream / Warm Beige — 全体の下地 */
+  --cream-50:  oklch(0.985 0.010 80);
+  --cream-100: oklch(0.970 0.015 80);
+  --cream-200: oklch(0.945 0.022 78);
+  --cream-300: oklch(0.900 0.030 76);
+  --cream-400: oklch(0.840 0.040 74);
 
-  /* Gold / Amber accent */
-  --gold-300: oklch(0.820 0.100 75);    /* #d4b87a */
-  --gold-400: oklch(0.760 0.110 72);    /* #c9a84c */
-  --gold-500: oklch(0.700 0.115 70);    /* #b8973a */
-  --gold-600: oklch(0.640 0.110 68);    /* #a07d28 */
+  /* Gold / Amber — ブランドのアクセント */
+  --gold-200: oklch(0.890 0.070 78);
+  --gold-300: oklch(0.820 0.100 75);
+  --gold-400: oklch(0.760 0.110 72);
+  --gold-500: oklch(0.700 0.115 70);
+  --gold-600: oklch(0.640 0.110 68);
 
-  /* Forest Green — subtle nature accent */
-  --forest-400: oklch(0.540 0.090 145); /* #4a7c59 */
-  --forest-500: oklch(0.480 0.095 145); /* #3d6b4a */
-  --forest-600: oklch(0.420 0.090 145); /* #2f5a3c */
+  /* Forest Green — ブランドのプライマリ */
+  --forest-100: oklch(0.945 0.030 150);
+  --forest-400: oklch(0.540 0.090 145);
+  --forest-500: oklch(0.480 0.095 145);
+  --forest-600: oklch(0.420 0.090 145);
+  --forest-700: oklch(0.355 0.080 145);
 
-  /* Dark Brown text */
-  --brown-900: oklch(0.200 0.030 60);   /* #1e1810 */
-  --brown-800: oklch(0.260 0.035 62);   /* #2c2416 */
-  --brown-700: oklch(0.340 0.038 64);   /* #3d3020 */
-  --brown-500: oklch(0.500 0.040 66);   /* #6b5840 */
-  --brown-300: oklch(0.680 0.035 68);   /* #9c8c78 */
+  /* Brown — テキスト */
+  --brown-900: oklch(0.200 0.030 60);
+  --brown-800: oklch(0.260 0.035 62);
+  --brown-700: oklch(0.340 0.038 64);
+  --brown-600: oklch(0.420 0.039 65);
+  --brown-500: oklch(0.500 0.040 66);
+  --brown-400: oklch(0.590 0.038 67);
+  --brown-300: oklch(0.680 0.035 68);
+
+  /* ── パステル差し色 ────────────────────────────────────────────────────
+     やわらかさを担当する層。-100 は面、-300 は縁・チップ、-500 はドット・
+     アイコン、-700 は -100 の上に載せる文字色（コントラスト確保済み）。   */
+  --blossom-100: oklch(0.955 0.020 350);
+  --blossom-300: oklch(0.880 0.055 350);
+  --blossom-500: oklch(0.720 0.115 350);
+  --blossom-700: oklch(0.520 0.130 350);
+
+  --mint-100: oklch(0.955 0.025 165);
+  --mint-300: oklch(0.880 0.060 165);
+  --mint-500: oklch(0.720 0.100 165);
+  --mint-700: oklch(0.500 0.095 165);
+
+  --aqua-100: oklch(0.955 0.022 235);
+  --aqua-300: oklch(0.880 0.055 235);
+  --aqua-500: oklch(0.700 0.105 240);
+  --aqua-700: oklch(0.510 0.120 245);
+
+  --butter-100: oklch(0.965 0.035 90);
+  --butter-300: oklch(0.905 0.080 88);
+  --butter-500: oklch(0.820 0.120 85);
+  --butter-700: oklch(0.560 0.105 75);
+
+  --lilac-100: oklch(0.955 0.022 300);
+  --lilac-300: oklch(0.880 0.055 300);
+  --lilac-500: oklch(0.720 0.105 300);
+  --lilac-700: oklch(0.510 0.125 300);
 
   /* Semantic tokens */
   --background:           var(--cream-50);
@@ -50,7 +82,15 @@
   --border:               var(--cream-300);
   --input:                var(--cream-200);
   --ring:                 var(--gold-400);
-  --radius:               0.5rem;
+
+  /* 角丸 — 可愛さの主役。従来の 0.5rem から大きく引き上げる */
+  --radius:      1rem;
+  --radius-card: 1.75rem;
+  --radius-pill: 999px;
+
+  /* 影 — 黒ではなくブラウン寄りにして、クリーム地から浮きすぎないようにする */
+  --shadow-soft:  0 2px 10px oklch(0.200 0.030 60 / 0.05), 0 8px 28px oklch(0.200 0.030 60 / 0.06);
+  --shadow-float: 0 6px 18px oklch(0.200 0.030 60 / 0.08), 0 18px 44px oklch(0.200 0.030 60 / 0.10);
 
   /* Sidebar */
   --sidebar:              oklch(0.975 0.012 80);
@@ -62,13 +102,15 @@
   --sidebar-border:       var(--cream-300);
   --sidebar-ring:         var(--gold-400);
 
-  /* Typography */
-  --font-serif: "Noto Serif JP", "Georgia", serif;
-  --font-sans:  "Noto Sans JP", "Helvetica Neue", sans-serif;
-  --font-display: "Cormorant Garamond", "Georgia", serif;
+  /* Typography — 丸ゴシックを主役に、英字ラベルだけ端正なサンセリフ */
+  --font-sans:    "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Noto Sans JP", sans-serif;
+  --font-serif:   "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Noto Sans JP", sans-serif;
+  --font-display: "Inter", "Helvetica Neue", Arial, sans-serif;
 }
 
-/* ─── Base Styles ────────────────────────────────────────────────────────── */
+/* ─── Tailwind へのトークン登録 ──────────────────────────────────────────
+   生パレットもここに載せることで bg-cream-100 / text-gold-500 /
+   bg-blossom-100 / rounded-card / shadow-soft が本物のユーティリティになる。 */
 @theme inline {
   --color-background:         var(--background);
   --color-foreground:         var(--foreground);
@@ -96,13 +138,65 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border:     var(--sidebar-border);
   --color-sidebar-ring:       var(--sidebar-ring);
-  --radius-sm:   calc(var(--radius) - 4px);
-  --radius-md:   calc(var(--radius) - 2px);
+
+  --color-cream-50:  var(--cream-50);
+  --color-cream-100: var(--cream-100);
+  --color-cream-200: var(--cream-200);
+  --color-cream-300: var(--cream-300);
+  --color-cream-400: var(--cream-400);
+  --color-gold-200: var(--gold-200);
+  --color-gold-300: var(--gold-300);
+  --color-gold-400: var(--gold-400);
+  --color-gold-500: var(--gold-500);
+  --color-gold-600: var(--gold-600);
+  --color-forest-100: var(--forest-100);
+  --color-forest-400: var(--forest-400);
+  --color-forest-500: var(--forest-500);
+  --color-forest-600: var(--forest-600);
+  --color-forest-700: var(--forest-700);
+  --color-brown-300: var(--brown-300);
+  --color-brown-400: var(--brown-400);
+  --color-brown-500: var(--brown-500);
+  --color-brown-600: var(--brown-600);
+  --color-brown-700: var(--brown-700);
+  --color-brown-800: var(--brown-800);
+  --color-brown-900: var(--brown-900);
+
+  --color-blossom-100: var(--blossom-100);
+  --color-blossom-300: var(--blossom-300);
+  --color-blossom-500: var(--blossom-500);
+  --color-blossom-700: var(--blossom-700);
+  --color-mint-100: var(--mint-100);
+  --color-mint-300: var(--mint-300);
+  --color-mint-500: var(--mint-500);
+  --color-mint-700: var(--mint-700);
+  --color-aqua-100: var(--aqua-100);
+  --color-aqua-300: var(--aqua-300);
+  --color-aqua-500: var(--aqua-500);
+  --color-aqua-700: var(--aqua-700);
+  --color-butter-100: var(--butter-100);
+  --color-butter-300: var(--butter-300);
+  --color-butter-500: var(--butter-500);
+  --color-butter-700: var(--butter-700);
+  --color-lilac-100: var(--lilac-100);
+  --color-lilac-300: var(--lilac-300);
+  --color-lilac-500: var(--lilac-500);
+  --color-lilac-700: var(--lilac-700);
+
+  --radius-sm:   calc(var(--radius) - 8px);
+  --radius-md:   calc(var(--radius) - 4px);
   --radius-lg:   var(--radius);
   --radius-xl:   calc(var(--radius) + 4px);
-  --font-sans:   var(--font-sans);
-  --font-serif:  var(--font-serif);
-  --font-mono:   ui-monospace, monospace;
+  --radius-card: var(--radius-card);
+  --radius-pill: var(--radius-pill);
+
+  --shadow-soft:  var(--shadow-soft);
+  --shadow-float: var(--shadow-float);
+
+  --font-sans:    var(--font-sans);
+  --font-serif:   var(--font-serif);
+  --font-display: var(--font-display);
+  --font-mono:    ui-monospace, monospace;
 }
 
 @layer base {
@@ -118,18 +212,16 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
-    font-weight: 300;
-    line-height: 1.8;
-    letter-spacing: 0.02em;
+    font-weight: 400;
+    line-height: 1.75;
+    letter-spacing: 0.01em;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    line-height: 1.4;
-    letter-spacing: 0.04em;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
   }
-  .font-serif { font-family: var(--font-serif); }
-  .font-display { font-family: var(--font-display); }
 }
 
 /* ─── Layout Utilities ───────────────────────────────────────────────────── */
@@ -140,7 +232,6 @@
   }
   .flex { min-width: 0; min-height: 0; }
 
-  /* Gold line decorative element */
   .gold-line {
     display: inline-block;
     width: 2.5rem;
@@ -150,11 +241,11 @@
     margin-right: 0.75rem;
   }
 
-  /* Section label style (01 VISION) */
   .section-label {
     font-family: var(--font-display);
     font-size: 0.65rem;
-    letter-spacing: 0.25em;
+    font-weight: 500;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--gold-500);
     display: flex;
@@ -162,46 +253,59 @@
     gap: 0.5rem;
   }
 
-  /* Hero gradient */
   .bg-hero-gradient {
     background: linear-gradient(
       160deg,
-      oklch(0.960 0.018 82) 0%,
-      oklch(0.940 0.025 78) 50%,
-      oklch(0.920 0.030 76) 100%
+      oklch(0.975 0.018 82) 0%,
+      oklch(0.960 0.022 60) 48%,
+      oklch(0.955 0.025 340) 100%
     );
   }
 
-  /* Warm section background */
-  .bg-warm-section {
-    background-color: var(--cream-100);
-  }
+  .bg-warm-section { background-color: var(--cream-100); }
 
-  /* Cream card */
   .bg-cream-card {
     background-color: oklch(1.000 0.000 0);
     border: 1px solid var(--cream-300);
   }
 
-  /* Gold accent border */
-  .border-gold {
-    border-color: var(--gold-400);
-  }
+  .border-gold { border-color: var(--gold-400); }
+  .text-gold   { color: var(--gold-500); }
 
-  /* Text gold */
-  .text-gold {
-    color: var(--gold-500);
-  }
-
-  /* Decorative quote mark */
   .quote-mark::before {
     content: '"';
     font-family: var(--font-display);
     font-size: 4rem;
     line-height: 1;
-    color: var(--gold-300);
+    color: var(--blossom-300);
     display: block;
     margin-bottom: -1rem;
+  }
+
+  /* カードの持ち上がり。従来クラス名だけ存在して未定義だったものを実装する。 */
+  .card-hover {
+    transition: transform 240ms cubic-bezier(0.23, 1, 0.32, 1),
+                box-shadow 240ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-float);
+  }
+
+  /* 横スクロール領域のスクロールバーを隠す。こちらも未定義だった。 */
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+  /* ぼかした装飾ブロブ。写真の代わりに画面へやわらかい密度を与える。 */
+  .soft-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(38px);
+    opacity: 0.55;
+    pointer-events: none;
   }
 }
 
@@ -231,7 +335,7 @@
   to   { opacity: 1; }
 }
 
-/* ─── NatuLabo Editorial Motion System ──────────────────────────────────── */
+/* ─── NatuLabo Motion System ────────────────────────────────────────────── */
 @media (prefers-reduced-motion: no-preference) {
   .natu-hero-word {
     display: inline-block;
@@ -249,9 +353,7 @@
     animation-delay: var(--letter-delay, 0ms);
   }
 
-  .natu-float {
-    animation: natuFloat 7s ease-in-out infinite;
-  }
+  .natu-float { animation: natuFloat 7s ease-in-out infinite; }
 
   .natu-orbit {
     animation: natuOrbit 18s linear infinite;
@@ -268,38 +370,42 @@
 }
 
 @keyframes natuWordReveal {
-  0% { opacity: 0; transform: translateY(24px) scale(0.985); filter: blur(7px); }
+  0%   { opacity: 0; transform: translateY(24px) scale(0.985); filter: blur(7px); }
   100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
 }
 
 @keyframes natuLetterReveal {
-  0% { opacity: 0; transform: translateY(18px); filter: blur(6px); }
+  0%   { opacity: 0; transform: translateY(18px); filter: blur(6px); }
   100% { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
 @keyframes natuFloat {
   0%, 100% { transform: translate3d(0, 0, 0); }
-  50% { transform: translate3d(0, -10px, 0); }
+  50%      { transform: translate3d(0, -10px, 0); }
 }
 
 @keyframes natuOrbit {
   from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  to   { transform: rotate(360deg); }
 }
 
 @keyframes natuScrollReveal {
   from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
+/* 動きを減らす設定では、無限ループするものも含めてすべて止める。 */
 @media (prefers-reduced-motion: reduce) {
   .natu-hero-word,
   .natu-hero-letter,
-  .natu-scroll-reveal {
+  .natu-scroll-reveal,
+  .natu-float,
+  .natu-orbit {
     opacity: 1;
     transform: none;
     animation: none;
   }
+  .card-hover:hover { transform: none; }
 }
 
 /* ─── Button Micro-interactions ──────────────────────────────────────────── */
@@ -313,7 +419,7 @@ button:active,
 :where(a, button, input, textarea, select, [tabindex]):focus-visible {
   outline: 2px solid var(--gold-400);
   outline-offset: 3px;
-  border-radius: 0.4rem;
+  border-radius: 0.6rem;
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
