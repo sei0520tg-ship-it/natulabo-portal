@@ -7,6 +7,7 @@ import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { storagePut } from "./storage";
 import { getYouTubeConfig, syncYouTubeVideos } from "./youtube";
 import { importSeedVideos } from "./seed/importSeed";
+import { getEventSheetSources, syncEventSheets } from "./eventSheetSync";
 import * as db from "./db";
 
 // Admin guard middleware
@@ -290,6 +291,30 @@ export const appRouter = router({
         await db.deleteEvent(input.id);
         return { success: true };
       }),
+    // カレンダーの絞り込みタブに出すグループ名一覧
+    groups: protectedProcedure.query(() => db.getEventGroups()),
+    // 管理者：スプレッドシートを今すぐ同期する（cronと同じ処理を手動実行）
+    syncNow: adminProcedure.mutation(async () => {
+      try {
+        const result = await syncEventSheets();
+        return { success: true as const, ...result };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: (error as Error).message,
+        });
+      }
+    }),
+    // 管理者：連携の設定状況と最終同期日時
+    syncStatus: adminProcedure.query(async () => {
+      const status = await db.getEventSyncStatus();
+      const sources = getEventSheetSources();
+      return {
+        configured: sources.length > 0,
+        sheetLabels: sources.map((s) => s.label),
+        ...status,
+      };
+    }),
   }),
 
   // ─── External Links ───────────────────────────────────────────────────────

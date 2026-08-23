@@ -124,6 +124,13 @@ export const events = mysqlTable("events", {
   endAt: timestamp("endAt"),
   location: varchar("location", { length: 255 }),
   formUrl: text("formUrl"), // Google Form URL
+  // 複数グループ（なちゅらぼ公式 / 樹里エリー限定 など）の出し分け用。
+  // 未設定なら全会員向けとして扱う。
+  groupName: varchar("groupName", { length: 64 }),
+  // スプレッドシート同期用。手動登録したイベントでは null のまま。
+  // 「シート名:フォーム送信日時」で一意になる。
+  sourceKey: varchar("sourceKey", { length: 191 }).unique(),
+  syncedAt: timestamp("syncedAt"),
   isPublished: boolean("isPublished").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

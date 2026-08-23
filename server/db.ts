@@ -1,4 +1,4 @@
-import { and, desc, eq, gte, sql } from "drizzle-orm";
+import { and, desc, eq, gte, isNotNull, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser,
@@ -284,6 +284,29 @@ export async function deleteEvent(id: number) {
   const db = await getDb();
   if (!db) return;
   await db.delete(events).where(eq(events.id, id));
+}
+
+/** イベントに設定されているグループ名の一覧（カレンダーの絞り込みタブ用）。 */
+export async function getEventGroups() {
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db
+    .selectDistinct({ groupName: events.groupName })
+    .from(events)
+    .where(and(eq(events.isPublished, true), isNotNull(events.groupName)));
+  return rows.map((r) => r.groupName as string).filter(Boolean).sort();
+}
+
+/** スプレッドシート同期の状況（管理画面の表示用）。 */
+export async function getEventSyncStatus() {
+  const db = await getDb();
+  if (!db) return { syncedCount: 0, lastSyncedAt: null as Date | null };
+  const rows = await db
+    .select({ syncedAt: events.syncedAt })
+    .from(events)
+    .where(isNotNull(events.sourceKey))
+    .orderBy(desc(events.syncedAt));
+  return { syncedCount: rows.length, lastSyncedAt: rows[0]?.syncedAt ?? null };
 }
 
 // ─── External Links ───────────────────────────────────────────────────────────
