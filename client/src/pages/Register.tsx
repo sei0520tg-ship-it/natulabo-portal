@@ -102,7 +102,7 @@ export default function Register() {
               fontSize: "1.5rem",
               fontWeight: 400,
               letterSpacing: "0.05em",
-              color: "white",
+              color: "var(--brown-800)",
             }}
           >
             会員登録
@@ -122,7 +122,7 @@ export default function Register() {
         </div>
 
         {/* Step indicator */}
-        <div className="flex items-center justify-center gap-2 mb-8" style={{ color: "white" }}>
+        <div className="flex items-center justify-center gap-2 mb-8 text-brown-600">
           {["招待コード確認", "プロフィール入力"].map((label, i) => (
             <div key={i} className="flex items-center gap-2">
               <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium transition-colors ${

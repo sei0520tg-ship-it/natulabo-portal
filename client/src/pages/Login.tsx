@@ -49,7 +49,7 @@ export default function Login() {
               fontSize: "1.6rem",
               fontWeight: 400,
               letterSpacing: "0.06em",
-              color: "white",
+              color: "var(--brown-800)",
               lineHeight: 1.3,
             }}
           >
