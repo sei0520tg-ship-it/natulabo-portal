@@ -1,6 +1,7 @@
 import MemberLayout from "@/components/MemberLayout";
 import { usePageView } from "@/hooks/usePageView";
-import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
+import { doterraSources } from "@/lib/doterraAssets";
+import { tone, type ToneName } from "@/lib/categoryTheme";
 import { ArrowLeft, Search, X, Leaf, Droplets, Home, Sparkles, Wind } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useRoute } from "wouter";
@@ -165,16 +166,17 @@ const categories = [
   { label: "クリーニング", icon: Home },
 ];
 
-const recipeImages: Record<string, string> = {
-  "アロマ": doterraAssets.memberRoseField,
-  "スキンケア": doterraAssets.essentialOils,
-  "クリーニング": doterraAssets.sourceFarmer,
-  "ボディケア": doterraAssets.loginGarden,
+// カテゴリごとの見た目。写真をやめてパステルとアイコンで区別する。
+const recipeTone: Record<string, ToneName> = {
+  "アロマ": "lilac",
+  "スキンケア": "blossom",
+  "クリーニング": "aqua",
+  "ボディケア": "mint",
 };
 
 /* ── Recipe Card ────────────────────────────────────────────────────────── */
 function RecipeCard({ recipe, onClick }: { recipe: Recipe; onClick: () => void }) {
-  const imageUrl = recipeImages[recipe.category] ?? doterraAssets.sourceFarmer;
+  const t = tone(recipeTone[recipe.category]);
   return (
     <button
       onClick={onClick}
@@ -194,9 +196,11 @@ function RecipeCard({ recipe, onClick }: { recipe: Recipe; onClick: () => void }
       }}
     >
       <div className="relative h-48 overflow-hidden">
-        <img src={imageUrl} alt="" aria-hidden="true" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(11,29,14,0.55), transparent 60%)" }} />
-        <span className="absolute bottom-3 left-4 rounded-full px-3 py-1" style={{ background: "rgba(255,255,255,0.90)", color: "var(--forest-600)", fontFamily: "var(--font-display)", fontSize: "0.58rem", letterSpacing: "0.18em" }}>
+        <div aria-hidden="true" className={`absolute inset-0 ${t.surface}`}>
+          <span className={`soft-blob -right-6 -top-8 h-36 w-36 ${t.dot} opacity-30`} />
+          <span className={`soft-blob -left-8 bottom-0 h-28 w-28 ${t.dot} opacity-20`} />
+        </div>
+        <span className={`absolute bottom-3 left-4 rounded-pill bg-card px-3 py-1 font-display shadow-soft ${t.ink}`} style={{ fontSize: "0.58rem", letterSpacing: "0.14em" }}>
           {recipe.category}
         </span>
       </div>
@@ -278,7 +282,7 @@ function RecipeCard({ recipe, onClick }: { recipe: Recipe; onClick: () => void }
 
 /* ── Recipe detail page ─────────────────────────────────────────────────── */
 function RecipeDetailPage({ recipe, onBack }: { recipe: Recipe; onBack: () => void }) {
-  const imageUrl = recipeImages[recipe.category] ?? doterraAssets.sourceFarmer;
+  const t = tone(recipeTone[recipe.category]);
   return (
     <MemberLayout>
       <div className="container max-w-2xl py-8 lg:py-10">
@@ -290,9 +294,11 @@ function RecipeDetailPage({ recipe, onBack }: { recipe: Recipe; onBack: () => vo
           style={{ background: "var(--cream-50)" }}
         >
         <div className="relative h-48 overflow-hidden rounded-t-3xl sm:rounded-t-2xl">
-          <img src={imageUrl} alt={recipe.title} className="h-full w-full object-cover" />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(11,29,14,0.54), transparent)" }} />
-          <span className="absolute bottom-4 left-5 rounded-full px-3 py-1" style={{ background: "rgba(255,255,255,0.90)", color: "var(--forest-600)", fontFamily: "var(--font-display)", fontSize: "0.58rem", letterSpacing: "0.18em" }}>{recipe.category}</span>
+          <div aria-hidden="true" className={`absolute inset-0 ${t.surface}`}>
+            <span className={`soft-blob natu-float -right-8 -top-10 h-44 w-44 ${t.dot} opacity-30`} />
+            <span className={`soft-blob -left-10 bottom-0 h-32 w-32 ${t.dot} opacity-20`} />
+          </div>
+          <span className={`absolute bottom-4 left-5 rounded-pill bg-card px-3 py-1 font-display shadow-soft ${t.ink}`} style={{ fontSize: "0.58rem", letterSpacing: "0.14em" }}>{recipe.category}</span>
         </div>
 
         <div className="p-6 space-y-6">

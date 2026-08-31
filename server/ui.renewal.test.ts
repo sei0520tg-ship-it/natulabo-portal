@@ -9,8 +9,10 @@ describe("UIリニューアルの構成", () => {
   it("ランディングページに公式写真ヒーローとブランド文字出現演出を保持する", () => {
     const home = readProjectFile("client/src/pages/Home.tsx");
 
-    expect(home).toContain("doterraAssets.memberRoseField");
-    expect(home).not.toContain("forest_bg_loop_1b4e6054.mp4");
+    // 写真をやめてパステルのグラデーションにした
+    expect(home).not.toContain("doterraAssets.");
+    expect(home).toContain("bg-hero-gradient");
+    expect(home).toContain("soft-blob");
     expect(home).toContain("NATU LABO");
     expect(home).toContain("natu-hero-letter");
     expect(home).toContain("NatuLabo Portal");
@@ -21,26 +23,23 @@ describe("UIリニューアルの構成", () => {
 
     expect(dashboard).toContain('aria-label="前のお知らせ"');
     expect(dashboard).toContain('aria-label="次のお知らせ"');
-    expect(dashboard).toContain("doterraAssets.memberRoseField");
-    expect(dashboard).toContain("rgba(255,255,255,0.80)");
-    expect(dashboard).toContain("item.image");
+    // 写真ではなくセクションごとのトーンで識別する
+    expect(dashboard).not.toContain("doterraAssets.");
+    expect(dashboard).toContain("sectionTone[item.href]");
   });
 
-  it("あなたのためのコンテンツに重複しない植物系ビジュアルを割り当てる", () => {
-    const dashboard = readProjectFile("client/src/pages/Dashboard.tsx");
-    const assets = readProjectFile("client/src/lib/doterraAssets.ts");
+  it("あなたのためのコンテンツに重複しないトーンを割り当てる", () => {
+    const theme = readProjectFile("client/src/lib/categoryTheme.ts");
 
-    [
-      "doterraAssets.leafyBlossom",
-      "doterraAssets.essentialOils",
-      "doterraAssets.memberRoseField",
-      "doterraAssets.loginGarden",
-      "doterraAssets.botanicalSprigs",
-      "doterraAssets.greenLeaves",
-    ].forEach((asset) => expect(dashboard).toContain(asset));
-    expect(assets).toContain("leafyBlossom");
-    expect(assets).toContain("botanicalSprigs");
-    expect(assets).toContain("greenLeaves");
+    // 6枚のカードが同じ色で並ばないよう、ルートごとにトーンを持たせている
+    ["/setup", "/videos", "/recipes", "/testimonials", "/calendar", "/links"].forEach((route) =>
+      expect(theme).toContain(`"${route}"`)
+    );
+    // クラス名は完全な文字列で書くこと。動的に組み立てると
+    // Tailwind v4 のスキャナが拾えずクラスごと消える。
+    // 注意書き自体に悪い例を載せているので、コメントを除いてから検査する。
+    const code = theme.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
+    expect(code).not.toMatch(/["`']bg-\$\{/);
   });
 
   it("ログイン・レシピ・初期設定に公式画像と誤リンクのない導線を保持する", () => {
@@ -48,9 +47,10 @@ describe("UIリニューアルの構成", () => {
     const recipes = readProjectFile("client/src/pages/Recipes.tsx");
     const setup = readProjectFile("client/src/pages/Setup.tsx");
 
-    expect(login).toContain("doterraAssets.loginGarden");
-    expect(recipes).toContain("const recipeImages");
-    expect(recipes).toContain("recipeImages[recipe.category]");
+    expect(login).toContain("SoftBackdrop");
+    expect(login).not.toContain("doterraAssets.");
+    expect(recipes).toContain("const recipeTone");
+    expect(recipes).toContain("recipeTone[recipe.category]");
     expect(setup).not.toContain("youtube.com/embed/dQw4w9WgXcQ");
   });
 
@@ -61,8 +61,10 @@ describe("UIリニューアルの構成", () => {
     const app = readProjectFile("client/src/App.tsx");
     const recipes = readProjectFile("client/src/pages/Recipes.tsx");
 
-    expect(visualHero).toContain("dōTERRA公式掲載画像");
-    expect(videos).toContain("videoFallbackImages");
+    // 写真をやめてパステルの面にしたので、ヒーローに img は存在しない
+    expect(visualHero).not.toContain("<img");
+    expect(visualHero).not.toContain("dōTERRA公式掲載画像");
+    expect(videos).toContain("fallbackTones");
     expect(setup).toContain("ContentVisualHero");
     expect(app).toContain('path="/recipes/:id"');
     expect(recipes).toContain('useRoute("/recipes/:id")');
@@ -76,11 +78,44 @@ describe("UIリニューアルの構成", () => {
     const adminVideos = readProjectFile("client/src/pages/admin/AdminVideos.tsx");
     const adminTestimonials = readProjectFile("client/src/pages/admin/AdminTestimonials.tsx");
 
-    expect(visualHero).toContain("sm:min-h-[17rem]");
-    expect(visualHero).toContain('alt={imageAlt}');
+    // アイコンチップとトーンで構成されていること
+    expect(visualHero).toContain("icon: Icon");
+    expect(visualHero).toContain("tone(toneName)");
+    // 装飾は読み上げ対象から外す
+    expect(visualHero).toContain('aria-hidden="true"');
     pages.forEach((page) => expect(page).toContain("ContentVisualHero"));
     expect(adminVideos).toContain("サムネイル画像URL");
     expect(adminTestimonials).toContain("t.imageUrl ? <img");
+  });
+
+  it("参照しているCSS変数がすべて index.css で定義されている", () => {
+    // 以前 --brown-600 など5変数が未定義のまま参照され、色が当たっていなかった。
+    // 文字列の一致ではなく構造的な不変条件として検証し、再発を防ぐ。
+    const css = readProjectFile("client/src/index.css");
+    const defined = new Set(Array.from(css.matchAll(/^\s*(--[a-z0-9-]+)\s*:/gm), (m) => m[1]));
+
+    // shadcn/ui と Tailwind が実行時に注入するものは対象外
+    const runtimeProvided = /^--(tw-|radix-|sidebar-width|spacing$|reveal-delay|letter-delay)/;
+
+    const dir = path.resolve(process.cwd(), "client/src");
+    const walk = (d: string): string[] =>
+      fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => {
+        const full = path.join(d, e.name);
+        if (e.isDirectory()) return walk(full);
+        return /\.(tsx?|css)$/.test(e.name) ? [full] : [];
+      });
+
+    const missing = new Map<string, string>();
+    for (const file of walk(dir)) {
+      const text = fs.readFileSync(file, "utf8");
+      for (const m of text.matchAll(/var\((--[a-zA-Z0-9-]+)/g)) {
+        const name = m[1];
+        if (defined.has(name) || runtimeProvided.test(name)) continue;
+        if (!missing.has(name)) missing.set(name, path.relative(dir, file));
+      }
+    }
+
+    expect(Array.from(missing.entries())).toEqual([]);
   });
 
   it("会員レイアウトと全体テーマにキーボードフォーカス導線を保持する", () => {

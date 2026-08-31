@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
-import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
+import SoftBackdrop from "@/components/SoftBackdrop";
 import { CheckCircle2, Leaf, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -61,8 +61,7 @@ export default function Register() {
   if (step === "done") {
     return (
       <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4">
-        <img src={doterraAssets.loginGarden} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(13,35,17,0.84), rgba(28,58,31,0.56))" }} />
+        <SoftBackdrop />
         <div className="relative z-10 rounded-3xl bg-white/95 p-10 text-center shadow-2xl animate-fade-in-up">
           <CheckCircle2 className="w-16 h-16 text-primary mx-auto mb-4" />
           <h2 className="text-2xl font-serif font-semibold mb-2">登録完了</h2>
@@ -77,9 +76,7 @@ export default function Register() {
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-12">
-      <img src={doterraAssets.loginGarden} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
-      <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(13,35,17,0.84), rgba(28,58,31,0.56))" }} />
-      <div className="absolute -right-20 -top-28 h-96 w-96 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.18)" }} />
+      <SoftBackdrop />
 
       <div className="relative z-10 w-full max-w-sm animate-fade-in-up">
         <div className="text-center mb-8">
@@ -116,7 +113,7 @@ export default function Register() {
               fontSize: "0.62rem",
               letterSpacing: "0.25em",
               textTransform: "uppercase",
-              color: "rgba(255,255,255,0.72)",
+              color: "var(--brown-400)",
               marginTop: "0.3rem",
             }}
           >
@@ -137,13 +134,13 @@ export default function Register() {
               }`}>
                 {i + 1}
               </div>
-              <span className="hidden text-xs sm:block" style={{ color: "rgba(255,255,255,0.78)" }}>{label}</span>
-              {i === 0 && <div className="h-px w-8" style={{ background: "rgba(255,255,255,0.35)" }} />}
+              <span className="hidden text-xs text-brown-600 sm:block">{label}</span>
+              {i === 0 && <div className="h-px w-8 bg-cream-400" />}
             </div>
           ))}
         </div>
 
-        <div className="rounded-2xl border p-8 shadow-2xl" style={{ background: "rgba(255,255,255,0.95)", borderColor: "rgba(255,255,255,0.48)", backdropFilter: "blur(16px)" }}>
+        <div className="rounded-card border border-cream-300 bg-card p-8 shadow-float">
           {step === "invite" && (
             <form onSubmit={handleInviteSubmit} className="space-y-5">
               <div>
@@ -236,9 +233,6 @@ export default function Register() {
             </form>
           )}
         </div>
-        <a href={doterraSources.coImpact} target="_blank" rel="noreferrer" className="mt-4 block text-center" style={{ color: "rgba(255,255,255,0.54)", fontSize: "0.62rem", letterSpacing: "0.04em" }}>
-          背景画像：dōTERRA公式掲載画像
-        </a>
       </div>
     </div>
   );

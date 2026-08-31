@@ -2,7 +2,6 @@ import MemberLayout from "@/components/MemberLayout";
 import { usePageView } from "@/hooks/usePageView";
 import { trpc } from "@/lib/trpc";
 import ContentVisualHero from "@/components/ContentVisualHero";
-import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
 import { useState } from "react";
 import { MessageCircle, Heart, Sparkles, Users, Leaf, Star, AlertCircle, RefreshCw } from "lucide-react";
 
@@ -43,7 +42,7 @@ export default function Testimonials() {
   return (
     <MemberLayout>
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <ContentVisualHero eyebrow="MEMBER STORIES" title="体験談" description="dōTERRAのエッセンシャルオイルとともに暮らす、メンバーの皆さんのリアルな声をお届けします。" imageUrl={doterraAssets.loginGarden} imageAlt="dōTERRA公式掲載の自然豊かな暮らし" sourceHref={doterraSources.japanHome} />
+        <ContentVisualHero eyebrow="MEMBER STORIES" title="体験談" description="dōTERRAのエッセンシャルオイルとともに暮らす、メンバーの皆さんのリアルな声をお届けします。" icon={Heart} tone="mint" />
 
         {/* カテゴリタブ */}
         <div className="flex flex-wrap gap-2 justify-center mb-8">

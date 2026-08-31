@@ -3,9 +3,9 @@ import YouTubePlayer, { extractYouTubeId } from "@/components/YouTubePlayer";
 import ContentVisualHero from "@/components/ContentVisualHero";
 import { trpc } from "@/lib/trpc";
 import { usePageView } from "@/hooks/usePageView";
-import { doterraAssets, doterraSources } from "@/lib/doterraAssets";
+import { tone, type ToneName } from "@/lib/categoryTheme";
 import { Badge } from "@/components/ui/badge";
-import { PlayCircle, Sparkles, CheckCircle2, Clock, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
+import { BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Clock, PlayCircle, RotateCcw, Sparkles } from "lucide-react";
 import { useState, useCallback, useEffect, useRef } from "react";
 
 // 1ページあたりの動画数。カードは2列表示なので偶数が収まりが良い。
@@ -84,12 +84,9 @@ function DrivePlayer({ url }: { url: string }) {
   );
 }
 
-const videoFallbackImages = [
-  doterraAssets.essentialOils,
-  doterraAssets.memberRoseField,
-  doterraAssets.loginGarden,
-  doterraAssets.sourceFarmer,
-];
+// サムネイルが無い動画の代替表示。写真ではなくパステルの面を順に割り当てる。
+// 現在は全180本にYouTubeのサムネイルがあるため、実際にはほとんど出番がない。
+const fallbackTones: ToneName[] = ["aqua", "blossom", "butter", "lilac", "mint", "apricot"];
 
 // 個別動画カードコンポーネント
 function VideoCard({
@@ -125,7 +122,7 @@ function VideoCard({
 
   const youtubeId = extractYouTubeId(video.videoUrl);
   const isYouTube = !!youtubeId;
-  const previewImage = video.thumbnailUrl ?? videoFallbackImages[video.id % videoFallbackImages.length];
+  const fallbackTone = tone(fallbackTones[video.id % fallbackTones.length]);
 
   const handleProgress = useCallback(
     (pos: number, dur: number) => {
@@ -136,7 +133,7 @@ function VideoCard({
 
   return (
     <div className="bg-card rounded-2xl border border-border overflow-hidden card-hover">
-      <div className="aspect-video bg-black relative">
+      <div className="aspect-video bg-muted relative">
         {isActive ? (
           isYouTube ? (
             <YouTubePlayer
@@ -157,11 +154,17 @@ function VideoCard({
             aria-label={`「${video.title}」を再生`}
             className="relative w-full h-full overflow-hidden group"
           >
-            <img src={previewImage} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-            <span className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(9,27,13,0.68), rgba(9,27,13,0.15))" }} />
+            {video.thumbnailUrl ? (
+              <>
+                <img src={video.thumbnailUrl} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <span className="absolute inset-0 bg-brown-900/35" />
+              </>
+            ) : (
+              <span className={`absolute inset-0 ${fallbackTone.surface}`} />
+            )}
             <span className="relative flex h-full flex-col items-center justify-center gap-2">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full" style={{ background: "rgba(255,255,255,0.92)", color: "var(--forest-600)" }}><PlayCircle size={25} /></span>
-              {startSec > 0 && <span className="rounded-full px-3 py-1 text-xs" style={{ color: "white", background: "rgba(9,27,13,0.70)" }}>{formatTime(startSec)} から続きを再生</span>}
+              <span className={`flex h-12 w-12 items-center justify-center rounded-pill bg-card shadow-soft ${video.thumbnailUrl ? "text-forest-600" : fallbackTone.ink}`}><PlayCircle size={25} /></span>
+              {startSec > 0 && <span className="rounded-pill bg-brown-900/70 px-3 py-1 text-xs text-white">{formatTime(startSec)} から続きを再生</span>}
             </span>
           </button>
         )}
@@ -304,7 +307,7 @@ export default function Videos() {
   return (
     <MemberLayout>
       <div className="container py-6 lg:py-8 space-y-8">
-        <ContentVisualHero eyebrow="VIDEO LIBRARY" title="学習動画ライブラリ" description="カテゴリ別に動画を整理しています。視聴の続きから、あなたのペースで学びを深めましょう。" imageUrl={doterraAssets.essentialOils} imageAlt="dōTERRA公式掲載のエッセンシャルオイル" sourceHref={doterraSources.japanHome} />
+        <ContentVisualHero eyebrow="VIDEO LIBRARY" title="学習動画ライブラリ" description="カテゴリ別に動画を整理しています。視聴の続きから、あなたのペースで学びを深めましょう。" icon={BookOpen} tone="aqua" />
 
         {/* Latest videos */}
         {latestVideos.length > 0 && (
