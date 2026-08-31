@@ -1,3 +1,4 @@
+import BrandMark from "@/components/BrandMark";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -90,11 +91,7 @@ export default function Register() {
               boxShadow: "0 2px 12px oklch(0.200 0.030 60 / 0.08)",
             }}
           >
-            <img
-              src="/manus-storage/logo-circle_08be9919.png"
-              alt="NatuLabo"
-              style={{ width: "2.75rem", height: "2.75rem", objectFit: "contain" }}
-            />
+            <BrandMark className="h-12 w-12" title="NatuLabo" />
           </div>
           <h1
             style={{

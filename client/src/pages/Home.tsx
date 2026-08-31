@@ -1,3 +1,4 @@
+import BrandMark from "@/components/BrandMark";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import {
@@ -103,12 +104,7 @@ export default function Home() {
               className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full"
               style={{ background: "var(--card)", boxShadow: "var(--shadow-soft)" }}
             >
-              <img
-                src="/manus-storage/logo-circle_08be9919.png"
-                alt=""
-                aria-hidden="true"
-                className="h-7 w-7 object-contain"
-              />
+              <BrandMark className="h-7 w-7 object-contain" title="" />
             </span>
             <span
               className="hidden sm:block"
@@ -185,7 +181,7 @@ export default function Home() {
             <div
               className="mb-5 flex leading-none"
               aria-label="NATU LABO"
-              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(4.2rem, 9vw, 8rem)", fontWeight: 300, letterSpacing: "0.035em", color: "var(--brown-800)", whiteSpace: "nowrap" }}
+              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 11vw, 8rem)", fontWeight: 300, letterSpacing: "0.035em", color: "var(--brown-800)", whiteSpace: "nowrap" }}
             >
               {heroLetters.map((letter, index) => (
                 <span
@@ -243,7 +239,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="absolute bottom-7 left-1/2 z-10 -translate-x-1/2 text-center">
+        <div className="absolute bottom-7 left-1/2 z-10 hidden -translate-x-1/2 text-center sm:block">
           <span className="font-display text-brown-400" style={{ fontSize: "0.6rem", letterSpacing: "0.24em" }}>SCROLL TO EXPLORE</span>
           <div className="mx-auto mt-2 h-9 w-px" style={{ background: "linear-gradient(to bottom, var(--brown-300), transparent)" }} />
         </div>
@@ -350,7 +346,7 @@ export default function Home() {
         <div className="container flex flex-col gap-6 border-t pt-8 sm:flex-row sm:items-center sm:justify-between" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
           <div className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: "rgba(255,255,255,0.94)" }}>
-              <img src="/manus-storage/logo-circle_08be9919.png" alt="NatuLabo" className="h-7 w-7 object-contain" />
+              <BrandMark className="h-7 w-7 object-contain" title="NatuLabo" />
             </span>
             <span style={{ color: "rgba(255,255,255,0.86)", fontFamily: "var(--font-display)", fontSize: "1rem", letterSpacing: "0.14em" }}>NatuLabo Portal</span>
           </div>

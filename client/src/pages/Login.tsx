@@ -1,3 +1,4 @@
+import BrandMark from "@/components/BrandMark";
 import { getLoginUrl } from "@/const";
 import { Leaf } from "lucide-react";
 import { useEffect } from "react";
@@ -37,11 +38,7 @@ export default function Login() {
               boxShadow: "var(--shadow-soft)",
             }}
           >
-            <img
-              src="/manus-storage/logo-circle_08be9919.png"
-              alt="NatuLabo"
-              style={{ width: "3rem", height: "3rem", objectFit: "contain" }}
-            />
+            <BrandMark className="h-12 w-12" title="NatuLabo" />
           </div>
           <h1
             style={{
