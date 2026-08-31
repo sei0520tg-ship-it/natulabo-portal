@@ -1,3 +1,4 @@
+import BrandMark from "@/components/BrandMark";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -90,11 +91,7 @@ export default function Register() {
               boxShadow: "0 2px 12px oklch(0.200 0.030 60 / 0.08)",
             }}
           >
-            <img
-              src="/manus-storage/logo-circle_08be9919.png"
-              alt="NatuLabo"
-              style={{ width: "2.75rem", height: "2.75rem", objectFit: "contain" }}
-            />
+            <BrandMark className="h-12 w-12" title="NatuLabo" />
           </div>
           <h1
             style={{
@@ -102,7 +99,7 @@ export default function Register() {
               fontSize: "1.5rem",
               fontWeight: 400,
               letterSpacing: "0.05em",
-              color: "white",
+              color: "var(--brown-800)",
             }}
           >
             会員登録
@@ -122,7 +119,7 @@ export default function Register() {
         </div>
 
         {/* Step indicator */}
-        <div className="flex items-center justify-center gap-2 mb-8" style={{ color: "white" }}>
+        <div className="flex items-center justify-center gap-2 mb-8 text-brown-600">
           {["招待コード確認", "プロフィール入力"].map((label, i) => (
             <div key={i} className="flex items-center gap-2">
               <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium transition-colors ${

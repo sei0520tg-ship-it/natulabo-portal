@@ -1,3 +1,4 @@
+import BrandMark from "@/components/BrandMark";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { sectionTone, tone } from "@/lib/categoryTheme";
@@ -53,7 +54,7 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
       <div className="flex min-h-screen items-center justify-center" style={{ background: "var(--cream-50)" }}>
         <div className="flex flex-col items-center gap-4">
           <div className="natu-float flex h-14 w-14 items-center justify-center rounded-pill bg-card shadow-soft">
-            <img src="/manus-storage/logo-circle_08be9919.png" alt="" className="h-10 w-10 rounded-full" />
+            <BrandMark className="h-10 w-10 rounded-full" title="" />
           </div>
           <span style={{ color: "var(--brown-500)", fontFamily: "var(--font-display)", fontSize: "0.72rem", letterSpacing: "0.24em" }}>LOADING</span>
         </div>
@@ -72,7 +73,7 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
         <div className="px-7 pb-7 pt-8">
           <Link href="/dashboard" className="flex items-center gap-3" aria-label="NatuLabo ホーム">
             <span className="flex h-10 w-10 items-center justify-center rounded-pill bg-card shadow-soft">
-              <img src="/manus-storage/logo-circle_08be9919.png" alt="NatuLabo" className="h-8 w-8 object-contain" />
+              <BrandMark className="h-8 w-8 object-contain" title="NatuLabo" />
             </span>
             <div>
               <p className="font-display text-brown-800" style={{ fontSize: "1.1rem", fontWeight: 600, letterSpacing: "0.12em", lineHeight: 1 }}>NATU LABO.</p>
@@ -136,7 +137,7 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
       <main className="min-h-screen pb-20 lg:pl-[17.5rem] lg:pb-0">
         <header className="sticky top-0 z-20 flex h-16 items-center justify-between px-4 lg:hidden" style={{ background: "rgba(250,248,243,0.88)", backdropFilter: "blur(16px)", borderBottom: "1px solid var(--cream-300)" }}>
           <Link href="/dashboard" className="flex items-center gap-2.5" aria-label="NatuLabo ホーム">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: "white", boxShadow: "0 2px 8px rgba(45,34,22,0.08)" }}><img src="/manus-storage/logo-circle_08be9919.png" alt="NatuLabo" className="h-7 w-7" /></span>
+            <span className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: "white", boxShadow: "0 2px 8px rgba(45,34,22,0.08)" }}><BrandMark className="h-7 w-7" title="NatuLabo" /></span>
             <span style={{ color: "var(--brown-800)", fontFamily: "var(--font-display)", fontSize: "1rem", letterSpacing: "0.14em" }}>NATU LABO.</span>
           </Link>
           <Link href="/profile" aria-label="プロフィールを開く" className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: "var(--cream-200)", color: "var(--forest-600)" }}><UserRound className="h-4 w-4" /></Link>
