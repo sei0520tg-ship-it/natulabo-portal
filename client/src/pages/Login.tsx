@@ -28,7 +28,7 @@ export default function Login() {
       <div className="relative z-10 w-full max-w-sm animate-fade-in-up">
         {/* Logo */}
         <div className="text-center mb-10">
-          <BrandMark variant="circle" className="mb-4 h-24 w-24" title="NatuLabo" />
+          <BrandMark variant="circle" className="mx-auto mb-4 h-24 w-24" title="NatuLabo" />
           <h1
             style={{
               fontFamily: "var(--font-display)",

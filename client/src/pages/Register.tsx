@@ -81,22 +81,11 @@ export default function Register() {
 
       <div className="relative z-10 w-full max-w-sm animate-fade-in-up">
         <div className="text-center mb-8">
-          <div
-            className="inline-flex items-center justify-center mb-3"
-            style={{
-              width: "4.5rem",
-              height: "4.5rem",
-              borderRadius: "1.25rem",
-              background: "var(--cream-100, oklch(0.970 0.012 80))",
-              boxShadow: "0 2px 12px oklch(0.200 0.030 60 / 0.08)",
-            }}
-          >
-            <BrandMark className="h-12 w-12" title="NatuLabo" />
-          </div>
+          <BrandMark variant="circle" className="mx-auto mb-3 h-20 w-20" title="NatuLabo" />
           <h1
             style={{
-              fontFamily: "var(--font-serif)",
-              fontSize: "1.5rem",
+              fontFamily: "var(--font-display)",
+              fontSize: "1.4rem",
               fontWeight: 400,
               letterSpacing: "0.05em",
               color: "var(--brown-800)",
