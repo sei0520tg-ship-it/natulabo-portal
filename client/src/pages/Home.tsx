@@ -164,7 +164,7 @@ export default function Home() {
 
             <div
               className="mb-5 flex leading-none"
-              aria-label="NATU LABO"
+              aria-label="NATULABO"
               style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 11vw, 8rem)", fontWeight: 500, letterSpacing: "0.01em", color: "var(--brown-800)", whiteSpace: "nowrap" }}
             >
               {heroLetters.map((letter, index) => (

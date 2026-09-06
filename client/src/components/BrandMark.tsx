@@ -15,7 +15,7 @@
  *   viewBox 付きの SVG なら、箱の大きさに文字が必ず比例する。
  *
  * variant:
- *   wordmark … 横一列の「NATU LABO.」。ヘッダーやフッター向け
+ *   wordmark … 横一列の「NATULABO.」。ヘッダーやフッター向け
  *   circle   … ピンクの円に2行で収めたもの。ログイン画面などの象徴的な位置向け
  *   banner   … ピンクの帯に横組み
  */
@@ -85,7 +85,7 @@ export default function BrandMark({
           letterSpacing="2.2"
           style={TEXT_STYLE}
         >
-          NATU LABO.
+          NATULABO.
         </text>
       </svg>
     );
@@ -96,7 +96,7 @@ export default function BrandMark({
       {...a11y}
       className={`font-display font-bold tracking-[0.14em] text-brown-900 ${className}`}
     >
-      NATU&nbsp;LABO.
+      NATULABO.
     </span>
   );
 }

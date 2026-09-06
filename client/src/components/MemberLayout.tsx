@@ -79,7 +79,7 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
               <BrandMark variant="circle" className="h-9 w-9" title="NatuLabo" />
             </span>
             <div>
-              <p className="font-display text-brown-800" style={{ fontSize: "1.1rem", fontWeight: 600, letterSpacing: "0.12em", lineHeight: 1 }}>NATU LABO.</p>
+              <BrandMark className="text-[1.15rem] leading-none" title="" />
               <p className="font-display text-brown-400" style={{ fontSize: "0.55rem", letterSpacing: "0.22em", marginTop: "0.35rem" }}>MEMBER&apos;S PORTAL</p>
             </div>
           </Link>
@@ -141,7 +141,7 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
         <header className="sticky top-0 z-20 flex h-16 items-center justify-between px-4 lg:hidden" style={{ background: "rgba(250,248,243,0.88)", backdropFilter: "blur(16px)", borderBottom: "1px solid var(--cream-300)" }}>
           <Link href="/dashboard" className="flex items-center gap-2.5" aria-label="NatuLabo ホーム">
             <BrandMark variant="circle" className="h-9 w-9" title="NatuLabo" />
-            <span style={{ color: "var(--brown-800)", fontFamily: "var(--font-display)", fontSize: "1rem", letterSpacing: "0.14em" }}>NATU LABO.</span>
+            <BrandMark className="text-[1.25rem] leading-none" title="" />
           </Link>
           <div className="flex items-center gap-2">
             <Link href="/profile" aria-label="プロフィールを開く" className="flex h-9 w-9 items-center justify-center rounded-pill bg-cream-200 text-forest-600"><UserRound className="h-4 w-4" /></Link>
