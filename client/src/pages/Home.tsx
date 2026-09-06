@@ -200,9 +200,8 @@ export default function Home() {
                 color: "var(--brown-800)",
                 fontFamily: "var(--font-serif)",
                 fontSize: "clamp(1.7rem, 4.1vw, 3.15rem)",
-                fontWeight: 400,
-                letterSpacing: "0.02em",
                 fontWeight: 700,
+                letterSpacing: "0.02em",
                 lineHeight: 1.5,
               } as React.CSSProperties}
             >
