@@ -80,15 +80,15 @@ export default function Dashboard() {
 
   return (
     <MemberLayout>
-      <div className="px-4 py-7 sm:px-7 sm:py-10 lg:px-10 lg:py-11">
-        <div className="mx-auto max-w-[1280px] space-y-14 lg:space-y-18">
+      <div className="px-4 py-5 sm:px-7 sm:py-8 lg:px-10 lg:py-10">
+        <div className="mx-auto max-w-[1280px] space-y-9 lg:space-y-12">
           <section className="grid gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)]">
-            <div className="relative min-h-[21rem] overflow-hidden rounded-[1.75rem] animate-fade-in-up">
+            <div className="relative overflow-hidden rounded-card animate-fade-in-up">
               <div aria-hidden="true" className="absolute inset-0 bg-cream-100">
                 <span className="soft-blob natu-float -right-10 -top-16 h-72 w-72 bg-mint-300 opacity-45" />
                 <span className="soft-blob -bottom-24 right-32 h-56 w-56 bg-butter-300 opacity-40" />
               </div>
-              <div className="relative flex h-full min-h-[21rem] flex-col justify-between p-7 sm:p-10">
+              <div className="relative flex h-full flex-col justify-between gap-5 p-6 sm:p-8">
                 <div className="flex items-center justify-between">
                   <span className="font-display text-mint-700" style={{ fontSize: "0.63rem", letterSpacing: "0.2em" }}>MEMBER&apos;S HOME</span>
                   <span className="rounded-pill border border-mint-300 bg-card px-3 py-1 font-display text-brown-600" style={{ fontSize: "0.58rem", letterSpacing: "0.14em" }}>
@@ -97,7 +97,7 @@ export default function Dashboard() {
                 </div>
                 <div>
                   <p className="mb-3 font-display text-mint-700" style={{ fontSize: "0.78rem", letterSpacing: "0.14em" }}>HELLO, {user?.name ?? "MEMBER"}</p>
-                  <h1 className="text-brown-800" style={{ fontSize: "clamp(1.75rem, 3.6vw, 2.8rem)", letterSpacing: "0.04em", lineHeight: 1.45 }}>
+                  <h1 className="text-brown-800" style={{ fontSize: "clamp(1.5rem, 3.2vw, 2.3rem)", letterSpacing: "0.02em", lineHeight: 1.4 }}>
                     今日も、自然とともに。
                   </h1>
                   <p className="mt-4 max-w-md text-brown-600" style={{ fontSize: "0.84rem", letterSpacing: "0.03em", lineHeight: 1.9 }}>
@@ -107,19 +107,19 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="rounded-[1.75rem] p-6 animate-fade-in-up stagger-1" style={{ background: "white", border: "1px solid var(--cream-300)" }}>
+            <div className="rounded-card p-5 animate-fade-in-up stagger-1" style={{ background: "white", border: "1px solid var(--cream-300)" }}>
               <p style={{ color: "var(--gold-500)", fontFamily: "var(--font-display)", fontSize: "0.62rem", letterSpacing: "0.26em" }}>YOUR PORTAL</p>
-              <p className="mt-5" style={{ color: "var(--brown-800)", fontFamily: "var(--font-serif)", fontSize: "1.35rem", fontWeight: 400, letterSpacing: "0.06em", lineHeight: 1.6 }}>暮らしの中に、<br />学びとつながりを。</p>
-              <div className="mt-7 grid grid-cols-2 gap-3">
+              <p className="mt-3 font-bold text-brown-800" style={{ fontSize: "1.15rem", letterSpacing: "0.02em", lineHeight: 1.5 }}>暮らしの中に、<br />学びとつながりを。</p>
+              <div className="mt-4 grid grid-cols-2 gap-3">
                 <Link href="/videos" className="group rounded-2xl p-4 transition-transform hover:-translate-y-0.5" style={{ background: "var(--cream-100)" }}>
                   <Play className="h-4 w-4" style={{ color: "var(--forest-600)" }} />
-                  <p className="mt-5" style={{ color: "var(--brown-800)", fontSize: "0.78rem", fontWeight: 500, letterSpacing: "0.04em" }}>動画を観る</p>
-                  <ArrowUpRight className="mt-2 h-3.5 w-3.5" style={{ color: "var(--gold-600)" }} />
+                  <p className="mt-3 font-bold text-brown-800" style={{ fontSize: "0.8rem", letterSpacing: "0.02em" }}>動画を観る</p>
+                  <ArrowUpRight className="mt-1 h-3.5 w-3.5" style={{ color: "var(--gold-600)" }} />
                 </Link>
                 <Link href="/calendar" className="group rounded-2xl p-4 transition-transform hover:-translate-y-0.5" style={{ background: "var(--cream-100)" }}>
                   <CalendarDays className="h-4 w-4" style={{ color: "var(--forest-600)" }} />
-                  <p className="mt-5" style={{ color: "var(--brown-800)", fontSize: "0.78rem", fontWeight: 500, letterSpacing: "0.04em" }}>予定を見る</p>
-                  <ArrowUpRight className="mt-2 h-3.5 w-3.5" style={{ color: "var(--gold-600)" }} />
+                  <p className="mt-3 font-bold text-brown-800" style={{ fontSize: "0.8rem", letterSpacing: "0.02em" }}>予定を見る</p>
+                  <ArrowUpRight className="mt-1 h-3.5 w-3.5" style={{ color: "var(--gold-600)" }} />
                 </Link>
               </div>
               <Link href="/setup" className="mt-4 flex items-center justify-between rounded-xl px-4 py-3 transition-colors hover:bg-[var(--cream-100)]" style={{ border: "1px solid var(--cream-300)", color: "var(--brown-700)" }}>
@@ -133,21 +133,18 @@ export default function Dashboard() {
 
           <section>
             <SectionHeader no="01" title="あなたのためのコンテンツ" />
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 xl:grid-cols-3">
               {menuItems.map((item, index) => {
                 const Icon = item.icon;
                 const t = tone(sectionTone[item.href]);
                 return (
-                  <Link key={item.href} href={item.href} className="group card-hover relative overflow-hidden rounded-card border border-cream-300 bg-cream-100 px-5 py-6" style={{ animationDelay: `${index * 60}ms` }}>
-                    <span aria-hidden="true" className={`soft-blob -right-6 -top-8 h-28 w-28 ${t.surface} opacity-80`} />
-                    <div className="relative flex flex-col items-start gap-3">
-                      <span className={`flex h-14 w-14 items-center justify-center rounded-pill transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110 ${t.surface} ${t.ink}`}><Icon className="h-6 w-6" /></span>
+                  <Link key={item.href} href={item.href} className={`group card-hover relative overflow-hidden rounded-card border border-cream-300 bg-cream-100 p-4 sm:p-5`} style={{ animationDelay: `${index * 60}ms` }}>
+                    <span aria-hidden="true" className={`soft-blob -right-5 -top-6 h-20 w-20 ${t.surface} opacity-80`} />
+                    <div className="relative flex flex-col items-start gap-2.5">
+                      <span className={`flex h-11 w-11 items-center justify-center rounded-pill transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110 ${t.surface} ${t.ink}`}><Icon className="h-5 w-5" /></span>
                       <div className="w-full">
-                        <div className="flex items-center justify-between gap-3">
-                          <p className="text-brown-800" style={{ fontSize: "1.05rem", fontWeight: 700, letterSpacing: "0.02em" }}>{item.title}</p>
-                          <ArrowUpRight className={`h-4 w-4 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ${t.ink}`} />
-                        </div>
-                        <span className={`mt-1 block font-display ${t.ink}`} style={{ fontSize: "0.56rem", letterSpacing: "0.14em" }}>{item.en}</span>
+                        <p className="text-brown-800" style={{ fontSize: "0.9rem", fontWeight: 700, letterSpacing: "0.01em", lineHeight: 1.35 }}>{item.title}</p>
+                        <span className={`mt-0.5 block font-display ${t.ink}`} style={{ fontSize: "0.5rem", letterSpacing: "0.12em" }}>{item.en}</span>
                       </div>
                     </div>
                   </Link>

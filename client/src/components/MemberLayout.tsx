@@ -12,11 +12,13 @@ import {
   Leaf,
   LogOut,
   MessageCircleHeart,
+  Menu,
   Settings2,
   Sparkles,
   UserRound,
+  X,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 
 const navItems = [
@@ -37,6 +39,7 @@ interface MemberLayoutProps {
 export default function MemberLayout({ children }: MemberLayoutProps) {
   const { user, isAuthenticated, loading } = useAuth();
   const [location] = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
   const logoutMutation = trpc.auth.logout.useMutation({
     onSuccess: () => {
       window.location.href = "/";
@@ -140,10 +143,85 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
             <BrandMark variant="circle" className="h-9 w-9" title="NatuLabo" />
             <span style={{ color: "var(--brown-800)", fontFamily: "var(--font-display)", fontSize: "1rem", letterSpacing: "0.14em" }}>NATU LABO.</span>
           </Link>
-          <Link href="/profile" aria-label="プロフィールを開く" className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: "var(--cream-200)", color: "var(--forest-600)" }}><UserRound className="h-4 w-4" /></Link>
+          <div className="flex items-center gap-2">
+            <Link href="/profile" aria-label="プロフィールを開く" className="flex h-9 w-9 items-center justify-center rounded-pill bg-cream-200 text-forest-600"><UserRound className="h-4 w-4" /></Link>
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label="メニューを開く"
+              aria-expanded={menuOpen}
+              className="flex h-9 w-9 items-center justify-center rounded-pill bg-cream-200 text-brown-700"
+            >
+              <Menu className="h-4 w-4" />
+            </button>
+          </div>
         </header>
         {children}
       </main>
+
+      {/* モバイルのメニュー。下部タブには5項目しか出せないため、
+          残りの項目・管理画面・ログアウトはここから辿れるようにする。 */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <button
+            type="button"
+            aria-label="メニューを閉じる"
+            onClick={() => setMenuOpen(false)}
+            className="absolute inset-0 bg-brown-900/30"
+          />
+          <div className="absolute inset-y-0 right-0 flex w-[80%] max-w-xs flex-col border-l border-cream-300 bg-cream-50 shadow-float">
+            <div className="flex items-center justify-between border-b border-cream-300 px-5 py-4">
+              <span className="font-display text-sm font-bold tracking-[0.12em] text-brown-700">MENU</span>
+              <button
+                type="button"
+                onClick={() => setMenuOpen(false)}
+                aria-label="メニューを閉じる"
+                className="flex h-9 w-9 items-center justify-center rounded-pill bg-cream-200 text-brown-700"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <nav className="flex-1 overflow-y-auto p-3">
+              {navItems.map(({ href, icon: Icon, label, en }) => {
+                const active = location === href || location.startsWith(`${href}/`);
+                const t = tone(sectionTone[href]);
+                return (
+                  <Link key={href} href={href} onClick={() => setMenuOpen(false)}>
+                    <div className={`mb-1 flex items-center gap-3 rounded-xl px-3 py-2.5 ${active ? `${t.surface}` : ""}`}>
+                      <span className={`flex h-9 w-9 items-center justify-center rounded-pill ${active ? `bg-card ${t.ink}` : "bg-cream-200 text-brown-500"}`}>
+                        <Icon className="h-4 w-4" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className={`block text-sm ${active ? "font-bold text-brown-800" : "text-brown-600"}`}>{label}</span>
+                        <span className={`block font-display text-[0.5rem] tracking-[0.14em] ${active ? t.ink : "text-brown-300"}`}>{en}</span>
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+
+              {user?.role === "admin" && (
+                <Link href="/admin" onClick={() => setMenuOpen(false)}>
+                  <div className="mt-2 flex items-center gap-3 rounded-xl border-t border-cream-300 px-3 pb-2.5 pt-4">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-pill bg-cream-200 text-brown-500"><Settings2 className="h-4 w-4" /></span>
+                    <span className="text-sm text-brown-600">管理画面</span>
+                  </div>
+                </Link>
+              )}
+            </nav>
+
+            <button
+              type="button"
+              onClick={() => { setMenuOpen(false); logoutMutation.mutate(); }}
+              className="flex items-center gap-3 border-t border-cream-300 px-6 py-4 text-left text-sm text-brown-400"
+            >
+              <LogOut className="h-4 w-4" />
+              ログアウト
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* モバイルの下部タブ。選択中は面（クリーム）で示し、アイコンはタブごとの色を持たせる。 */}
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-cream-300 bg-cream-50 lg:hidden">
