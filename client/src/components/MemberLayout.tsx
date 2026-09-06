@@ -145,15 +145,25 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
         {children}
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 lg:hidden" style={{ background: "color-mix(in oklch, var(--card) 92%, transparent)", backdropFilter: "blur(16px)", borderTop: "1px solid var(--cream-300)" }}>
-        <div className="flex items-center justify-around px-1 py-2">
+      {/* モバイルの下部タブ。選択中は面（クリーム）で示し、アイコンはタブごとの色を持たせる。 */}
+      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-cream-300 bg-cream-50 lg:hidden">
+        <div className="flex items-stretch justify-around">
           {navItems.slice(0, 5).map(({ href, icon: Icon, label }) => {
             const active = location === href || location.startsWith(`${href}/`);
+            const t = tone(sectionTone[href]);
             return (
-              <Link key={href} href={href}>
-                <span className="flex min-w-[3.5rem] flex-col items-center gap-1 rounded-xl px-2 py-1.5" style={{ color: active ? "var(--forest-600)" : "var(--brown-300)" }}>
-                  <span className="flex h-6 w-8 items-center justify-center rounded-full" style={{ background: active ? "var(--cream-200)" : "transparent" }}><Icon className="h-4 w-4" /></span>
-                  <span style={{ fontSize: "0.58rem", fontWeight: active ? 500 : 300, letterSpacing: "0.03em" }}>{label}</span>
+              <Link key={href} href={href} className="flex-1">
+                <span
+                  className={`flex h-full min-w-0 flex-col items-center gap-1 px-1 py-2.5 transition-colors ${
+                    active ? "bg-cream-200" : ""
+                  }`}
+                >
+                  <Icon className={`h-5 w-5 ${active ? t.ink : "text-brown-300"}`} />
+                  <span
+                    className={`truncate text-[0.6rem] ${active ? "font-bold text-brown-700" : "text-brown-400"}`}
+                  >
+                    {label}
+                  </span>
                 </span>
               </Link>
             );

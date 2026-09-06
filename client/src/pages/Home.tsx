@@ -152,10 +152,9 @@ export default function Home() {
         className="relative flex min-h-[100svh] items-center overflow-hidden pt-20"
       >
         <div aria-hidden="true" className="absolute inset-0 bg-hero-gradient">
-          <span className="soft-blob natu-float -left-24 -top-20 h-[34rem] w-[34rem] bg-blossom-300 opacity-40" />
-          <span className="soft-blob -right-32 top-10 h-[30rem] w-[30rem] bg-aqua-300 opacity-35" />
-          <span className="soft-blob natu-float bottom-[-10rem] left-1/3 h-[26rem] w-[26rem] bg-butter-300 opacity-35" />
-          <span className="soft-blob -bottom-20 -right-10 h-72 w-72 bg-mint-300 opacity-30" />
+          <span className="soft-blob natu-float -left-24 -top-20 h-[34rem] w-[34rem] bg-blossom-100 opacity-70" />
+          <span className="soft-blob -right-32 top-10 h-[30rem] w-[30rem] bg-aqua-100 opacity-55" />
+          <span className="soft-blob natu-float bottom-[-10rem] left-1/3 h-[26rem] w-[26rem] bg-butter-100 opacity-70" />
         </div>
         <div
           className="natu-orbit absolute -right-[17vw] -top-[34vw] h-[68vw] w-[68vw] rounded-full border border-cream-300"
@@ -181,7 +180,7 @@ export default function Home() {
             <div
               className="mb-5 flex leading-none"
               aria-label="NATU LABO"
-              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 11vw, 8rem)", fontWeight: 300, letterSpacing: "0.035em", color: "var(--brown-800)", whiteSpace: "nowrap" }}
+              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 11vw, 8rem)", fontWeight: 500, letterSpacing: "0.01em", color: "var(--brown-800)", whiteSpace: "nowrap" }}
             >
               {heroLetters.map((letter, index) => (
                 <span
@@ -202,8 +201,9 @@ export default function Home() {
                 fontFamily: "var(--font-serif)",
                 fontSize: "clamp(1.7rem, 4.1vw, 3.15rem)",
                 fontWeight: 400,
-                letterSpacing: "0.1em",
-                lineHeight: 1.55,
+                letterSpacing: "0.02em",
+                fontWeight: 700,
+                lineHeight: 1.5,
               } as React.CSSProperties}
             >
               自然の恵みとともに、

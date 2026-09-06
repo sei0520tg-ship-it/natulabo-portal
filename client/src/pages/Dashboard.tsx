@@ -142,12 +142,12 @@ export default function Dashboard() {
                 const Icon = item.icon;
                 const t = tone(sectionTone[item.href]);
                 return (
-                  <Link key={item.href} href={item.href} className={`group card-hover relative min-h-48 overflow-hidden rounded-card p-5 shadow-soft ${t.surface}`} style={{ animationDelay: `${index * 60}ms` }}>
-                    <span aria-hidden="true" className={`soft-blob -right-8 -top-10 h-40 w-40 ${t.dot} opacity-25`} />
+                  <Link key={item.href} href={item.href} className="group card-hover relative min-h-48 overflow-hidden rounded-card border border-cream-300 bg-cream-100 p-5" style={{ animationDelay: `${index * 60}ms` }}>
+                    <span aria-hidden="true" className={`soft-blob -right-8 -top-10 h-40 w-40 ${t.surface} opacity-80`} />
                     <div className="relative flex h-full min-h-36 flex-col justify-between">
                       <div className="flex items-start justify-between">
                         <span className={`font-display ${t.ink}`} style={{ fontSize: "0.59rem", letterSpacing: "0.16em" }}>{item.en}</span>
-                        <span className={`flex h-11 w-11 items-center justify-center rounded-pill bg-card shadow-soft transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110 ${t.ink}`}><Icon className="h-5 w-5" /></span>
+                        <span className={`flex h-12 w-12 items-center justify-center rounded-pill transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110 ${t.surface} ${t.ink}`}><Icon className="h-5 w-5" /></span>
                       </div>
                       <div className="flex items-center justify-between gap-3">
                         <p className="text-brown-800" style={{ fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.03em" }}>{item.title}</p>
