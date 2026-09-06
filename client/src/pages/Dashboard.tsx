@@ -84,10 +84,9 @@ export default function Dashboard() {
         <div className="mx-auto max-w-[1280px] space-y-14 lg:space-y-18">
           <section className="grid gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)]">
             <div className="relative min-h-[21rem] overflow-hidden rounded-[1.75rem] animate-fade-in-up">
-              <div aria-hidden="true" className="absolute inset-0 bg-mint-100">
-                <span className="soft-blob natu-float -right-10 -top-16 h-72 w-72 bg-mint-500 opacity-25" />
-                <span className="soft-blob -bottom-24 right-32 h-56 w-56 bg-butter-500 opacity-20" />
-                <span className="soft-blob -left-16 bottom-0 h-52 w-52 bg-blossom-500 opacity-20" />
+              <div aria-hidden="true" className="absolute inset-0 bg-cream-100">
+                <span className="soft-blob natu-float -right-10 -top-16 h-72 w-72 bg-mint-300 opacity-45" />
+                <span className="soft-blob -bottom-24 right-32 h-56 w-56 bg-butter-300 opacity-40" />
               </div>
               <div className="relative flex h-full min-h-[21rem] flex-col justify-between p-7 sm:p-10">
                 <div className="flex items-center justify-between">
@@ -104,9 +103,6 @@ export default function Dashboard() {
                   <p className="mt-4 max-w-md text-brown-600" style={{ fontSize: "0.84rem", letterSpacing: "0.03em", lineHeight: 1.9 }}>
                     小さな心地よさを積み重ねる一日へ。気になるコンテンツから、ゆっくり始めてみましょう。
                   </p>
-                  <a href={doterraSources.shop} target="_blank" rel="noreferrer" className="mt-4 inline-block" style={{ color: "rgba(255,255,255,0.62)", fontSize: "0.62rem", letterSpacing: "0.04em" }}>
-                    背景画像：dōTERRA公式掲載画像
-                  </a>
                 </div>
               </div>
             </div>
