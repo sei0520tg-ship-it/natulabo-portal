@@ -138,16 +138,16 @@ export default function Dashboard() {
                 const Icon = item.icon;
                 const t = tone(sectionTone[item.href]);
                 return (
-                  <Link key={item.href} href={item.href} className="group card-hover relative min-h-48 overflow-hidden rounded-card border border-cream-300 bg-cream-100 p-5" style={{ animationDelay: `${index * 60}ms` }}>
-                    <span aria-hidden="true" className={`soft-blob -right-8 -top-10 h-40 w-40 ${t.surface} opacity-80`} />
-                    <div className="relative flex h-full min-h-36 flex-col justify-between">
-                      <div className="flex items-start justify-between">
-                        <span className={`font-display ${t.ink}`} style={{ fontSize: "0.59rem", letterSpacing: "0.16em" }}>{item.en}</span>
-                        <span className={`flex h-12 w-12 items-center justify-center rounded-pill transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110 ${t.surface} ${t.ink}`}><Icon className="h-5 w-5" /></span>
-                      </div>
-                      <div className="flex items-center justify-between gap-3">
-                        <p className="text-brown-800" style={{ fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.03em" }}>{item.title}</p>
-                        <ArrowUpRight className={`h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ${t.ink}`} />
+                  <Link key={item.href} href={item.href} className="group card-hover relative overflow-hidden rounded-card border border-cream-300 bg-cream-100 px-5 py-6" style={{ animationDelay: `${index * 60}ms` }}>
+                    <span aria-hidden="true" className={`soft-blob -right-6 -top-8 h-28 w-28 ${t.surface} opacity-80`} />
+                    <div className="relative flex flex-col items-start gap-3">
+                      <span className={`flex h-14 w-14 items-center justify-center rounded-pill transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110 ${t.surface} ${t.ink}`}><Icon className="h-6 w-6" /></span>
+                      <div className="w-full">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-brown-800" style={{ fontSize: "1.05rem", fontWeight: 700, letterSpacing: "0.02em" }}>{item.title}</p>
+                          <ArrowUpRight className={`h-4 w-4 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ${t.ink}`} />
+                        </div>
+                        <span className={`mt-1 block font-display ${t.ink}`} style={{ fontSize: "0.56rem", letterSpacing: "0.14em" }}>{item.en}</span>
                       </div>
                     </div>
                   </Link>
