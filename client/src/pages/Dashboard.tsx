@@ -12,7 +12,6 @@ import {
   ChevronRight,
   Clock3,
   ExternalLink,
-  Leaf,
   MessageCircleHeart,
   Play,
   Settings2,
@@ -82,7 +81,7 @@ export default function Dashboard() {
     <MemberLayout>
       <div className="px-4 py-5 sm:px-7 sm:py-8 lg:px-10 lg:py-10">
         <div className="mx-auto max-w-[1280px] space-y-9 lg:space-y-12">
-          <section className="grid gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.5fr)]">
+          <section>
             <div className="relative overflow-hidden rounded-card animate-fade-in-up">
               <div aria-hidden="true" className="absolute inset-0 bg-cream-100">
                 <span className="soft-blob natu-float -right-10 -top-16 h-72 w-72 bg-mint-300 opacity-45" />
@@ -107,26 +106,6 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="rounded-card p-5 animate-fade-in-up stagger-1" style={{ background: "white", border: "1px solid var(--cream-300)" }}>
-              <p style={{ color: "var(--gold-500)", fontFamily: "var(--font-display)", fontSize: "0.62rem", letterSpacing: "0.26em" }}>YOUR PORTAL</p>
-              <p className="mt-3 font-bold text-brown-800" style={{ fontSize: "1.15rem", letterSpacing: "0.02em", lineHeight: 1.5 }}>暮らしの中に、<br />学びとつながりを。</p>
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                <Link href="/videos" className="group rounded-2xl p-4 transition-transform hover:-translate-y-0.5" style={{ background: "var(--cream-100)" }}>
-                  <Play className="h-4 w-4" style={{ color: "var(--forest-600)" }} />
-                  <p className="mt-3 font-bold text-brown-800" style={{ fontSize: "0.8rem", letterSpacing: "0.02em" }}>動画を観る</p>
-                  <ArrowUpRight className="mt-1 h-3.5 w-3.5" style={{ color: "var(--gold-600)" }} />
-                </Link>
-                <Link href="/calendar" className="group rounded-2xl p-4 transition-transform hover:-translate-y-0.5" style={{ background: "var(--cream-100)" }}>
-                  <CalendarDays className="h-4 w-4" style={{ color: "var(--forest-600)" }} />
-                  <p className="mt-3 font-bold text-brown-800" style={{ fontSize: "0.8rem", letterSpacing: "0.02em" }}>予定を見る</p>
-                  <ArrowUpRight className="mt-1 h-3.5 w-3.5" style={{ color: "var(--gold-600)" }} />
-                </Link>
-              </div>
-              <Link href="/setup" className="mt-4 flex items-center justify-between rounded-xl px-4 py-3 transition-colors hover:bg-[var(--cream-100)]" style={{ border: "1px solid var(--cream-300)", color: "var(--brown-700)" }}>
-                <span className="flex items-center gap-2 text-xs" style={{ letterSpacing: "0.04em" }}><Leaf className="h-3.5 w-3.5" style={{ color: "var(--forest-500)" }} />はじめにを確認する</span>
-                <ChevronRight className="h-3.5 w-3.5" style={{ color: "var(--gold-500)" }} />
-              </Link>
-            </div>
           </section>
 
           <TopicsCarousel />
@@ -274,15 +253,15 @@ function TopicsCarousel() {
 
   const content = (
     <>
-        <div className="relative z-10 flex h-full flex-col justify-between p-5 sm:p-7">
-          <div className="flex w-fit items-center gap-4 rounded-full px-3 py-1.5" style={{ background: "rgba(255,255,255,0.84)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.72)" }}>
+        <div className="relative z-10 flex h-full flex-col justify-between p-4 sm:p-5">
+          <div className="flex w-fit items-center gap-3 rounded-pill px-2.5 py-1" style={{ background: "rgba(255,255,255,0.84)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.72)" }}>
             <span style={{ color: "var(--forest-600)", fontFamily: "var(--font-display)", fontSize: "0.60rem", letterSpacing: "0.24em" }}>LATEST TOPICS</span>
             <span style={{ color: "var(--brown-600)", fontFamily: "var(--font-display)", fontSize: "0.58rem", letterSpacing: "0.16em" }}>{String(current + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}</span>
           </div>
-        <div className="max-w-xl rounded-2xl p-5 sm:p-6" style={{ background: "rgba(255,255,255,0.80)", backdropFilter: "blur(14px)", border: "1px solid rgba(255,255,255,0.74)", boxShadow: "0 12px 34px rgba(30,48,27,0.16)" }}>
-          <p style={{ color: "var(--brown-800)", fontFamily: "var(--font-serif)", fontSize: "clamp(1.35rem, 3vw, 2.2rem)", fontWeight: 400, letterSpacing: "0.065em", lineHeight: 1.5 }}>{topic.title}</p>
-          {topic.body && <p className="mt-3 max-w-lg line-clamp-2" style={{ color: "var(--brown-600)", fontSize: "0.78rem", fontWeight: 400, letterSpacing: "0.05em", lineHeight: 1.85 }}>{topic.body}</p>}
-          {topic.buttonText && topic.buttonUrl && <span className="mt-5 inline-flex items-center gap-2" style={{ color: "var(--forest-600)", fontSize: "0.75rem", fontWeight: 600, letterSpacing: "0.08em" }}>{topic.buttonText}<ArrowUpRight className="h-3.5 w-3.5" /></span>}
+        <div className="max-w-xl rounded-xl p-3.5 sm:p-4" style={{ background: "rgba(255,255,255,0.86)", backdropFilter: "blur(14px)", border: "1px solid rgba(255,255,255,0.74)", boxShadow: "var(--shadow-soft)" }}>
+          <p className="line-clamp-2 font-bold text-brown-800" style={{ fontSize: "clamp(0.95rem, 2.4vw, 1.3rem)", letterSpacing: "0.02em", lineHeight: 1.4 }}>{topic.title}</p>
+          {topic.body && <p className="mt-1.5 max-w-lg line-clamp-1 text-brown-600" style={{ fontSize: "0.72rem", letterSpacing: "0.02em", lineHeight: 1.6 }}>{topic.body}</p>}
+          {topic.buttonText && topic.buttonUrl && <span className="mt-2 inline-flex items-center gap-1.5" style={{ color: "var(--forest-600)", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.04em" }}>{topic.buttonText}<ArrowUpRight className="h-3.5 w-3.5" /></span>}
         </div>
       </div>
     </>
@@ -292,7 +271,7 @@ function TopicsCarousel() {
     <section>
       <SectionHeader no="NEWS" title="お知らせ" />
       <div
-        className="relative h-[20rem] select-none overflow-hidden rounded-[1.75rem] sm:h-[22rem]"
+        className="relative h-[11.5rem] select-none overflow-hidden rounded-card sm:h-[13rem]"
         style={{ cursor: isDragging ? "grabbing" : "grab" }}
         onMouseDown={(event) => dragStart(event.clientX)}
         onMouseMove={(event) => dragMove(event.clientX)}
@@ -312,8 +291,8 @@ function TopicsCarousel() {
           <>
             <button aria-label="前のお知らせ" onClick={(event) => { event.stopPropagation(); previous(); resetAutoPlay(); }} className="absolute left-4 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full sm:flex" style={{ background: "rgba(255,255,255,0.78)", border: "1px solid rgba(255,255,255,0.72)", color: "var(--forest-600)", backdropFilter: "blur(8px)" }}><ChevronLeft className="h-4 w-4" /></button>
             <button aria-label="次のお知らせ" onClick={(event) => { event.stopPropagation(); next(); resetAutoPlay(); }} className="absolute right-4 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full sm:flex" style={{ background: "rgba(255,255,255,0.78)", border: "1px solid rgba(255,255,255,0.72)", color: "var(--forest-600)", backdropFilter: "blur(8px)" }}><ChevronRight className="h-4 w-4" /></button>
-            <div className="absolute bottom-5 left-7 z-20 flex gap-1.5 rounded-full p-2 sm:left-10" style={{ background: "rgba(20,40,20,0.58)", backdropFilter: "blur(8px)" }}>
-              {topics.map((item, index) => <button key={item.id} aria-label={`${index + 1}件目のお知らせを表示`} onClick={(event) => { event.stopPropagation(); goTo(index); resetAutoPlay(); }} className="rounded-full transition-all duration-300" style={{ width: index === current ? "1.45rem" : "0.42rem", height: "0.42rem", background: index === current ? "var(--gold-500)" : "rgba(255,255,255,0.82)", boxShadow: "0 1px 4px rgba(20,40,20,0.22)" }} />)}
+            <div className="absolute bottom-3 right-4 z-20 flex gap-1.5 rounded-pill px-2 py-1.5" style={{ background: "rgba(255,255,255,0.82)", backdropFilter: "blur(8px)" }}>
+              {topics.map((item, index) => <button key={item.id} aria-label={`${index + 1}件目のお知らせを表示`} onClick={(event) => { event.stopPropagation(); goTo(index); resetAutoPlay(); }} className="rounded-full transition-all duration-300" style={{ width: index === current ? "1.45rem" : "0.42rem", height: "0.42rem", background: index === current ? "var(--gold-500)" : "var(--brown-300)" }} />)}
             </div>
           </>
         )}

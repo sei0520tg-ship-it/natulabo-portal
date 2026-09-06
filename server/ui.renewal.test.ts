@@ -13,7 +13,7 @@ describe("UIリニューアルの構成", () => {
     expect(home).not.toContain("doterraAssets.");
     expect(home).toContain("bg-hero-gradient");
     expect(home).toContain("soft-blob");
-    expect(home).toContain("NATU LABO");
+    expect(home).toContain("NATULABO");
     expect(home).toContain("natu-hero-letter");
     expect(home).toContain("NatuLabo Portal");
   });
