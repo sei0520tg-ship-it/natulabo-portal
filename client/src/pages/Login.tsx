@@ -28,24 +28,13 @@ export default function Login() {
       <div className="relative z-10 w-full max-w-sm animate-fade-in-up">
         {/* Logo */}
         <div className="text-center mb-10">
-          <div
-            className="inline-flex items-center justify-center mb-4"
-            style={{
-              width: "5rem",
-              height: "5rem",
-              borderRadius: "var(--radius-card)",
-              background: "var(--card)",
-              boxShadow: "var(--shadow-soft)",
-            }}
-          >
-            <BrandMark className="h-12 w-12" title="NatuLabo" />
-          </div>
+          <BrandMark variant="circle" className="mb-4 h-24 w-24" title="NatuLabo" />
           <h1
             style={{
-              fontFamily: "var(--font-serif)",
-              fontSize: "1.6rem",
-              fontWeight: 400,
-              letterSpacing: "0.06em",
+              fontFamily: "var(--font-display)",
+              fontSize: "1.5rem",
+              fontWeight: 700,
+              letterSpacing: "0.12em",
               color: "var(--brown-800)",
               lineHeight: 1.3,
             }}

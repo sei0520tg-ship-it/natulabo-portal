@@ -1,56 +1,69 @@
-import { useState } from "react";
-
 /**
  * BrandMark.tsx
  *
- * NatuLabo のロゴマーク。
+ * NatuLabo のロゴ。画像ファイルではなく、ロゴと同じ書体（Montserrat）で
+ * 組んだテキストとして描画する。
  *
- * ロゴの実体は Manus のストレージ（/manus-storage/…）にしか無く、
- * リポジトリには含まれていない。そのため Manus が落ちるとサイト全体で
- * ロゴが壊れた画像アイコンになってしまう（実際に発生した）。
+ * 画像を使わない理由:
+ *   元のロゴは Manus のストレージにしか無く、Manus が落ちるとサイト全体で
+ *   ロゴが壊れた画像になった（実際に発生した）。テキストで組めば外部に
+ *   一切依存せず、どの解像度でも滲まない。
  *
- * ここでは画像の読み込みに失敗したら、その場で描画する葉のマークに
- * 差し替える。外部に一切依存しないので、Manus から離れても崩れない。
+ * variant:
+ *   wordmark … 横一列の「NATU LABO.」。ヘッダーやフッター向け
+ *   circle   … ピンクの円に2行で収めたもの。ログイン画面などの象徴的な位置向け
+ *   banner   … ピンクの帯に白抜きの横組み
  */
 
-const LOGO_SRC = "/manus-storage/logo-circle_08be9919.png";
+type Variant = "wordmark" | "circle" | "banner";
 
 export default function BrandMark({
+  variant = "wordmark",
   className = "",
   title = "NatuLabo",
 }: {
+  variant?: Variant;
   className?: string;
   /** 装飾として置く場合は空文字を渡す（読み上げ対象から外れる） */
   title?: string;
 }) {
-  const [failed, setFailed] = useState(false);
+  const a11y = title
+    ? { role: "img" as const, "aria-label": title }
+    : { "aria-hidden": true as const };
 
-  if (failed) {
+  if (variant === "circle") {
     return (
-      <svg
-        viewBox="0 0 40 40"
-        className={className}
-        role={title ? "img" : undefined}
-        aria-label={title || undefined}
-        aria-hidden={title ? undefined : "true"}
+      <span
+        {...a11y}
+        className={`inline-flex flex-col items-center justify-center rounded-pill bg-brand-pink leading-none ${className}`}
       >
-        <circle cx="20" cy="20" r="20" fill="var(--forest-500)" />
-        {/* 葉。左右の曲線を合わせた形 */}
-        <path
-          d="M20 9c-6.2 2-9.8 6.6-9.8 12.2 0 3.6 1.8 6.6 4.6 8.3.7-5.9 2.6-10.2 5.9-13.4-2.4 3.6-3.8 8-4.2 13.6 1.1.4 2.3.6 3.5.6 6 0 9.8-4.3 9.8-10.6C29.8 15.4 25.6 11 20 9z"
-          fill="var(--cream-50)"
-        />
-      </svg>
+        <span className="font-display font-bold tracking-[0.04em] text-brown-900" style={{ fontSize: "0.34em" }}>
+          NATU
+        </span>
+        <span className="font-display font-bold tracking-[0.04em] text-brown-900" style={{ fontSize: "0.34em", marginTop: "0.12em" }}>
+          LABO.
+        </span>
+      </span>
+    );
+  }
+
+  if (variant === "banner") {
+    return (
+      <span
+        {...a11y}
+        className={`inline-flex items-center bg-brand-pink px-[0.5em] py-[0.22em] font-display font-bold tracking-[0.14em] text-brown-900 ${className}`}
+      >
+        NATU&nbsp;LABO.
+      </span>
     );
   }
 
   return (
-    <img
-      src={LOGO_SRC}
-      alt={title}
-      aria-hidden={title ? undefined : "true"}
-      className={className}
-      onError={() => setFailed(true)}
-    />
+    <span
+      {...a11y}
+      className={`font-display font-bold tracking-[0.14em] text-brown-900 ${className}`}
+    >
+      NATU&nbsp;LABO.
+    </span>
   );
 }

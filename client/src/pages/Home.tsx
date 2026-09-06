@@ -100,23 +100,8 @@ export default function Home() {
       >
         <div className="container flex h-[4.75rem] items-center justify-between">
           <Link href="/" className="flex items-center gap-3" aria-label="NatuLabo ホーム">
-            <span
-              className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full"
-              style={{ background: "var(--card)", boxShadow: "var(--shadow-soft)" }}
-            >
-              <BrandMark className="h-7 w-7 object-contain" title="" />
-            </span>
-            <span
-              className="hidden sm:block"
-              style={{
-                color: "var(--brown-800)",
-                fontFamily: "var(--font-display)",
-                fontSize: "1.15rem",
-                letterSpacing: "0.16em",
-              }}
-            >
-              NATU LABO.
-            </span>
+            <BrandMark variant="circle" className="h-10 w-10" title="" />
+            <BrandMark className="hidden text-[1.05rem] sm:block" title="NatuLabo" />
           </Link>
 
           {!loading && (
@@ -345,7 +330,7 @@ export default function Home() {
         <div className="container flex flex-col gap-6 border-t pt-8 sm:flex-row sm:items-center sm:justify-between" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
           <div className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: "rgba(255,255,255,0.94)" }}>
-              <BrandMark className="h-7 w-7 object-contain" title="NatuLabo" />
+              <BrandMark variant="circle" className="h-9 w-9" title="NatuLabo" />
             </span>
             <span style={{ color: "rgba(255,255,255,0.86)", fontFamily: "var(--font-display)", fontSize: "1rem", letterSpacing: "0.14em" }}>NatuLabo Portal</span>
           </div>

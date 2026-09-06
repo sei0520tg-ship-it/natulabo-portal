@@ -68,6 +68,9 @@
   --sage-500: oklch(0.700 0.085 132);
   --sage-700: oklch(0.475 0.080 132);
 
+  /* ロゴの地色に使うブランドピンク */
+  --brand-pink: oklch(0.815 0.072 20);
+
   --apricot-100: oklch(0.958 0.035 55);
   --apricot-300: oklch(0.885 0.070 52);
   --apricot-500: oklch(0.745 0.115 48);
@@ -116,7 +119,8 @@
   /* Typography — 丸ゴシックを主役に、英字ラベルだけ端正なサンセリフ */
   --font-sans:    "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Noto Sans JP", sans-serif;
   --font-serif:   "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Noto Sans JP", sans-serif;
-  --font-display: "Inter", "Helvetica Neue", Arial, sans-serif;
+  /* ロゴと同じ書体。英字の見出し・ラベル・ロゴで共通して使う */
+  --font-display: "Montserrat", "Helvetica Neue", Arial, sans-serif;
 }
 
 /* ─── Tailwind へのトークン登録 ──────────────────────────────────────────
@@ -197,6 +201,7 @@
   --color-sage-300: var(--sage-300);
   --color-sage-500: var(--sage-500);
   --color-sage-700: var(--sage-700);
+  --color-brand-pink: var(--brand-pink);
   --color-apricot-100: var(--apricot-100);
   --color-apricot-300: var(--apricot-300);
   --color-apricot-500: var(--apricot-500);
