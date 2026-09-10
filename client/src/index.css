@@ -98,7 +98,8 @@
   --ring:                 var(--gold-400);
 
   /* 角丸 — 可愛さの主役。従来の 0.5rem から大きく引き上げる */
-  --radius:      1rem;
+  --radius:       1rem;
+  --radius-field: 0.9rem;   /* 入力欄・小さいボタン */
   --radius-card: 1.75rem;
   --radius-pill: 999px;
 
@@ -212,6 +213,7 @@
   --radius-lg:   var(--radius);
   --radius-xl:   calc(var(--radius) + 4px);
   --radius-card: var(--radius-card);
+  --radius-field: var(--radius-field);
   --radius-pill: var(--radius-pill);
 
   --shadow-soft:  var(--shadow-soft);

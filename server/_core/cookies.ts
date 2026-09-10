@@ -39,10 +39,15 @@ export function getSessionCookieOptions(
   //       ? hostname
   //       : undefined;
 
+  const secure = isSecureRequest(req);
+
   return {
     httpOnly: true,
     path: "/",
-    sameSite: "none",
-    secure: isSecureRequest(req),
+    // sameSite: "none" は secure とセットでしか成立せず、HTTPのままだと
+    // ブラウザがCookieごと破棄する（ローカル開発でログインできなくなる）。
+    // 本番(HTTPS)は none のまま、非HTTPSでは lax に落とす。
+    sameSite: secure ? "none" : "lax",
+    secure,
   };
 }

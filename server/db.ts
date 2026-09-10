@@ -99,6 +99,66 @@ export async function updateUserProfile(
   await db.update(users).set(data).where(eq(users.id, id));
 }
 
+/** メールアドレスで会員を引く。ログイン時の本人特定に使う。 */
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  return result[0];
+}
+
+/** メール＋パスワードで新規会員を作成する。作成した会員を返す。 */
+export async function createUserWithPassword(data: {
+  openId: string;
+  email: string;
+  passwordHash: string;
+  name: string;
+  phone?: string;
+  address?: string;
+  brandRegisteredAt?: Date;
+  invitationCode?: string;
+  role?: "user" | "admin";
+}) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  await db.insert(users).values({
+    openId: data.openId,
+    email: data.email,
+    passwordHash: data.passwordHash,
+    name: data.name,
+    phone: data.phone,
+    address: data.address,
+    brandRegisteredAt: data.brandRegisteredAt,
+    invitationCode: data.invitationCode,
+    loginMethod: "password",
+    role: data.role ?? "user",
+    lastSignedIn: new Date(),
+  });
+  return getUserByEmail(data.email);
+}
+
+/** ログイン日時を更新する。 */
+export async function touchLastSignedIn(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(users).set({ lastSignedIn: new Date() }).where(eq(users.id, id));
+}
+
+/** パスワードを設定・変更する。 */
+export async function setUserPassword(id: number, passwordHash: string) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(users).set({ passwordHash }).where(eq(users.id, id));
+}
+
+/** 会員が1人も存在しないか。最初の登録者を管理者にするために使う。 */
+export async function hasAnyUser() {
+  const db = await getDb();
+  if (!db) return true;
+  const rows = await db.select({ id: users.id }).from(users).limit(1);
+  return rows.length > 0;
+}
+
 export async function setUserRole(id: number, role: "user" | "admin") {
   const db = await getDb();
   if (!db) return;

@@ -5,6 +5,10 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { storagePut } from "./storage";
+import { randomUUID } from "node:crypto";
+import { hashPassword, verifyPassword, MIN_PASSWORD_LENGTH } from "./auth/password";
+import { sdk } from "./_core/sdk";
+import { ONE_YEAR_MS } from "@shared/const";
 import { getYouTubeConfig, syncYouTubeVideos } from "./youtube";
 import { importSeedVideos } from "./seed/importSeed";
 import { getEventSheetSources, syncEventSheets } from "./eventSheetSync";
@@ -29,6 +33,56 @@ export const appRouter = router({
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
+
+    /**
+     * メール＋パスワードでログインする。
+     * Manus の OAuth を廃止したため、本人確認を自前で行う。
+     * セッションの発行は従来と同じ仕組み(自前のJWT)をそのまま使う。
+     */
+    login: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        password: z.string().min(1),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const email = input.email.trim().toLowerCase();
+        const user = await db.getUserByEmail(email);
+        const ok = await verifyPassword(input.password, user?.passwordHash);
+
+        // 「メールが存在しない」と「パスワードが違う」を区別しない。
+        // 区別すると、どのメールが登録済みかを外部から探れてしまう。
+        if (!user || !ok) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "メールアドレスまたはパスワードが正しくありません",
+          });
+        }
+
+        await db.touchLastSignedIn(user.id);
+        const token = await sdk.createSessionToken(user.openId, {
+          name: user.name ?? "",
+          expiresInMs: ONE_YEAR_MS,
+        });
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie(COOKIE_NAME, token, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+        return { success: true as const };
+      }),
+
+    /** ログイン中の会員が自分のパスワードを変更する。 */
+    changePassword: protectedProcedure
+      .input(z.object({
+        currentPassword: z.string().min(1),
+        newPassword: z.string().min(MIN_PASSWORD_LENGTH),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const user = await db.getUserById(ctx.user.id);
+        const ok = await verifyPassword(input.currentPassword, user?.passwordHash);
+        if (!ok) {
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "現在のパスワードが正しくありません" });
+        }
+        await db.setUserPassword(ctx.user.id, await hashPassword(input.newPassword));
+        return { success: true as const };
+      }),
   }),
 
   // ─── Invitations ─────────────────────────────────────────────────────────
@@ -66,11 +120,18 @@ export const appRouter = router({
 
   // ─── Member Registration ──────────────────────────────────────────────────
   member: router({
+    /**
+     * 招待コード＋メール＋パスワードで会員を作成し、そのままログイン状態にする。
+     *
+     * 以前は Manus でログインした後にプロフィールを紐付ける流れだったが、
+     * Manus を廃止したため、ここで会員の作成まで行う。
+     */
     register: publicProcedure
       .input(z.object({
         invitationCode: z.string(),
         name: z.string().min(1),
         email: z.string().email(),
+        password: z.string().min(MIN_PASSWORD_LENGTH, `パスワードは${MIN_PASSWORD_LENGTH}文字以上にしてください`),
         phone: z.string().optional(),
         address: z.string().optional(),
         brandRegisteredAt: z.string().optional(),
@@ -82,17 +143,39 @@ export const appRouter = router({
         const maxUses = inv.maxUses ?? 1;
         const useCount = inv.useCount ?? 0;
         if (useCount >= maxUses) throw new TRPCError({ code: "BAD_REQUEST", message: "招待コードの使用回数上限に達しています" });
-        // If user is already logged in, update their profile
-        if (ctx.user) {
-          await db.updateUserProfile(ctx.user.id, {
-            name: input.name,
-            address: input.address,
-            phone: input.phone,
-            brandRegisteredAt: input.brandRegisteredAt ? new Date(input.brandRegisteredAt) : undefined,
-          });
-          await db.useInvitation(input.invitationCode, ctx.user.id);
+
+        const email = input.email.trim().toLowerCase();
+        if (await db.getUserByEmail(email)) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "このメールアドレスは既に登録されています" });
         }
-        return { success: true };
+
+        // 最初の登録者は管理者にする。そうしないと誰も管理画面に入れず、
+        // 招待コードの発行もできなくなるため。
+        const isFirstUser = !(await db.hasAnyUser());
+
+        const user = await db.createUserWithPassword({
+          openId: `local:${randomUUID()}`,
+          email,
+          passwordHash: await hashPassword(input.password),
+          name: input.name,
+          phone: input.phone,
+          address: input.address,
+          brandRegisteredAt: input.brandRegisteredAt ? new Date(input.brandRegisteredAt) : undefined,
+          invitationCode: input.invitationCode,
+          role: isFirstUser ? "admin" : "user",
+        });
+        if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "会員の作成に失敗しました" });
+
+        await db.useInvitation(input.invitationCode, user.id);
+
+        const token = await sdk.createSessionToken(user.openId, {
+          name: user.name ?? "",
+          expiresInMs: ONE_YEAR_MS,
+        });
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie(COOKIE_NAME, token, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+
+        return { success: true as const, isAdmin: isFirstUser };
       }),
     updateProfile: protectedProcedure
       .input(z.object({
