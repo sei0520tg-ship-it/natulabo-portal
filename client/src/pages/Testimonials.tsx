@@ -42,7 +42,7 @@ export default function Testimonials() {
   return (
     <MemberLayout>
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <ContentVisualHero eyebrow="MEMBER STORIES" title="体験談" description="dōTERRAのエッセンシャルオイルとともに暮らす、メンバーの皆さんのリアルな声をお届けします。" icon={Heart} tone="mint" />
+        <ContentVisualHero eyebrow="MEMBER STORIES" title="体験談" description="dōTERRAのエッセンシャルオイルとともに暮らす、メンバーの皆さんのリアルな声をお届けします。" icon={Heart} tone="mint" compact />
 
         {/* カテゴリタブ */}
         <div className="flex flex-wrap gap-2 justify-center mb-8">
@@ -90,9 +90,9 @@ export default function Testimonials() {
 
         {/* ローディング */}
         {isLoading && (
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 animate-pulse">
+              <div key={i} className="bg-card rounded-card border border-cream-300 p-4 animate-pulse">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 rounded-full bg-stone-200" />
                   <div className="flex-1">
@@ -123,14 +123,14 @@ export default function Testimonials() {
 
         {/* 体験談カード */}
         {!isLoading && !isError && filtered.length > 0 && (
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             {filtered.map((t) => {
               const isExpanded = expandedId === t.id;
               const isLong = t.content.length > 120;
               return (
                 <div
                   key={t.id}
-                  className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
+                  className="bg-card rounded-card border border-cream-300 p-4 card-hover"
                   style={{ border: "1px solid var(--cream-300)" }}
                 >
                   {/* カテゴリバッジ */}
@@ -154,25 +154,15 @@ export default function Testimonials() {
 
                   {/* タイトル */}
                   <h2
-                    className="text-lg leading-snug mb-3"
-                    style={{
-                      fontFamily: "var(--font-serif)",
-                      fontWeight: 400,
-                      color: "var(--forest-500)",
-                      letterSpacing: "0.04em",
-                    }}
+                    className="mb-2 text-base font-bold leading-snug text-brown-800"
+                    style={{ letterSpacing: "0.01em" }}
                   >
                     {t.title}
                   </h2>
 
                   {/* 本文 */}
                   <p
-                    className="text-sm leading-relaxed"
-                    style={{
-                      color: "var(--brown-500)",
-                      fontFamily: "var(--font-sans)",
-                      fontWeight: 300,
-                    }}
+                    className="text-[0.82rem] leading-relaxed text-brown-600"
                   >
                     {isLong && !isExpanded
                       ? `${t.content.slice(0, 120)}…`
