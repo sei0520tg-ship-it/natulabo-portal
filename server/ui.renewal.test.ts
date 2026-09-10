@@ -145,8 +145,12 @@ describe("UIリニューアルの構成", () => {
     const calendar = readProjectFile("client/src/pages/CalendarPage.tsx");
     const server = readProjectFile("server/_core/index.ts");
 
-    expect(calendar).toContain("NatuLaboイベントをカレンダーに購読");
-    expect(calendar).toContain("Googleで購読");
+    // 見出しやボタンの文言ではなく、導線そのものが残っているかを検証する。
+    // 文言で固定すると、言い回しを縮めただけでテストが落ちてしまう。
+    expect(calendar).toContain("googleSubscribeUrl");
+    expect(calendar).toContain("appleSubscribeUrl");
+    expect(calendar).toContain("copyCalendarFeedUrl");
+    expect(calendar).toContain('aria-labelledby="calendar-subscribe-title"');
     expect(calendar).toContain("/api/calendar/events/${event.id}.ics");
     expect(server).toContain('/api/calendar/natulabo.ics');
     expect(server).toContain('/api/calendar/events/:id.ics');
