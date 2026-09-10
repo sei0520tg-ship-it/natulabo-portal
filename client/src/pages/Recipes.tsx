@@ -351,9 +351,6 @@ function RecipeDetailPage({ recipe, onBack }: { recipe: Recipe; onBack: () => vo
           >
             {recipe.description}
           </p>
-          <a href={doterraSources.japanHome} target="_blank" rel="noreferrer" style={{ color: "var(--brown-500)", fontSize: "0.65rem", letterSpacing: "0.04em" }}>
-            ビジュアル：dōTERRA公式掲載画像
-          </a>
 
           {/* Ingredients */}
           <div

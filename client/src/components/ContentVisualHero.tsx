@@ -30,25 +30,25 @@ export default function ContentVisualHero({
 
   return (
     <section
-      className={`relative overflow-hidden rounded-card-lg ${t.surface} px-6 py-8 animate-fade-in-up sm:px-9 sm:py-10`}
+      className="relative overflow-hidden rounded-card-lg border border-cream-300 bg-cream-100 px-6 py-8 animate-fade-in-up sm:px-9 sm:py-10"
     >
       {/* 装飾。写真の代わりに画面へやわらかい密度を与える。読み上げ対象から外す。 */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <span className={`soft-blob natu-float -right-10 -top-16 h-52 w-52 ${t.dot} opacity-25`} />
-        <span className={`soft-blob -bottom-20 right-24 h-40 w-40 ${t.dot} opacity-20`} />
+        <span className={`soft-blob natu-float -right-10 -top-16 h-52 w-52 ${t.surface} opacity-80`} />
+        <span className={`soft-blob -bottom-20 right-24 h-40 w-40 ${t.surface} opacity-60`} />
       </div>
 
       <div className="relative flex max-w-2xl flex-col gap-3">
-        <span className="flex h-14 w-14 items-center justify-center rounded-pill bg-card shadow-soft">
-          <Icon size={26} className={t.ink} aria-hidden="true" />
+        <span className={`flex h-16 w-16 items-center justify-center rounded-pill ${t.surface}`}>
+          <Icon size={28} className={t.ink} aria-hidden="true" />
         </span>
 
-        <p className={`font-display text-[0.68rem] font-medium tracking-[0.16em] ${t.ink}`}>
+        <p className={`font-display text-[0.68rem] font-semibold tracking-[0.14em] ${t.ink}`}>
           {eyebrow}
         </p>
 
         <h1
-          className="text-brown-800"
+          className="font-bold text-brown-800"
           style={{ fontSize: "clamp(1.5rem, 3.4vw, 2.2rem)", lineHeight: 1.4 }}
         >
           {title}

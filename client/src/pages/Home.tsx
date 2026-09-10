@@ -100,23 +100,8 @@ export default function Home() {
       >
         <div className="container flex h-[4.75rem] items-center justify-between">
           <Link href="/" className="flex items-center gap-3" aria-label="NatuLabo ホーム">
-            <span
-              className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full"
-              style={{ background: "var(--card)", boxShadow: "var(--shadow-soft)" }}
-            >
-              <BrandMark className="h-7 w-7 object-contain" title="" />
-            </span>
-            <span
-              className="hidden sm:block"
-              style={{
-                color: "var(--brown-800)",
-                fontFamily: "var(--font-display)",
-                fontSize: "1.15rem",
-                letterSpacing: "0.16em",
-              }}
-            >
-              NATU LABO.
-            </span>
+            <BrandMark variant="circle" className="h-10 w-10" title="" />
+            <BrandMark className="hidden text-[1.05rem] sm:block" title="NatuLabo" />
           </Link>
 
           {!loading && (
@@ -152,10 +137,9 @@ export default function Home() {
         className="relative flex min-h-[100svh] items-center overflow-hidden pt-20"
       >
         <div aria-hidden="true" className="absolute inset-0 bg-hero-gradient">
-          <span className="soft-blob natu-float -left-24 -top-20 h-[34rem] w-[34rem] bg-blossom-300 opacity-40" />
-          <span className="soft-blob -right-32 top-10 h-[30rem] w-[30rem] bg-aqua-300 opacity-35" />
-          <span className="soft-blob natu-float bottom-[-10rem] left-1/3 h-[26rem] w-[26rem] bg-butter-300 opacity-35" />
-          <span className="soft-blob -bottom-20 -right-10 h-72 w-72 bg-mint-300 opacity-30" />
+          <span className="soft-blob natu-float -left-24 -top-20 h-[34rem] w-[34rem] bg-blossom-100 opacity-70" />
+          <span className="soft-blob -right-32 top-10 h-[30rem] w-[30rem] bg-aqua-100 opacity-55" />
+          <span className="soft-blob natu-float bottom-[-10rem] left-1/3 h-[26rem] w-[26rem] bg-butter-100 opacity-70" />
         </div>
         <div
           className="natu-orbit absolute -right-[17vw] -top-[34vw] h-[68vw] w-[68vw] rounded-full border border-cream-300"
@@ -180,8 +164,8 @@ export default function Home() {
 
             <div
               className="mb-5 flex leading-none"
-              aria-label="NATU LABO"
-              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 11vw, 8rem)", fontWeight: 300, letterSpacing: "0.035em", color: "var(--brown-800)", whiteSpace: "nowrap" }}
+              aria-label="NATULABO"
+              style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.5rem, 11vw, 8rem)", fontWeight: 500, letterSpacing: "0.01em", color: "var(--brown-800)", whiteSpace: "nowrap" }}
             >
               {heroLetters.map((letter, index) => (
                 <span
@@ -201,9 +185,9 @@ export default function Home() {
                 color: "var(--brown-800)",
                 fontFamily: "var(--font-serif)",
                 fontSize: "clamp(1.7rem, 4.1vw, 3.15rem)",
-                fontWeight: 400,
-                letterSpacing: "0.1em",
-                lineHeight: 1.55,
+                fontWeight: 700,
+                letterSpacing: "0.02em",
+                lineHeight: 1.5,
               } as React.CSSProperties}
             >
               自然の恵みとともに、
@@ -346,7 +330,7 @@ export default function Home() {
         <div className="container flex flex-col gap-6 border-t pt-8 sm:flex-row sm:items-center sm:justify-between" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
           <div className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: "rgba(255,255,255,0.94)" }}>
-              <BrandMark className="h-7 w-7 object-contain" title="NatuLabo" />
+              <BrandMark variant="circle" className="h-9 w-9" title="NatuLabo" />
             </span>
             <span style={{ color: "rgba(255,255,255,0.86)", fontFamily: "var(--font-display)", fontSize: "1rem", letterSpacing: "0.14em" }}>NatuLabo Portal</span>
           </div>

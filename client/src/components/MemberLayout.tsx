@@ -12,11 +12,13 @@ import {
   Leaf,
   LogOut,
   MessageCircleHeart,
+  Menu,
   Settings2,
   Sparkles,
   UserRound,
+  X,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 
 const navItems = [
@@ -37,6 +39,7 @@ interface MemberLayoutProps {
 export default function MemberLayout({ children }: MemberLayoutProps) {
   const { user, isAuthenticated, loading } = useAuth();
   const [location] = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
   const logoutMutation = trpc.auth.logout.useMutation({
     onSuccess: () => {
       window.location.href = "/";
@@ -54,7 +57,7 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
       <div className="flex min-h-screen items-center justify-center" style={{ background: "var(--cream-50)" }}>
         <div className="flex flex-col items-center gap-4">
           <div className="natu-float flex h-14 w-14 items-center justify-center rounded-pill bg-card shadow-soft">
-            <BrandMark className="h-10 w-10 rounded-full" title="" />
+            <BrandMark variant="circle" className="h-11 w-11" title="" />
           </div>
           <span style={{ color: "var(--brown-500)", fontFamily: "var(--font-display)", fontSize: "0.72rem", letterSpacing: "0.24em" }}>LOADING</span>
         </div>
@@ -73,10 +76,10 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
         <div className="px-7 pb-7 pt-8">
           <Link href="/dashboard" className="flex items-center gap-3" aria-label="NatuLabo ホーム">
             <span className="flex h-10 w-10 items-center justify-center rounded-pill bg-card shadow-soft">
-              <BrandMark className="h-8 w-8 object-contain" title="NatuLabo" />
+              <BrandMark variant="circle" className="h-9 w-9" title="NatuLabo" />
             </span>
             <div>
-              <p className="font-display text-brown-800" style={{ fontSize: "1.1rem", fontWeight: 600, letterSpacing: "0.12em", lineHeight: 1 }}>NATU LABO.</p>
+              <BrandMark className="text-[1.15rem] leading-none" title="" />
               <p className="font-display text-brown-400" style={{ fontSize: "0.55rem", letterSpacing: "0.22em", marginTop: "0.35rem" }}>MEMBER&apos;S PORTAL</p>
             </div>
           </Link>
@@ -137,23 +140,108 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
       <main className="min-h-screen pb-20 lg:pl-[17.5rem] lg:pb-0">
         <header className="sticky top-0 z-20 flex h-16 items-center justify-between px-4 lg:hidden" style={{ background: "rgba(250,248,243,0.88)", backdropFilter: "blur(16px)", borderBottom: "1px solid var(--cream-300)" }}>
           <Link href="/dashboard" className="flex items-center gap-2.5" aria-label="NatuLabo ホーム">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: "white", boxShadow: "0 2px 8px rgba(45,34,22,0.08)" }}><BrandMark className="h-7 w-7" title="NatuLabo" /></span>
-            <span style={{ color: "var(--brown-800)", fontFamily: "var(--font-display)", fontSize: "1rem", letterSpacing: "0.14em" }}>NATU LABO.</span>
+            <BrandMark variant="circle" className="h-9 w-9" title="NatuLabo" />
+            <BrandMark className="text-[1.25rem] leading-none" title="" />
           </Link>
-          <Link href="/profile" aria-label="プロフィールを開く" className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: "var(--cream-200)", color: "var(--forest-600)" }}><UserRound className="h-4 w-4" /></Link>
+          <div className="flex items-center gap-2">
+            <Link href="/profile" aria-label="プロフィールを開く" className="flex h-9 w-9 items-center justify-center rounded-pill bg-cream-200 text-forest-600"><UserRound className="h-4 w-4" /></Link>
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label="メニューを開く"
+              aria-expanded={menuOpen}
+              className="flex h-9 w-9 items-center justify-center rounded-pill bg-cream-200 text-brown-700"
+            >
+              <Menu className="h-4 w-4" />
+            </button>
+          </div>
         </header>
         {children}
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 lg:hidden" style={{ background: "color-mix(in oklch, var(--card) 92%, transparent)", backdropFilter: "blur(16px)", borderTop: "1px solid var(--cream-300)" }}>
-        <div className="flex items-center justify-around px-1 py-2">
+      {/* モバイルのメニュー。下部タブには5項目しか出せないため、
+          残りの項目・管理画面・ログアウトはここから辿れるようにする。 */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <button
+            type="button"
+            aria-label="メニューを閉じる"
+            onClick={() => setMenuOpen(false)}
+            className="absolute inset-0 bg-brown-900/30"
+          />
+          <div className="absolute inset-y-0 right-0 flex w-[80%] max-w-xs flex-col border-l border-cream-300 bg-cream-50 shadow-float">
+            <div className="flex items-center justify-between border-b border-cream-300 px-5 py-4">
+              <span className="font-display text-sm font-bold tracking-[0.12em] text-brown-700">MENU</span>
+              <button
+                type="button"
+                onClick={() => setMenuOpen(false)}
+                aria-label="メニューを閉じる"
+                className="flex h-9 w-9 items-center justify-center rounded-pill bg-cream-200 text-brown-700"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <nav className="flex-1 overflow-y-auto p-3">
+              {navItems.map(({ href, icon: Icon, label, en }) => {
+                const active = location === href || location.startsWith(`${href}/`);
+                const t = tone(sectionTone[href]);
+                return (
+                  <Link key={href} href={href} onClick={() => setMenuOpen(false)}>
+                    <div className={`mb-1 flex items-center gap-3 rounded-xl px-3 py-2.5 ${active ? `${t.surface}` : ""}`}>
+                      <span className={`flex h-9 w-9 items-center justify-center rounded-pill ${active ? `bg-card ${t.ink}` : "bg-cream-200 text-brown-500"}`}>
+                        <Icon className="h-4 w-4" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className={`block text-sm ${active ? "font-bold text-brown-800" : "text-brown-600"}`}>{label}</span>
+                        <span className={`block font-display text-[0.5rem] tracking-[0.14em] ${active ? t.ink : "text-brown-300"}`}>{en}</span>
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+
+              {user?.role === "admin" && (
+                <Link href="/admin" onClick={() => setMenuOpen(false)}>
+                  <div className="mt-2 flex items-center gap-3 rounded-xl border-t border-cream-300 px-3 pb-2.5 pt-4">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-pill bg-cream-200 text-brown-500"><Settings2 className="h-4 w-4" /></span>
+                    <span className="text-sm text-brown-600">管理画面</span>
+                  </div>
+                </Link>
+              )}
+            </nav>
+
+            <button
+              type="button"
+              onClick={() => { setMenuOpen(false); logoutMutation.mutate(); }}
+              className="flex items-center gap-3 border-t border-cream-300 px-6 py-4 text-left text-sm text-brown-400"
+            >
+              <LogOut className="h-4 w-4" />
+              ログアウト
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* モバイルの下部タブ。選択中は面（クリーム）で示し、アイコンはタブごとの色を持たせる。 */}
+      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-cream-300 bg-cream-50 lg:hidden">
+        <div className="flex items-stretch justify-around">
           {navItems.slice(0, 5).map(({ href, icon: Icon, label }) => {
             const active = location === href || location.startsWith(`${href}/`);
+            const t = tone(sectionTone[href]);
             return (
-              <Link key={href} href={href}>
-                <span className="flex min-w-[3.5rem] flex-col items-center gap-1 rounded-xl px-2 py-1.5" style={{ color: active ? "var(--forest-600)" : "var(--brown-300)" }}>
-                  <span className="flex h-6 w-8 items-center justify-center rounded-full" style={{ background: active ? "var(--cream-200)" : "transparent" }}><Icon className="h-4 w-4" /></span>
-                  <span style={{ fontSize: "0.58rem", fontWeight: active ? 500 : 300, letterSpacing: "0.03em" }}>{label}</span>
+              <Link key={href} href={href} className="flex-1">
+                <span
+                  className={`flex h-full min-w-0 flex-col items-center gap-1 px-1 py-2.5 transition-colors ${
+                    active ? "bg-cream-200" : ""
+                  }`}
+                >
+                  <Icon className={`h-5 w-5 ${active ? t.ink : "text-brown-300"}`} />
+                  <span
+                    className={`truncate text-[0.6rem] ${active ? "font-bold text-brown-700" : "text-brown-400"}`}
+                  >
+                    {label}
+                  </span>
                 </span>
               </Link>
             );

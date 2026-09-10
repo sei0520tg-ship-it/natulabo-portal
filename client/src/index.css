@@ -6,11 +6,11 @@
 /* ─── Design Tokens ─────────────────────────────────────────────────────── */
 :root {
   /* Cream / Warm Beige — 全体の下地 */
-  --cream-50:  oklch(0.985 0.010 80);
-  --cream-100: oklch(0.970 0.015 80);
-  --cream-200: oklch(0.945 0.022 78);
-  --cream-300: oklch(0.900 0.030 76);
-  --cream-400: oklch(0.840 0.040 74);
+  --cream-50:  oklch(0.980 0.016 85);   /* 画面全体の下地 */
+  --cream-100: oklch(0.962 0.026 86);   /* タイルやカードの面 */
+  --cream-200: oklch(0.940 0.034 85);   /* ボタン、選択中のタブ */
+  --cream-300: oklch(0.906 0.032 82);   /* 罫線 */
+  --cream-400: oklch(0.845 0.038 78);
 
   /* Gold / Amber — ブランドのアクセント */
   --gold-200: oklch(0.890 0.070 78);
@@ -27,13 +27,13 @@
   --forest-700: oklch(0.355 0.080 145);
 
   /* Brown — テキスト */
-  --brown-900: oklch(0.200 0.030 60);
-  --brown-800: oklch(0.260 0.035 62);
-  --brown-700: oklch(0.340 0.038 64);
-  --brown-600: oklch(0.420 0.039 65);
-  --brown-500: oklch(0.500 0.040 66);
-  --brown-400: oklch(0.590 0.038 67);
-  --brown-300: oklch(0.680 0.035 68);
+  --brown-900: oklch(0.255 0.028 62);
+  --brown-800: oklch(0.335 0.033 64);   /* 見出し。黒ではなく焦茶 */
+  --brown-700: oklch(0.400 0.036 66);
+  --brown-600: oklch(0.470 0.038 68);   /* ラベル。参考アプリの #8B7355 相当 */
+  --brown-500: oklch(0.545 0.038 70);
+  --brown-400: oklch(0.625 0.034 72);
+  --brown-300: oklch(0.715 0.028 74);
 
   /* ── パステル差し色 ────────────────────────────────────────────────────
      やわらかさを担当する層。-100 は面、-300 は縁・チップ、-500 はドット・
@@ -68,6 +68,9 @@
   --sage-500: oklch(0.700 0.085 132);
   --sage-700: oklch(0.475 0.080 132);
 
+  /* ロゴの地色に使うブランドピンク */
+  --brand-pink: oklch(0.815 0.072 20);
+
   --apricot-100: oklch(0.958 0.035 55);
   --apricot-300: oklch(0.885 0.070 52);
   --apricot-500: oklch(0.745 0.115 48);
@@ -75,7 +78,7 @@
 
   /* Semantic tokens */
   --background:           var(--cream-50);
-  --foreground:           var(--brown-800);
+  --foreground:           var(--brown-700);
   --card:                 oklch(1.000 0.000 0);
   --card-foreground:      var(--brown-800);
   --popover:              oklch(1.000 0.000 0);
@@ -86,8 +89,9 @@
   --secondary-foreground: var(--brown-700);
   --muted:                var(--cream-100);
   --muted-foreground:     var(--brown-500);
-  --accent:               var(--gold-400);
-  --accent-foreground:    oklch(1.000 0.000 0);
+  /* hover の面。ゴールドだと彩度が高すぎて参考アプリの質感から外れる */
+  --accent:               var(--cream-200);
+  --accent-foreground:    var(--brown-700);
   --destructive:          oklch(0.577 0.245 27.325);
   --border:               var(--cream-300);
   --input:                var(--cream-200);
@@ -99,8 +103,8 @@
   --radius-pill: 999px;
 
   /* 影 — 黒ではなくブラウン寄りにして、クリーム地から浮きすぎないようにする */
-  --shadow-soft:  0 2px 10px oklch(0.200 0.030 60 / 0.05), 0 8px 28px oklch(0.200 0.030 60 / 0.06);
-  --shadow-float: 0 6px 18px oklch(0.200 0.030 60 / 0.08), 0 18px 44px oklch(0.200 0.030 60 / 0.10);
+  --shadow-soft:  0 1px 3px oklch(0.400 0.030 65 / 0.04), 0 6px 18px oklch(0.400 0.030 65 / 0.05);
+  --shadow-float: 0 3px 10px oklch(0.400 0.030 65 / 0.06), 0 12px 32px oklch(0.400 0.030 65 / 0.07);
 
   /* Sidebar */
   --sidebar:              oklch(0.975 0.012 80);
@@ -115,7 +119,8 @@
   /* Typography — 丸ゴシックを主役に、英字ラベルだけ端正なサンセリフ */
   --font-sans:    "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Noto Sans JP", sans-serif;
   --font-serif:   "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Noto Sans JP", sans-serif;
-  --font-display: "Inter", "Helvetica Neue", Arial, sans-serif;
+  /* ロゴと同じ書体。英字の見出し・ラベル・ロゴで共通して使う */
+  --font-display: "Montserrat", "Helvetica Neue", Arial, sans-serif;
 }
 
 /* ─── Tailwind へのトークン登録 ──────────────────────────────────────────
@@ -196,6 +201,7 @@
   --color-sage-300: var(--sage-300);
   --color-sage-500: var(--sage-500);
   --color-sage-700: var(--sage-700);
+  --color-brand-pink: var(--brand-pink);
   --color-apricot-100: var(--apricot-100);
   --color-apricot-300: var(--apricot-300);
   --color-apricot-500: var(--apricot-500);
@@ -271,12 +277,13 @@
     gap: 0.5rem;
   }
 
+  /* 参考アプリに合わせ、色味はごく薄い温かみだけに留める */
   .bg-hero-gradient {
     background: linear-gradient(
-      160deg,
-      oklch(0.975 0.018 82) 0%,
-      oklch(0.960 0.022 60) 48%,
-      oklch(0.955 0.025 340) 100%
+      165deg,
+      oklch(0.984 0.014 88) 0%,
+      oklch(0.973 0.022 82) 55%,
+      oklch(0.966 0.024 60) 100%
     );
   }
 
@@ -321,8 +328,8 @@
   .soft-blob {
     position: absolute;
     border-radius: 50%;
-    filter: blur(38px);
-    opacity: 0.55;
+    filter: blur(52px);
+    opacity: 0.6;
     pointer-events: none;
   }
 }
