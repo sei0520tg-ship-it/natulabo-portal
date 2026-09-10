@@ -118,6 +118,20 @@ describe("UIリニューアルの構成", () => {
     expect(Array.from(missing.entries())).toEqual([]);
   });
 
+  it("モバイル下部タブの項目と順番が意図どおりである", () => {
+    const layout = readProjectFile("client/src/components/MemberLayout.tsx");
+
+    // 順番まで含めて固定する。navItems の先頭5件を使う実装だと、
+    // サイドバーの並びを変えただけで下部タブが巻き添えで変わってしまう。
+    expect(layout).toContain(
+      'const BOTTOM_TAB_HREFS = ["/dashboard", "/calendar", "/videos", "/recipes", "/testimonials"]'
+    );
+    // 「はじめに」は下部タブに出さず、ハンバーガーからのみ辿る
+    expect(layout).not.toMatch(/BOTTOM_TAB_HREFS = \[[^\]]*"\/setup"/);
+    // ハンバーガーには全項目を出す
+    expect(layout).toContain("navItems.map(({ href, icon: Icon, label, en })");
+  });
+
   it("会員レイアウトと全体テーマにキーボードフォーカス導線を保持する", () => {
     const memberLayout = readProjectFile("client/src/components/MemberLayout.tsx");
     const css = readProjectFile("client/src/index.css");
