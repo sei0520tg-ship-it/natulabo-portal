@@ -17,6 +17,9 @@ export const users = mysqlTable("users", {
   name: text("name"),
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
+  // メール＋パスワードでのログイン用。scrypt のハッシュを保存する。
+  // Manus の OAuth を廃止したため、本人確認は自前で行う。
+  passwordHash: varchar("passwordHash", { length: 255 }),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
   // Extended member fields
   address: text("address"),

@@ -17,6 +17,8 @@ export default function Register() {
   const [inviteError, setInviteError] = useState("");
   const [form, setForm] = useState({
     name: user?.name ?? "",
+    email: "",
+    password: "",
     phone: "",
     address: "",
     brandRegisteredAt: "",
@@ -45,17 +47,16 @@ export default function Register() {
 
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isAuthenticated) {
-      navigate("/login");
-      return;
-    }
+    setInviteError("");
+    // 登録が成功すると、その場でログイン状態になる
     registerMutation.mutate({
       invitationCode: inviteCode,
       name: form.name,
+      email: form.email,
+      password: form.password,
       phone: form.phone,
       address: form.address,
       brandRegisteredAt: form.brandRegisteredAt || undefined,
-      email: user?.email ?? "",
     });
   };
 
@@ -165,6 +166,31 @@ export default function Register() {
                   className="mt-1.5 h-11 rounded-xl"
                   required
                 />
+              </div>
+              <div>
+                <Label className="text-xs">メールアドレス *</Label>
+                <Input
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  placeholder="you@example.com"
+                  className="mt-1 h-11 rounded-field text-sm"
+                />
+              </div>
+              <div>
+                <Label className="text-xs">パスワード *</Label>
+                <Input
+                  type="password"
+                  autoComplete="new-password"
+                  required
+                  minLength={8}
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  className="mt-1 h-11 rounded-field text-sm"
+                />
+                <p className="mt-1 text-[0.68rem] text-brown-400">8文字以上で設定してください</p>
               </div>
               <div>
                 <Label htmlFor="phone" className="text-sm font-medium">電話番号</Label>
