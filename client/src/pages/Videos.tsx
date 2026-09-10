@@ -307,7 +307,7 @@ export default function Videos() {
   return (
     <MemberLayout>
       <div className="container py-6 lg:py-8 space-y-8">
-        <ContentVisualHero eyebrow="VIDEO LIBRARY" title="学習動画ライブラリ" description="カテゴリ別に動画を整理しています。視聴の続きから、あなたのペースで学びを深めましょう。" icon={BookOpen} tone="aqua" />
+        <ContentVisualHero eyebrow="VIDEO LIBRARY" title="学習動画ライブラリ" description="カテゴリ別に動画を整理しています。視聴の続きから、あなたのペースで学びを深めましょう。" icon={BookOpen} tone="aqua" compact />
 
         {/* Latest videos */}
         {latestVideos.length > 0 && (
@@ -316,7 +316,7 @@ export default function Videos() {
               <Sparkles size={16} className="text-amber-500" />
               <h2 className="text-base font-semibold">最新動画</h2>
             </div>
-            <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {latestVideos.map((video) => (
                 <VideoCard
                   key={video.id}

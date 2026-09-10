@@ -87,26 +87,24 @@ export default function CalendarPage() {
   return (
     <MemberLayout>
       <div className="container py-6 lg:py-8 space-y-6">
-        <ContentVisualHero eyebrow="EVENTS & COMMUNITY" title="イベント・講座カレンダー" description="学び、つながり、日々の暮らしを豊かにする予定をカレンダーから確認できます。" icon={CalendarDays} tone="lilac" />
+        <ContentVisualHero eyebrow="EVENTS & COMMUNITY" title="イベント・講座カレンダー" description="学び、つながり、日々の暮らしを豊かにする予定をカレンダーから確認できます。" icon={CalendarDays} tone="lilac" compact />
 
-        <section className="rounded-3xl border border-primary/15 bg-primary/[0.055] p-5 sm:p-6 animate-fade-in-up" aria-labelledby="calendar-subscribe-title">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-2xl">
-              <div className="mb-2 flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-primary">
-                <Rss size={14} aria-hidden="true" /> SHARED CALENDAR
-              </div>
-              <h2 id="calendar-subscribe-title" className="font-serif text-xl text-foreground sm:text-2xl">NatuLaboイベントをカレンダーに購読</h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">最初に一度だけ登録すれば、管理者が追加・変更した公開予定がご利用のカレンダーにも反映されます。</p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button asChild className="rounded-full bg-primary px-4 text-primary-foreground hover:bg-primary/90">
-                <a href={googleSubscribeUrl} target="_blank" rel="noopener noreferrer"><CalendarPlus size={15} aria-hidden="true" />Googleで購読</a>
+        {/* 購読の導線。カレンダー本体を早く見せたいので、説明は最小限にして1行に収める。 */}
+        <section className="rounded-card border border-cream-300 bg-cream-100 px-4 py-3 animate-fade-in-up" aria-labelledby="calendar-subscribe-title">
+          <div className="flex items-center gap-3">
+            <h2 id="calendar-subscribe-title" className="flex shrink-0 items-center gap-1.5 text-xs font-bold text-brown-700">
+              <Rss size={13} aria-hidden="true" className="text-primary" />
+              購読
+            </h2>
+            <div className="flex min-w-0 items-center gap-1.5 overflow-x-auto scrollbar-hide">
+              <Button asChild size="sm" className="shrink-0 rounded-pill bg-primary px-3 text-primary-foreground hover:bg-primary/90">
+                <a href={googleSubscribeUrl} target="_blank" rel="noopener noreferrer"><CalendarPlus size={13} aria-hidden="true" />Google</a>
               </Button>
-              <Button asChild variant="outline" className="rounded-full border-primary/25 bg-background/75 px-4 text-primary hover:bg-primary/10">
-                <a href={appleSubscribeUrl}><CalendarPlus size={15} aria-hidden="true" />Apple / Outlook</a>
+              <Button asChild size="sm" variant="outline" className="shrink-0 rounded-pill px-3">
+                <a href={appleSubscribeUrl}><CalendarPlus size={13} aria-hidden="true" />Apple</a>
               </Button>
-              <Button type="button" variant="ghost" onClick={copyCalendarFeedUrl} className="rounded-full px-3 text-primary hover:bg-primary/10" aria-label="共有カレンダーの購読用URLをコピー">
-                <Copy size={15} aria-hidden="true" />{copied ? "コピーしました" : "URLをコピー"}
+              <Button type="button" size="sm" variant="ghost" onClick={copyCalendarFeedUrl} className="shrink-0 rounded-pill px-2" aria-label="共有カレンダーの購読用URLをコピー">
+                <Copy size={13} aria-hidden="true" />{copied ? "コピー済" : "URL"}
               </Button>
             </div>
           </div>

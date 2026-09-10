@@ -21,13 +21,22 @@ import {
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 
+/**
+ * モバイル下部タブに出す項目と、その並び順。
+ *
+ * navItems の先頭5件を使う実装だったが、それだとサイドバーの並びを変えた
+ * だけで下部タブまで変わってしまう。よく使うものを明示的に選ぶ。
+ * ここに無い項目（はじめに・お問い合わせ・リンク集）はハンバーガーから辿る。
+ */
+const BOTTOM_TAB_HREFS = ["/dashboard", "/calendar", "/videos", "/recipes", "/testimonials"];
+
 const navItems = [
   { href: "/dashboard", icon: Home, label: "ホーム", en: "HOME" },
   { href: "/setup", icon: Settings2, label: "はじめに", en: "START HERE" },
   { href: "/videos", icon: BookOpen, label: "学習動画", en: "VIDEO LIBRARY" },
   { href: "/recipes", icon: Sparkles, label: "クラフトレシピ", en: "RECIPES" },
   { href: "/testimonials", icon: Leaf, label: "体験談", en: "STORIES" },
-  { href: "/calendar", icon: CalendarDays, label: "イベント", en: "EVENTS" },
+  { href: "/calendar", icon: CalendarDays, label: "イベント", en: "EVENTS", tabLabel: "カレンダー" },
   { href: "/contact", icon: MessageCircleHeart, label: "お問い合わせ", en: "CONTACT" },
   { href: "/links", icon: ExternalLink, label: "リンク集", en: "LINKS" },
 ];
@@ -226,7 +235,12 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
       {/* モバイルの下部タブ。選択中は面（クリーム）で示し、アイコンはタブごとの色を持たせる。 */}
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-cream-300 bg-cream-50 lg:hidden">
         <div className="flex items-stretch justify-around">
-          {navItems.slice(0, 5).map(({ href, icon: Icon, label }) => {
+          {BOTTOM_TAB_HREFS.map((tabHref) => navItems.find((n) => n.href === tabHref))
+            .filter((item): item is (typeof navItems)[number] => Boolean(item))
+            .map((item) => {
+            const { href, icon: Icon } = item;
+            // 下部タブは幅が狭いので、短い呼び方があればそちらを使う
+            const label = "tabLabel" in item ? item.tabLabel : item.label;
             const active = location === href || location.startsWith(`${href}/`);
             const t = tone(sectionTone[href]);
             return (
