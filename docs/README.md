@@ -1,8 +1,11 @@
 # NatuLabo Portal — ドキュメントインデックス
 
 > **プロジェクト**: NatuLabo Portal（dōTERRA愛用者向け会員制ポータルサイト）  
-> **公開URL**: https://natulabo-jgdafshb.manus.space  
-> **最終更新**: 2026年8月
+> **現在の公開URL**: 使用中のManusサイト画面から確認
+>
+> **最終更新**: 2026年11月3日
+
+知人への共有・引き継ぎは、最初に[Manusでの共有・引き継ぎガイド](15_manus_handoff.md)をお読みください。既存のManusサイトとDBを継続利用します。各資料には初期仕様や過去の移行検討が含まれます。
 
 ---
 
@@ -10,6 +13,7 @@
 
 | ファイル | 内容 | 対象読者 |
 |---------|------|---------|
+| [15_manus_handoff.md](./15_manus_handoff.md) | 現在の共有・共同編集・GitHub同期・公開の手順 | 所有者・引き継ぐ方 |
 | [01_project_overview.md](./01_project_overview.md) | プロジェクト概要・要件定義・開発経緯・チェックポイント履歴 | 全員 |
 | [02_db_schema.md](./02_db_schema.md) | データベーススキーマ設計書（全テーブル詳細・ER図・マイグレーション履歴） | 開発者・管理者 |
 | [03_screen_list.md](./03_screen_list.md) | 画面一覧・ページ構成・ナビゲーション・画面遷移フロー | 全員 |
@@ -22,9 +26,11 @@
 
 ## クイックリンク
 
-- **本番サイト**: https://natulabo-jgdafshb.manus.space
-- **管理画面**: https://natulabo-jgdafshb.manus.space/admin
-- **GitHubリポジトリ**: プロジェクト設定から確認
+- **本番サイト**: 使用中のManusタスクの公開画面から確認
+- **管理画面**: 現在の公開URLの `/admin`
+- **GitHubリポジトリ**: https://github.com/sei0520tg-ship-it/natulabo-portal
+
+旧URL `https://natulabo-jgdafshb.manus.space` は、2026年11月3日の確認ではHTTP 404でした。
 
 ---
 
@@ -32,7 +38,7 @@
 
 | 機能 | 説明 |
 |------|------|
-| 招待制会員登録 | 招待コード必須・Manus OAuth認証 |
+| 招待制会員登録 | 招待コード必須・メールアドレス＋パスワード認証 |
 | 学習動画ライブラリ | YouTube iframe API・視聴進捗保存・続きから再生 |
 | トピックスカルーセル | ダッシュボード上部・最大5件・自動再生・ループ |
 | 体験談 | 管理者が追加・公開/非公開管理 |
