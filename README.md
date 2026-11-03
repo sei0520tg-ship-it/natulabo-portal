@@ -1,4 +1,35 @@
-# Web App Template (tRPC + Manus Auth + Database)
+# NatuLabo Portal
+
+dōTERRA愛用者向けの招待制・会員制ポータルサイトです。学習動画、イベント、体験談、レシピ、外部リンクと管理画面を備えています。
+
+## 知人へ共有・引き継ぎする方へ
+
+**既存のManusサイトとDBを使い、GitHubをコードの共有先として運用します。** 新しいサーバーやDBの準備は不要です。
+
+- **共有するURL:** https://github.com/sei0520tg-ship-it/natulabo-portal
+- **最初に読む手順:** [Manusでの共有・引き継ぎガイド](docs/15_manus_handoff.md)
+- **機能・画面の資料:** [ドキュメント一覧](docs/README.md)
+
+このリポジトリは公開されているため、URLを知っている方はコードを閲覧・取得できます。直接変更を保存するには、その方自身のGitHubアカウントへの共同編集者の招待が必要です。`sei0520tg-ship-it` は所有者なので追加招待は不要です。
+
+既存サイトの管理・修正は、対象のManusタスクを共同編集できる状態で行ってください。GitHubのURLだけでは、Manusのタスクや既存DBへのアクセス権は付与されません。
+
+## 開発時の確認
+
+```bash
+pnpm install --frozen-lockfile
+pnpm run check
+pnpm test
+pnpm run build
+```
+
+通常の画面修正ではDBの初期化や再作成は行いません。コードの最新状態は `main` を基準にし、Manus上の同期状態を確認してから編集・公開します。
+
+> 以下は初期テンプレートの技術資料です。現在の共有・運用手順は上記ガイドを優先してください。現在のログインはメールアドレス＋パスワード方式です。
+
+---
+
+## 初期テンプレートの技術資料（tRPC + Manus Auth + Database）
 
 This template gives you a React 19 + Tailwind 4 + Express 4 + tRPC 11 stack with Manus OAuth already wired. Procedures are your contracts, types flow end to end, and authentication "just works".
 
